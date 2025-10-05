@@ -24,10 +24,10 @@ export const Navbar: React.FC = () => {
           <div className='flex items-center gap-4'>
             <div className='flex items-center '>
               <Button className='uppercase' variant={'link'} asChild>
-                <Link href={'/signin'}>Log in</Link>
+                <Link href={'/sign-in'}>Log in</Link>
               </Button>
               <Button className='uppercase' variant={'secondary'} asChild>
-                <Link href={'/signup'}>Sign-up</Link>
+                <Link href={'/sign-up'}>Sign-up</Link>
               </Button>
             </div>
             <ThemeSwitcher
