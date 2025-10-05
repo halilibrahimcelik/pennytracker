@@ -3,6 +3,7 @@ import { signUpCreateUser } from '@/app/actions';
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldSet,
@@ -29,17 +30,53 @@ export const AuthForm: React.FC = () => {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor='email'>Email</FieldLabel>
-              <Input id='email' type='email' placeholder='you@example.com' />
-              <FieldDescription>
-                Choose an email for your account.
-              </FieldDescription>
+              <Input
+                name='email'
+                id='email'
+                type='email'
+                placeholder='you@example.com'
+              />
+              {!state.errors?.email && (
+                <FieldDescription>
+                  Choose an email for your account.
+                </FieldDescription>
+              )}
+              <FieldError>
+                {state.errors?.email && state.errors.email.join(', ')}
+              </FieldError>
             </Field>
             <Field>
               <FieldLabel htmlFor='password'>Password</FieldLabel>
-              <FieldDescription>
-                Must be at least 8 characters long.
-              </FieldDescription>
-              <Input id='password' type='password' placeholder='********' />
+
+              <Input
+                name='password'
+                id='password'
+                type='password'
+                placeholder='********'
+              />
+              {!state.errors?.password && (
+                <FieldDescription>
+                  Must be at least 4 characters long.
+                </FieldDescription>
+              )}
+              <FieldError>
+                {state.errors?.password && state.errors.password.join(', ')}
+              </FieldError>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor='confirmPassword'>
+                Confirm Password
+              </FieldLabel>
+              <Input
+                name='confirmPassword'
+                id='confirmPassword'
+                type='password'
+                placeholder='********'
+              />
+              <FieldError>
+                {state.errors?.confirmPassword &&
+                  state.errors.confirmPassword.join(', ')}
+              </FieldError>
             </Field>
           </FieldGroup>
           <Button size='sm' variant='outline' type='submit' disabled={pending}>
