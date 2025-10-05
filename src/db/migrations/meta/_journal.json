@@ -8,6 +8,34 @@
       "when": 1759652672831,
       "tag": "0000_rainy_harrier",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1759703473146,
+      "tag": "0001_rich_dark_beast",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759703595440,
+      "tag": "0002_early_sandman",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1759703928726,
+      "tag": "0003_perpetual_donald_blake",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1759704376722,
+      "tag": "0004_dark_terrax",
+      "breakpoints": true
     }
   ]
 }

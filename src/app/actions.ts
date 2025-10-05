@@ -3,7 +3,7 @@
 import { success, z } from 'zod';
 import bcryptjs from 'bcryptjs';
 import { db } from '@/db';
-import { usersTable } from '@/db/schema';
+import { signUp } from '@/lib/auth-client';
 const schema = z
   .object({
     email: z.email({
@@ -47,10 +47,24 @@ export const signUpCreateUser = async (
   );
 
   const newUser = { email, passwordHash: hashedPassword };
-  const mockPromise = new Promise((resolve) => setTimeout(resolve, 1000));
-  await mockPromise;
   console.log(newUser);
+  await signUp.email(
+    {
+      email: newUser.email,
+      password: hashedPassword,
+
+      callbackURL: process.env.BASE_URL!,
+      name: 'New User',
+    },
+    {
+      onSuccess: (user) => {
+        console.log('User signed up successfully:');
+      },
+      onError: (error) => console.error('Error signing up user:', error),
+    }
+  );
   return { success: true, user: newUser };
+
   //inserting  a new user into the database
   // await db.insert(usersTable).values([
   //     { email, passwordHash: hashedPassword }
