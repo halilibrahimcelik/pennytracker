@@ -21,13 +21,29 @@ export const AuthForm: React.FC = () => {
     signUpCreateUser,
     initialState
   );
-  console.log('State:', state);
 
   return (
     <div className='flex-1 min-w-full lg:min-w-md  '>
       <form action={formAction} className='space-y-6'>
         <FieldSet>
           <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor='name'>Name</FieldLabel>
+              <Input
+                name='name'
+                id='name'
+                type='name'
+                placeholder='you@example.com'
+              />
+              {!state.errors?.name && (
+                <FieldDescription>
+                  Choose a name for your account.
+                </FieldDescription>
+              )}
+              <FieldError>
+                {state.errors?.name && state.errors.name.join(', ')}
+              </FieldError>
+            </Field>
             <Field>
               <FieldLabel htmlFor='email'>Email</FieldLabel>
               <Input

@@ -5,6 +5,7 @@ import bcryptjs from 'bcryptjs';
 import { signUp } from '@/lib/auth-client';
 const schema = z
   .object({
+    name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
     email: z.email({
       message: 'Invalid email address',
       pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
@@ -26,6 +27,7 @@ export const signUpCreateUser = async (
   formData: FormData
 ) => {
   const validatedData = schema.safeParse({
+    name: formData.get('name'),
     email: formData.get('email'),
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
@@ -37,23 +39,20 @@ export const signUpCreateUser = async (
       errors: validatedData.error.flatten().fieldErrors,
     };
   }
-  const { email, password } = validatedData.data;
+  const { email, password, name } = validatedData.data;
   const hashedPassword = await bcryptjs.hash(
     password,
     process.env.BCRYPT_SALT_ROUNDS
       ? parseInt(process.env.BCRYPT_SALT_ROUNDS)
-      : 4
+      : 12
   );
-
-  const newUser = { email, passwordHash: hashedPassword };
-  console.log(newUser);
   await signUp.email(
     {
-      email: newUser.email,
+      email,
       password: hashedPassword,
 
       callbackURL: process.env.BASE_URL! + '/dashboard',
-      name: 'New User',
+      name,
     },
     {
       onSuccess: (user) => {
@@ -62,7 +61,7 @@ export const signUpCreateUser = async (
       onError: (error) => console.error('Error signing up user:', error),
     }
   );
-  return { success: true, user: newUser };
+  return { success: true, user: validatedData.data };
 
   //inserting  a new user into the database
   // await db.insert(usersTable).values([

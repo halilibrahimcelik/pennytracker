@@ -27,7 +27,7 @@ export const auth = betterAuth({
       console.log('Verification URL:', url);
       console.log('Verification Token:', token);
       const { data, error } = await resend.emails.send({
-        from: 'Acme <onboarding@resend.dev>',
+        from: 'Finance-Tracker <noreply@pennytracker.xyz>',
         to: user.email!,
         subject: 'Verify your email',
         html: `
