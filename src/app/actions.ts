@@ -1,8 +1,7 @@
 'use server';
 
-import { success, z } from 'zod';
+import { z } from 'zod';
 import bcryptjs from 'bcryptjs';
-import { db } from '@/db';
 import { signUp } from '@/lib/auth-client';
 const schema = z
   .object({
