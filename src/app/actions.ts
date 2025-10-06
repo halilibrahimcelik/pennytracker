@@ -52,7 +52,7 @@ export const signUpCreateUser = async (
       email: newUser.email,
       password: hashedPassword,
 
-      callbackURL: process.env.BASE_URL!,
+      callbackURL: process.env.BASE_URL! + '/dashboard',
       name: 'New User',
     },
     {
