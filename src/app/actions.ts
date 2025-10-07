@@ -1,7 +1,5 @@
 'use server';
-
 import { z } from 'zod';
-import bcryptjs from 'bcryptjs';
 import { signUp } from '@/lib/auth-client';
 const schema = z
   .object({
@@ -42,12 +40,7 @@ export const signUpCreateUser = async (
     };
   }
   const { email, password, name } = validatedData.data;
-  const hashedPassword = await bcryptjs.hash(
-    password,
-    process.env.BCRYPT_SALT_ROUNDS
-      ? parseInt(process.env.BCRYPT_SALT_ROUNDS)
-      : 12
-  );
+
   const response = await signUp.email(
     {
       email,
