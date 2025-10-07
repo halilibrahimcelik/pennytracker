@@ -9,19 +9,25 @@ import {
   FieldSet,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
 const initialState = {
   success: false,
   errors: {},
 };
+import { toast } from 'sonner';
+
 export const AuthForm: React.FC = () => {
   const [state, formAction, pending] = useActionState(
     signUpCreateUser,
     initialState
   );
-
+  useEffect(() => {
+    if (state.errors) {
+    }
+  }, [state]);
+  console.log(state);
   return (
     <div className='flex-1 min-w-full lg:min-w-md  '>
       <form action={formAction} className='space-y-6'>
@@ -29,12 +35,7 @@ export const AuthForm: React.FC = () => {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor='name'>Name</FieldLabel>
-              <Input
-                name='name'
-                id='name'
-                type='name'
-                placeholder='you@example.com'
-              />
+              <Input name='name' id='name' type='name' placeholder='John Doe' />
               {!state.errors?.name && (
                 <FieldDescription>
                   Choose a name for your account.

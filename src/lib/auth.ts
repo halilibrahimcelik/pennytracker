@@ -11,6 +11,12 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    minPasswordLength: 4,
+    password: {
+      hash: async (password: string) => {
+        return password; // No hashing for testing purposes
+      },
+    },
   },
   socialProviders: {
     github: {

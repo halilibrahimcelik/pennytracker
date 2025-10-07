@@ -3,6 +3,7 @@ import { Inter, Inter_Tight } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { ThemeProvider } from '@/providers/ThemeProvider';
+import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
@@ -41,6 +42,7 @@ export default function RootLayout({
             {children}
           </>
         </ThemeProvider>
+        <Toaster position='bottom-center' />
       </body>
     </html>
   );

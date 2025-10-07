@@ -12,7 +12,10 @@ const schema = z
     }),
     password: z
       .string()
-      .min(4, { message: 'Password must be at least 4 characters long' }),
+      .min(4, { message: 'Password must be at least 4 characters long' })
+      .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/, {
+        message: 'Password must contain at least one letter and one number',
+      }),
     confirmPassword: z
       .string()
       .min(4, { message: 'Please confirm your password' }),
@@ -32,7 +35,6 @@ export const signUpCreateUser = async (
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
   });
-  console.log(formData, 'formData');
   if (!validatedData.success) {
     return {
       success: false,
@@ -46,10 +48,10 @@ export const signUpCreateUser = async (
       ? parseInt(process.env.BCRYPT_SALT_ROUNDS)
       : 12
   );
-  await signUp.email(
+  const response = await signUp.email(
     {
       email,
-      password: hashedPassword,
+      password,
 
       callbackURL: process.env.BASE_URL! + '/dashboard',
       name,
@@ -58,13 +60,22 @@ export const signUpCreateUser = async (
       onSuccess: (user) => {
         console.log('User signed up successfully:');
       },
-      onError: (error) => console.error('Error signing up user:', error),
+      onError: (error) => {
+        console.error('Error signing up user:', error);
+      },
     }
   );
-  return { success: true, user: validatedData.data };
-
-  //inserting  a new user into the database
-  // await db.insert(usersTable).values([
-  //     { email, passwordHash: hashedPassword }
-  //   ]);
+  if (response.error) {
+    return {
+      success: false,
+      errors: {
+        name: [],
+        email: [response.error.message],
+        password: [],
+        confirmPassword: [],
+      },
+    };
+  } else {
+    return { success: true, user: validatedData.data };
+  }
 };
