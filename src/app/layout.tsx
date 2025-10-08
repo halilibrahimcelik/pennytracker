@@ -42,7 +42,12 @@ export default function RootLayout({
             {children}
           </>
         </ThemeProvider>
-        <Toaster position='bottom-center' />
+        <Toaster
+          richColors
+          position='bottom-center'
+          closeButton
+          visibleToasts={2}
+        />
       </body>
     </html>
   );

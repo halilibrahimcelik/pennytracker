@@ -24,10 +24,14 @@ export const AuthForm: React.FC = () => {
     initialState
   );
   useEffect(() => {
-    if (state.errors) {
+    if (state.success) {
+      toast.success(
+        'Your account has been Created. Please check your email to verify it.',
+        {}
+      );
     }
   }, [state]);
-  console.log(state);
+
   return (
     <div className='flex-1 min-w-full lg:min-w-md  '>
       <form action={formAction} className='space-y-6'>
