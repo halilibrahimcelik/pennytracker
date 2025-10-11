@@ -23,7 +23,7 @@ export const Navbar: React.FC<Props> = ({ user }) => {
   const router = useRouter();
   useEffect(() => {
     if (state?.success) {
-      router.push('/sign-in');
+      router.replace('/sign-in', {});
       toast.success('User signed out successfully');
     }
   }, [state]);

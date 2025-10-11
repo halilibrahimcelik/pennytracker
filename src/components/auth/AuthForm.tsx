@@ -39,6 +39,18 @@ export const AuthForm: React.FC = () => {
     try {
       signIn.social({
         provider: 'github',
+        callbackURL: '/dashboard',
+        loginHint: 'github',
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSignUpWithGoogle = async () => {
+    try {
+      signIn.social({
+        provider: 'google',
+        callbackURL: '/dashboard',
       });
     } catch (error) {
       console.log(error);
@@ -142,7 +154,7 @@ export const AuthForm: React.FC = () => {
               <IoLogoGithub size={40} aria-label='Sign up with GitHub' />{' '}
             </Button>
             <Button
-              onClick={handleSignUpWithGithub}
+              onClick={handleSignUpWithGoogle}
               variant={'ghost'}
               size={'icon'}
               aria-label='Sign up with Google'
