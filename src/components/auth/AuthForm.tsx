@@ -12,11 +12,14 @@ import { Input } from '@/components/ui/input';
 import { useActionState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
+import { IoLogoGithub } from 'react-icons/io';
+
 const initialState = {
   success: false,
   errors: {},
 };
 import { toast } from 'sonner';
+import { signIn } from '@/lib/auth-client';
 
 export const AuthForm: React.FC = () => {
   const [state, formAction, pending] = useActionState(
@@ -31,6 +34,15 @@ export const AuthForm: React.FC = () => {
       );
     }
   }, [state]);
+  const handleSignUpWithGithub = async () => {
+    try {
+      signIn.social({
+        provider: 'github',
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className='flex-1 min-w-full lg:min-w-md  '>
@@ -106,6 +118,29 @@ export const AuthForm: React.FC = () => {
           </Button>
         </FieldSet>
       </form>
+      <div className='my-6 flex flex-col gap-2 '>
+        <div className='flex items-center  justify-center  gap-5'>
+          <hr className='w-full  ' />
+          <p className='text-sm uppercase'>OR</p>
+          <hr className='w-full' />
+        </div>
+        <div className='mx-auto flex flex-col gap-2 items-center'>
+          <p className='text-muted-foreground text-sm '>
+            {' '}
+            You can sign up with
+          </p>
+          <Button
+            onClick={handleSignUpWithGithub}
+            variant={'ghost'}
+            size={'icon'}
+            aria-label='Sign up with GitHub'
+            title='Sign up with GitHub'
+            className='h-10 w-10 rounded-full cursor-pointer'
+          >
+            <IoLogoGithub size={40} aria-label='Sign up with GitHub' />{' '}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

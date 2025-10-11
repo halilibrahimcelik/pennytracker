@@ -3,20 +3,20 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '@/db'; // your drizzle instance
 import { resend } from './resend';
 import { schema } from '@/db/schema';
+import { nextCookies } from 'better-auth/next-js';
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: 'pg', // or "mysql", "sqlite"
     schema,
   }),
+  plugins: [nextCookies()],
+  session: {
+    expiresIn: 60 * 60 * 24 * 2, // 2 days,
+  },
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 4,
-    password: {
-      hash: async (password: string) => {
-        return password; // No hashing for testing purposes
-      },
-    },
   },
   socialProviders: {
     github: {
