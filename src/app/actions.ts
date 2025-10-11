@@ -1,6 +1,10 @@
 'use server';
 import { z } from 'zod';
 import { signUp } from '@/lib/auth-client';
+import { redirect } from 'next/navigation';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+
 const schema = z
   .object({
     name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -70,5 +74,24 @@ export const signUpCreateUser = async (
     };
   } else {
     return { success: true, user: validatedData.data };
+  }
+};
+
+export const signOutUser = async () => {
+  try {
+    const response = await auth.api.signOut({
+      headers: await headers(),
+    });
+    if (response) {
+      return {
+        success: response,
+        error: 'No error',
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: 'Error signing out',
+    };
   }
 };

@@ -16,8 +16,6 @@ export async function middleware(request: NextRequest) {
       }
     );
 
-    console.log('Session in middleware:', session);
-
     // Check if session exists and is valid
     if (!session || !session.user) {
       console.log('No valid session, redirecting to sign-in');

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 
 import { cn } from '@/lib/utils';
+import { Skeleton } from './skeleton';
 const themes = [
   {
     key: 'light',
@@ -47,7 +48,12 @@ export const ThemeSwitcher = ({
     setMounted(true);
   }, []);
   if (!mounted) {
-    return null;
+    return (
+      <div className='relative isolate flex h-8 rounded-full bg-background p-1 ring-1 ring-border w-fit'>
+        <Skeleton className='h-6 w-6 rounded-full' />
+        <Skeleton className='h-6 w-6 rounded-full' />
+      </div>
+    );
   }
   return (
     <div

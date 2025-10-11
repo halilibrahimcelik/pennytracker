@@ -13,6 +13,7 @@ import { useActionState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
 import { IoLogoGithub } from 'react-icons/io';
+import { FcGoogle } from 'react-icons/fc';
 
 const initialState = {
   success: false,
@@ -129,16 +130,28 @@ export const AuthForm: React.FC = () => {
             {' '}
             You can sign up with
           </p>
-          <Button
-            onClick={handleSignUpWithGithub}
-            variant={'ghost'}
-            size={'icon'}
-            aria-label='Sign up with GitHub'
-            title='Sign up with GitHub'
-            className='h-10 w-10 rounded-full cursor-pointer'
-          >
-            <IoLogoGithub size={40} aria-label='Sign up with GitHub' />{' '}
-          </Button>
+          <div>
+            <Button
+              onClick={handleSignUpWithGithub}
+              variant={'ghost'}
+              size={'icon'}
+              aria-label='Sign up with GitHub'
+              title='Sign up with GitHub'
+              className='h-10 w-10 rounded-full cursor-pointer'
+            >
+              <IoLogoGithub size={40} aria-label='Sign up with GitHub' />{' '}
+            </Button>
+            <Button
+              onClick={handleSignUpWithGithub}
+              variant={'ghost'}
+              size={'icon'}
+              aria-label='Sign up with Google'
+              title='Sign up with Google'
+              className='h-10 w-10 rounded-full cursor-pointer'
+            >
+              <FcGoogle size={40} aria-label='Sign up with Google' />{' '}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
