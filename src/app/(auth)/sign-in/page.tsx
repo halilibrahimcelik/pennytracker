@@ -1,4 +1,4 @@
-import { signUpCreateUser } from '@/app/actions';
+import { signInUser, signUpCreateUser } from '@/app/actions';
 import { AuthForm } from '@/components/auth';
 import Container from '@/components/ui/container';
 import { NextPage } from 'next';
@@ -14,7 +14,7 @@ const SignInPage: NextPage = () => {
         <div className=' my-10 md:my-20 lg:my-32  mx-auto w-fit '>
           <AuthForm
             initialState={initialState}
-            authMethod={signUpCreateUser}
+            authMethod={signInUser}
             title='Log in to your account'
             authType='sign-in'
           />

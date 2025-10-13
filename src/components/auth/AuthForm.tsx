@@ -1,5 +1,4 @@
 'use client';
-import { signUpCreateUser } from '@/app/actions';
 import {
   Field,
   FieldDescription,
@@ -19,6 +18,7 @@ import { toast } from 'sonner';
 import { signIn } from '@/lib/auth-client';
 import { Card, CardContent, CardTitle } from '../ui/card';
 import Image from 'next/image';
+import { redirect } from 'next/dist/client/components/navigation';
 
 type Props = {
   title: string;
@@ -35,12 +35,18 @@ export const AuthForm: React.FC<Props> = ({
   const [state, formAction, pending] = useActionState(authMethod, initialState);
   useEffect(() => {
     if (state.success) {
-      toast.success(
-        'Your account has been Created. Please check your email to verify it.',
-        {}
-      );
+      if (authType === 'sign-in') {
+        toast.success('You have successfully logged in', {});
+        redirect('/dashboard');
+      } else {
+        toast.success(
+          'Your account has been Created. Please check your email to verify it.',
+          {}
+        );
+      }
     }
   }, [state]);
+  console.log(state);
   const handleSignUpWithGithub = async () => {
     try {
       signIn.social({
