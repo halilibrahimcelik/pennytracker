@@ -1,6 +1,5 @@
-import { signInUser, signUpCreateUser } from '@/app/actions';
+import { signInUser } from '@/app/actions';
 import { AuthForm } from '@/components/auth';
-import Container from '@/components/ui/container';
 import { NextPage } from 'next';
 
 const SignInPage: NextPage = () => {
@@ -9,18 +8,12 @@ const SignInPage: NextPage = () => {
     errors: {},
   };
   return (
-    <main>
-      <Container>
-        <div className=' my-10 md:my-20 lg:my-32  mx-auto w-fit '>
-          <AuthForm
-            initialState={initialState}
-            authMethod={signInUser}
-            title='Log in to your account'
-            authType='sign-in'
-          />
-        </div>
-      </Container>
-    </main>
+    <AuthForm
+      initialState={initialState}
+      authMethod={signInUser}
+      title='Log in to your account'
+      authType='sign-in'
+    />
   );
 };
 export default SignInPage;

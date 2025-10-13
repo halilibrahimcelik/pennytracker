@@ -32,7 +32,9 @@ export default async function RootLayout({
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  console.log(session);
+  const headerList = headers();
+  const activePath = (await headerList).get('x-current-path') || '/';
+
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={`${inter.variable} ${interTight.variable} antialiased`}>
@@ -43,7 +45,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <>
-            <Navbar user={session?.user} />
+            <Navbar user={session?.user} activePath={activePath} />
             {children}
           </>
         </ThemeProvider>

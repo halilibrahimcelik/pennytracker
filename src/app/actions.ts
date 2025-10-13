@@ -39,7 +39,9 @@ const signInSchema = z.object({
       message: 'Password must contain at least one letter and one number',
     }),
 });
-
+const emailSchema = z.object({
+  email: z.string().email({ message: 'Invalid email address' }),
+});
 export const signInUser = async (initialData: any, formData: FormData) => {
   const validatedData = signInSchema.safeParse({
     email: formData.get('email'),
@@ -153,6 +155,46 @@ export const signOutUser = async () => {
     return {
       success: false,
       error: 'Error signing out',
+    };
+  }
+};
+
+export const resetPassword = async (initialData: any, formData: FormData) => {
+  console.log('Resetting password with form data:', formData);
+  const validatedData = emailSchema.safeParse({
+    email: formData.get('email'),
+  });
+  console.log(validatedData);
+  if (!validatedData.success) {
+    return {
+      success: false,
+      errors: validatedData.error.flatten().fieldErrors,
+    };
+  }
+
+  const { email } = validatedData.data;
+  console.log('Resetting password for email:', email);
+  try {
+    const data = await auth.api.requestPasswordReset({
+      body: {
+        email, // required
+        redirectTo: process.env.BASE_URL! + '/reset-password', // Use your base URL
+      },
+    });
+    console.log('Password reset email sent:', data);
+    return { success: true, errors: { email: [] } };
+  } catch (error) {
+    console.error('Error during password reset:', error);
+    if (error instanceof APIError) {
+      return {
+        success: false,
+        errors: { email: [error.body?.message || 'Error sending reset email'] },
+      };
+    }
+    // Handle non-APIError exceptions
+    return {
+      success: false,
+      errors: { email: ['An unexpected error occurred. Please try again.'] },
     };
   }
 };

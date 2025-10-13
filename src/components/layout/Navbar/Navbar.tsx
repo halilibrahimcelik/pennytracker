@@ -7,15 +7,17 @@ import { SelectUser } from '@/db/schema';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useActionState, useEffect } from 'react';
 import { toast } from 'sonner';
 
 type Props = {
   user: Omit<SelectUser, 'image'> | undefined;
+  activePath?: string;
 };
 export const Navbar: React.FC<Props> = ({ user }) => {
   const { setTheme, theme } = useTheme();
+  const pathname = usePathname();
   const [state, formAction, isPending] = useActionState(signOutUser, {
     error: '',
     success: false,
@@ -45,10 +47,18 @@ export const Navbar: React.FC<Props> = ({ user }) => {
             <div className='flex items-center '>
               {!user ? (
                 <>
-                  <Button className='uppercase' variant={'link'} asChild>
+                  <Button
+                    className='uppercase'
+                    variant={pathname === '/sign-in' ? 'secondary' : 'link'}
+                    asChild
+                  >
                     <Link href={'/sign-in'}>Log in</Link>
                   </Button>
-                  <Button className='uppercase' variant={'secondary'} asChild>
+                  <Button
+                    className='uppercase'
+                    variant={pathname === '/sign-up' ? 'secondary' : 'link'}
+                    asChild
+                  >
                     <Link href={'/sign-up'}>Sign-up</Link>
                   </Button>
                 </>

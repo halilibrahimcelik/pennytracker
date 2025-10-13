@@ -19,7 +19,7 @@ import { signIn } from '@/lib/auth-client';
 import { Card, CardContent, CardTitle } from '../ui/card';
 import Image from 'next/image';
 import { redirect } from 'next/dist/client/components/navigation';
-
+import Link from 'next/link';
 type Props = {
   title: string;
   authMethod: any;
@@ -170,6 +170,11 @@ export const AuthForm: React.FC<Props> = ({
               </Button>
             </FieldSet>
           </form>
+          {authType === 'sign-in' && (
+            <p className='text-muted-foreground text-xs mt-4 cursor-pointer hover:underline'>
+              <Link href={'/reset-password'}>Forgot your password?</Link>
+            </p>
+          )}
           <div className='my-6 flex flex-col gap-2 '>
             <div className='flex items-center  justify-center  gap-5'>
               <hr className='w-full  ' />
