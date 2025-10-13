@@ -20,9 +20,6 @@ type Props = {
 };
 export const Navbar: React.FC<Props> = ({ user }) => {
   const { setTheme, theme } = useTheme();
-  const session = useSession();
-  const currentUser = !session.isPending ? session.data?.user : user;
-  const isLoggedIn = !!currentUser;
 
   const pathname = usePathname();
   const [state, formAction, isPending] = useActionState(signOutUser, {
@@ -30,7 +27,6 @@ export const Navbar: React.FC<Props> = ({ user }) => {
     success: false,
   });
   const router = useRouter();
-  console.log('session in navbar:', session);
   useEffect(() => {
     if (state?.success) {
       router.replace(ROUTES.SIGN_IN, {});
@@ -54,7 +50,7 @@ export const Navbar: React.FC<Props> = ({ user }) => {
           </Link>
           <div className='flex items-center gap-4'>
             <div className='flex items-center '>
-              {!isLoggedIn ? (
+              {!user ? (
                 <>
                   <Button
                     className='uppercase'

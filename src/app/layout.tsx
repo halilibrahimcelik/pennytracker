@@ -46,13 +46,13 @@ export default async function RootLayout({
             <Navbar user={session?.user} />
             {children}
           </>
+          <Toaster
+            richColors
+            position='bottom-center'
+            closeButton
+            visibleToasts={2}
+          />
         </ThemeProvider>
-        <Toaster
-          richColors
-          position='bottom-center'
-          closeButton
-          visibleToasts={2}
-        />
       </body>
     </html>
   );
