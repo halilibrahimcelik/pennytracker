@@ -62,7 +62,7 @@ export const signInUser = async (initialData: any, formData: FormData) => {
       body: {
         email,
         password,
-        callbackURL: process.env.BASE_URL! + '/dashboard',
+        callbackURL: process.env.BASE_URL! + ROUTES.DASHBOARD,
       },
       headers: await headers(),
     });
@@ -219,7 +219,7 @@ export const resetPassword = async (initialData: any, formData: FormData) => {
     });
   const validatedData = passwordSchema.safeParse({
     newPassword: formData.get('newPassword'),
-    confirmPassword: formData.get('confirmNewPassword'),
+    confirmPassword: formData.get('confirmPassword'),
   });
   if (!validatedData.success) {
     return {
@@ -236,7 +236,12 @@ export const resetPassword = async (initialData: any, formData: FormData) => {
         token, // required
       },
     });
+
+    if (data.status) {
+      return { success: true, errors: { newPassword: [] } };
+    }
   } catch (error) {
+    console.error('Error during password reset:', error);
     if (error instanceof APIError) {
       return {
         success: false,

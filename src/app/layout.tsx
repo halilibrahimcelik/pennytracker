@@ -32,8 +32,6 @@ export default async function RootLayout({
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  const headerList = headers();
-  const activePath = (await headerList).get('x-current-path') || '/';
 
   return (
     <html lang='en' suppressHydrationWarning>
@@ -45,7 +43,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <>
-            <Navbar user={session?.user} activePath={activePath} />
+            <Navbar user={session?.user} />
             {children}
           </>
         </ThemeProvider>

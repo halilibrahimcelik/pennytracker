@@ -18,9 +18,9 @@ import { toast } from 'sonner';
 import { signIn } from '@/lib/auth-client';
 import { Card, CardContent, CardTitle } from '../ui/card';
 import Image from 'next/image';
-import { redirect } from 'next/dist/client/components/navigation';
 import Link from 'next/link';
 import { ROUTES } from '@/types';
+import { redirect } from 'next/navigation';
 type Props = {
   title: string;
   authMethod: any;
@@ -47,7 +47,6 @@ export const AuthForm: React.FC<Props> = ({
       }
     }
   }, [state]);
-  console.log(state);
   const handleSignUpWithGithub = async () => {
     try {
       signIn.social({

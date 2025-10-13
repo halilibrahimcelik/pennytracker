@@ -12,8 +12,11 @@ import {
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { resetPassword } from '@/app/actions';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/types';
 
 const initialState = {
   success: false,
@@ -29,7 +32,16 @@ export const ResetPasswordForm: React.FC<Props> = ({ token }) => {
     resetPassword,
     initialState
   );
-
+  console.log('ResetPasswordForm state:', state);
+  const router = useRouter();
+  useEffect(() => {
+    if (state?.success) {
+      toast.success(
+        'Password has been reset successfully. You can now log in with your new password.'
+      );
+      router.push(ROUTES.SIGN_IN);
+    }
+  }, [state]);
   return (
     <Card className=' px-4 py-8 justify-center w-full  '>
       <CardTitle className='text-center text-2xl uppercase md:text-3xl font-semibold mb-4'>
@@ -67,7 +79,7 @@ export const ResetPasswordForm: React.FC<Props> = ({ token }) => {
                 </Field>
                 <input type='hidden' name='token' value={token} />
                 <Field>
-                  <FieldLabel htmlFor='confirmNewPassword'>
+                  <FieldLabel htmlFor='confirmPassword'>
                     Confirm New Password
                   </FieldLabel>
                   <Input

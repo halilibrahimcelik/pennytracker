@@ -4,13 +4,15 @@ import { Button } from '@/components/ui/button';
 import Container from '@/components/ui/container';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 import { SelectUser } from '@/db/schema';
+import { useSession } from '@/lib/auth-client';
 import { ROUTES } from '@/types';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { set } from 'zod';
 
 type Props = {
   user: Omit<SelectUser, 'image'> | undefined;
@@ -18,18 +20,24 @@ type Props = {
 };
 export const Navbar: React.FC<Props> = ({ user }) => {
   const { setTheme, theme } = useTheme();
+  const session = useSession();
+  const currentUser = !session.isPending ? session.data?.user : user;
+  const isLoggedIn = !!currentUser;
+
   const pathname = usePathname();
   const [state, formAction, isPending] = useActionState(signOutUser, {
     error: '',
     success: false,
   });
   const router = useRouter();
+  console.log('session in navbar:', session);
   useEffect(() => {
     if (state?.success) {
       router.replace(ROUTES.SIGN_IN, {});
       toast.success('User signed out successfully');
     }
   }, [state]);
+
   return (
     <nav className='bg-primary text-accent'>
       <Container>
@@ -46,7 +54,7 @@ export const Navbar: React.FC<Props> = ({ user }) => {
           </Link>
           <div className='flex items-center gap-4'>
             <div className='flex items-center '>
-              {!user ? (
+              {!isLoggedIn ? (
                 <>
                   <Button
                     className='uppercase'
