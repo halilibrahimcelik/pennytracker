@@ -20,6 +20,7 @@ import { Card, CardContent, CardTitle } from '../ui/card';
 import Image from 'next/image';
 import { redirect } from 'next/dist/client/components/navigation';
 import Link from 'next/link';
+import { ROUTES } from '@/types';
 type Props = {
   title: string;
   authMethod: any;
@@ -37,7 +38,7 @@ export const AuthForm: React.FC<Props> = ({
     if (state.success) {
       if (authType === 'sign-in') {
         toast.success('You have successfully logged in', {});
-        redirect('/dashboard');
+        redirect(ROUTES.DASHBOARD);
       } else {
         toast.success(
           'Your account has been Created. Please check your email to verify it.',
@@ -51,7 +52,7 @@ export const AuthForm: React.FC<Props> = ({
     try {
       signIn.social({
         provider: 'github',
-        callbackURL: '/dashboard',
+        callbackURL: ROUTES.DASHBOARD,
         loginHint: 'github',
       });
     } catch (error) {
@@ -62,7 +63,7 @@ export const AuthForm: React.FC<Props> = ({
     try {
       signIn.social({
         provider: 'google',
-        callbackURL: '/dashboard',
+        callbackURL: ROUTES.DASHBOARD,
       });
     } catch (error) {
       console.log(error);
@@ -172,7 +173,7 @@ export const AuthForm: React.FC<Props> = ({
           </form>
           {authType === 'sign-in' && (
             <p className='text-muted-foreground text-xs mt-4 cursor-pointer hover:underline'>
-              <Link href={'/reset-password'}>Forgot your password?</Link>
+              <Link href={ROUTES.FORGOT_PASSWORD}>Forgot your password?</Link>
             </p>
           )}
           <div className='my-6 flex flex-col gap-2 '>

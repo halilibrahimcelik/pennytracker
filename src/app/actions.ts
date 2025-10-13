@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { APIError, BetterAuthError } from 'better-auth';
+import { ROUTES } from '@/types';
 
 const schema = z
   .object({
@@ -159,7 +160,7 @@ export const signOutUser = async () => {
   }
 };
 
-export const resetPassword = async (initialData: any, formData: FormData) => {
+export const forgotPassword = async (initialData: any, formData: FormData) => {
   console.log('Resetting password with form data:', formData);
   const validatedData = emailSchema.safeParse({
     email: formData.get('email'),
@@ -178,7 +179,7 @@ export const resetPassword = async (initialData: any, formData: FormData) => {
     const data = await auth.api.requestPasswordReset({
       body: {
         email, // required
-        redirectTo: process.env.BASE_URL! + '/reset-password', // Use your base URL
+        redirectTo: process.env.BASE_URL! + ROUTES.RESET_PASSWORD, // Use your base URL
       },
     });
     console.log('Password reset email sent:', data);
@@ -195,6 +196,60 @@ export const resetPassword = async (initialData: any, formData: FormData) => {
     return {
       success: false,
       errors: { email: ['An unexpected error occurred. Please try again.'] },
+    };
+  }
+};
+
+export const resetPassword = async (initialData: any, formData: FormData) => {
+  const passwordSchema = z
+    .object({
+      newPassword: z
+        .string()
+        .min(4, { message: 'Password must be at least 4 characters long' })
+        .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/, {
+          message: 'Password must contain at least one letter and one number',
+        }),
+      confirmPassword: z
+        .string()
+        .min(4, { message: 'Please confirm your password' }),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: 'Passwords do not match',
+      path: ['confirmPassword'],
+    });
+  const validatedData = passwordSchema.safeParse({
+    newPassword: formData.get('newPassword'),
+    confirmPassword: formData.get('confirmNewPassword'),
+  });
+  if (!validatedData.success) {
+    return {
+      success: false,
+      errors: validatedData.error.flatten().fieldErrors,
+    };
+  }
+  const token = formData.get('token') as string;
+  const { newPassword } = validatedData.data;
+  try {
+    const data = await auth.api.resetPassword({
+      body: {
+        newPassword, // required
+        token, // required
+      },
+    });
+  } catch (error) {
+    if (error instanceof APIError) {
+      return {
+        success: false,
+        errors: {
+          newPassword: [error.body?.message || 'Error resetting password'],
+        },
+      };
+    }
+    return {
+      success: false,
+      errors: {
+        newPassword: ['An unexpected error occurred. Please try again.'],
+      },
     };
   }
 };

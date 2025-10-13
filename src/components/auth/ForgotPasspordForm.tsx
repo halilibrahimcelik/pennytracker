@@ -13,27 +13,24 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
 import { useActionState } from 'react';
-import { resetPassword } from '@/app/actions';
+import { forgotPassword, resetPassword } from '@/app/actions';
 
 const initialState = {
   success: false,
   errors: {
-    newPassword: [],
+    email: [],
   },
 };
-type Props = {
-  token: string;
-};
-export const ResetPasswordForm: React.FC<Props> = ({ token }) => {
+export const ForgotPasswordForm: React.FC = () => {
   const [state, formAction, pending] = useActionState(
-    resetPassword,
+    forgotPassword,
     initialState
   );
 
   return (
     <Card className=' px-4 py-8 justify-center w-full  '>
       <CardTitle className='text-center text-2xl uppercase md:text-3xl font-semibold mb-4'>
-        Reset your password
+        Forgot your password
       </CardTitle>
       <CardContent className='flex  flex-col lg:flex-row items-center  gap-2'>
         <Image
@@ -49,41 +46,20 @@ export const ResetPasswordForm: React.FC<Props> = ({ token }) => {
             <FieldSet>
               <FieldGroup>
                 <Field>
-                  <FieldLabel htmlFor='newPassword'>New Password</FieldLabel>
+                  <FieldLabel htmlFor='email'>Email</FieldLabel>
                   <Input
-                    name='newPassword'
-                    id='newPassword'
-                    type='password'
-                    placeholder='Enter your new password'
+                    name='email'
+                    id='email'
+                    type='email'
+                    placeholder='you@example.com'
                   />
-                  {!state?.errors.newPassword && (
+                  {!state?.errors.email && (
                     <FieldDescription>
-                      Enter your new password.
+                      Choose an email for your account.sdsd
                     </FieldDescription>
                   )}
                   <FieldError>
-                    {state?.errors && state?.errors.newPassword?.join(', ')}
-                  </FieldError>
-                </Field>
-                <input type='hidden' name='token' value={token} />
-                <Field>
-                  <FieldLabel htmlFor='confirmNewPassword'>
-                    Confirm New Password
-                  </FieldLabel>
-                  <Input
-                    name='confirmPassword'
-                    id='confirmPassword'
-                    type='password'
-                    placeholder='Confirm your new password'
-                  />
-
-                  {!state?.errors.confirmPassword && (
-                    <FieldDescription>
-                      Confirm your new password.
-                    </FieldDescription>
-                  )}
-                  <FieldError>
-                    {state?.errors && state?.errors.confirmPassword?.join(', ')}
+                    {state?.errors && state?.errors.email?.join(', ')}
                   </FieldError>
                 </Field>
               </FieldGroup>

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import Container from '@/components/ui/container';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 import { SelectUser } from '@/db/schema';
+import { ROUTES } from '@/types';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -25,7 +26,7 @@ export const Navbar: React.FC<Props> = ({ user }) => {
   const router = useRouter();
   useEffect(() => {
     if (state?.success) {
-      router.replace('/sign-in', {});
+      router.replace(ROUTES.SIGN_IN, {});
       toast.success('User signed out successfully');
     }
   }, [state]);
@@ -49,23 +50,23 @@ export const Navbar: React.FC<Props> = ({ user }) => {
                 <>
                   <Button
                     className='uppercase'
-                    variant={pathname === '/sign-in' ? 'secondary' : 'link'}
+                    variant={pathname === ROUTES.SIGN_IN ? 'secondary' : 'link'}
                     asChild
                   >
-                    <Link href={'/sign-in'}>Log in</Link>
+                    <Link href={ROUTES.SIGN_IN}>Log in</Link>
                   </Button>
                   <Button
                     className='uppercase'
-                    variant={pathname === '/sign-up' ? 'secondary' : 'link'}
+                    variant={pathname === ROUTES.SIGN_UP ? 'secondary' : 'link'}
                     asChild
                   >
-                    <Link href={'/sign-up'}>Sign-up</Link>
+                    <Link href={ROUTES.SIGN_UP}>Sign-up</Link>
                   </Button>
                 </>
               ) : (
                 <>
                   <Button variant={'link'} asChild className='cursor-pointer'>
-                    <Link href={'/dashboard'}>Dashboard</Link>
+                    <Link href={ROUTES.DASHBOARD}>Dashboard</Link>
                   </Button>
                   <form action={formAction}>
                     <Button
