@@ -8,7 +8,7 @@ import {
   FieldSet,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
 import { IoLogoGithub } from 'react-icons/io';
@@ -20,7 +20,9 @@ import { Card, CardContent, CardTitle } from '../ui/card';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ROUTES } from '@/types';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
+
 type Props = {
   title: string;
   authMethod: any;
@@ -34,6 +36,9 @@ export const AuthForm: React.FC<Props> = ({
   authType,
 }) => {
   const [state, formAction, pending] = useActionState(authMethod, initialState);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
   const router = useRouter();
   useEffect(() => {
     if (state.success) {
@@ -125,15 +130,40 @@ export const AuthForm: React.FC<Props> = ({
                     {state.errors?.email && state.errors.email.join(', ')}
                   </FieldError>
                 </Field>
-                <Field>
+                <Field className='relative'>
                   <FieldLabel htmlFor='password'>Password</FieldLabel>
 
                   <Input
                     name='password'
                     id='password'
-                    type='password'
+                    type={passwordVisible ? 'text' : 'password'}
                     placeholder='********'
                   />
+                  <div className=''>
+                    {passwordVisible ? (
+                      <Button
+                        title='hide password'
+                        type='button'
+                        className='absolute right-3 top-[32px] p-1! rounded-full cursor-pointer'
+                        variant={'ghost'}
+                        size={'icon'}
+                        onClick={() => setPasswordVisible(false)}
+                      >
+                        <EyeOffIcon size={20} />
+                      </Button>
+                    ) : (
+                      <Button
+                        title='show password'
+                        type='button'
+                        className='absolute right-3 top-[32px]  p-1! rounded-full cursor-pointer'
+                        variant={'ghost'}
+                        size={'icon'}
+                        onClick={() => setPasswordVisible(true)}
+                      >
+                        <EyeIcon size={20} />
+                      </Button>
+                    )}
+                  </div>
                   {!state.errors?.password && (
                     <FieldDescription>
                       Must be at least 4 characters long.
@@ -144,16 +174,41 @@ export const AuthForm: React.FC<Props> = ({
                   </FieldError>
                 </Field>
                 {authType === 'sign-up' && (
-                  <Field>
+                  <Field className='relative'>
                     <FieldLabel htmlFor='confirmPassword'>
                       Confirm Password
                     </FieldLabel>
                     <Input
                       name='confirmPassword'
                       id='confirmPassword'
-                      type='password'
+                      type={confirmPasswordVisible ? 'text' : 'password'}
                       placeholder='********'
                     />
+                    <div className=''>
+                      {confirmPasswordVisible ? (
+                        <Button
+                          title='hide password'
+                          type='button'
+                          className='absolute right-3 top-[32px] p-1! rounded-full cursor-pointer'
+                          variant={'ghost'}
+                          size={'icon'}
+                          onClick={() => setConfirmPasswordVisible(false)}
+                        >
+                          <EyeOffIcon size={20} />
+                        </Button>
+                      ) : (
+                        <Button
+                          title='show password'
+                          type='button'
+                          className='absolute right-3 top-[32px]  p-1! rounded-full cursor-pointer'
+                          variant={'ghost'}
+                          size={'icon'}
+                          onClick={() => setConfirmPasswordVisible(true)}
+                        >
+                          <EyeIcon size={20} />
+                        </Button>
+                      )}
+                    </div>
                     <FieldError>
                       {state.errors?.confirmPassword &&
                         state.errors.confirmPassword.join(', ')}

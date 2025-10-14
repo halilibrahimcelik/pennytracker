@@ -32,7 +32,6 @@ export const ResetPasswordForm: React.FC<Props> = ({ token }) => {
     resetPassword,
     initialState
   );
-  console.log('ResetPasswordForm state:', state);
   const router = useRouter();
   useEffect(() => {
     if (state?.success) {
