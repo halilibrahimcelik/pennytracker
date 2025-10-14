@@ -161,7 +161,6 @@ export const signOutUser = async () => {
 };
 
 export const forgotPassword = async (initialData: any, formData: FormData) => {
-  console.log('Resetting password with form data:', formData);
   const validatedData = emailSchema.safeParse({
     email: formData.get('email'),
   });
@@ -182,7 +181,6 @@ export const forgotPassword = async (initialData: any, formData: FormData) => {
         redirectTo: process.env.BASE_URL! + ROUTES.RESET_PASSWORD, // Use your base URL
       },
     });
-    console.log('Password reset email sent:', data);
     return { success: true, errors: { email: [] } };
   } catch (error) {
     console.error('Error during password reset:', error);

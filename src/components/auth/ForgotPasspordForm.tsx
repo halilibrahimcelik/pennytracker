@@ -12,8 +12,9 @@ import {
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { forgotPassword, resetPassword } from '@/app/actions';
+import { toast } from 'sonner';
 
 const initialState = {
   success: false,
@@ -26,6 +27,14 @@ export const ForgotPasswordForm: React.FC = () => {
     forgotPassword,
     initialState
   );
+  useEffect(() => {
+    if (state.success) {
+      toast.info(
+        'If an account with that email exists, a password reset link has been sent.',
+        { duration: 10000 }
+      );
+    }
+  }, [state]);
 
   return (
     <Card className=' px-4 py-8 justify-center w-full  '>
