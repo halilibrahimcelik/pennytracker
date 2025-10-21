@@ -2,7 +2,6 @@ import { defineConfig } from 'cypress';
 import dotenvPlugin from 'cypress-dotenv';
 
 export default defineConfig({
-  fixturesFolder: false,
   viewportHeight: 900,
   viewportWidth: 1440,
   e2e: {

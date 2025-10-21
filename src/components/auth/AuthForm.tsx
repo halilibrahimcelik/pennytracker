@@ -98,7 +98,7 @@ export const AuthForm: React.FC<Props> = ({
                   <Field>
                     <FieldLabel htmlFor='name'>Name</FieldLabel>
                     <Input
-                      data-testId='name-input'
+                      data-testid='name-input'
                       name='name'
                       id='name'
                       type='name'
@@ -109,7 +109,7 @@ export const AuthForm: React.FC<Props> = ({
                         Choose a name for your account.
                       </FieldDescription>
                     )}
-                    <FieldError data-testId='name-error'>
+                    <FieldError data-testid='name-error'>
                       {state.errors?.name && state.errors.name.join(', ')}
                     </FieldError>
                   </Field>
@@ -117,7 +117,7 @@ export const AuthForm: React.FC<Props> = ({
                 <Field>
                   <FieldLabel htmlFor='email'>Email</FieldLabel>
                   <Input
-                    data-testId='email-input'
+                    data-testid='email-input'
                     name='email'
                     id='email'
                     type='email'
@@ -128,7 +128,7 @@ export const AuthForm: React.FC<Props> = ({
                       Choose an email for your account.
                     </FieldDescription>
                   )}
-                  <FieldError data-testId='email-error'>
+                  <FieldError data-testid='email-error'>
                     {state.errors?.email && state.errors.email.join(', ')}
                   </FieldError>
                 </Field>
@@ -136,7 +136,7 @@ export const AuthForm: React.FC<Props> = ({
                   <FieldLabel htmlFor='password'>Password</FieldLabel>
 
                   <Input
-                    data-testId='password-input'
+                    data-testid='password-input'
                     name='password'
                     id='password'
                     type={passwordVisible ? 'text' : 'password'}
@@ -172,7 +172,7 @@ export const AuthForm: React.FC<Props> = ({
                       Must be at least 4 characters long.
                     </FieldDescription>
                   )}
-                  <FieldError data-testId='password-error'>
+                  <FieldError data-testid='password-error'>
                     {state.errors?.password && state.errors.password.join(', ')}
                   </FieldError>
                 </Field>
@@ -182,6 +182,7 @@ export const AuthForm: React.FC<Props> = ({
                       Confirm Password
                     </FieldLabel>
                     <Input
+                      data-testid='confirm-password-input'
                       name='confirmPassword'
                       id='confirmPassword'
                       type={confirmPasswordVisible ? 'text' : 'password'}
@@ -220,7 +221,7 @@ export const AuthForm: React.FC<Props> = ({
                 )}
               </FieldGroup>
               <Button
-                data-testId='submit-button'
+                data-testid='submit-button'
                 size='sm'
                 variant='outline'
                 type='submit'

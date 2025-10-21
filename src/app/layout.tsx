@@ -50,6 +50,7 @@ export default async function RootLayout({
             richColors
             position='bottom-center'
             closeButton
+            duration={999999999}
             visibleToasts={2}
           />
         </ThemeProvider>
