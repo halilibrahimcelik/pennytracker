@@ -98,6 +98,7 @@ export const AuthForm: React.FC<Props> = ({
                   <Field>
                     <FieldLabel htmlFor='name'>Name</FieldLabel>
                     <Input
+                      data-testId='name-input'
                       name='name'
                       id='name'
                       type='name'
@@ -108,7 +109,7 @@ export const AuthForm: React.FC<Props> = ({
                         Choose a name for your account.
                       </FieldDescription>
                     )}
-                    <FieldError>
+                    <FieldError data-testId='name-error'>
                       {state.errors?.name && state.errors.name.join(', ')}
                     </FieldError>
                   </Field>
@@ -116,6 +117,7 @@ export const AuthForm: React.FC<Props> = ({
                 <Field>
                   <FieldLabel htmlFor='email'>Email</FieldLabel>
                   <Input
+                    data-testId='email-input'
                     name='email'
                     id='email'
                     type='email'
@@ -126,7 +128,7 @@ export const AuthForm: React.FC<Props> = ({
                       Choose an email for your account.
                     </FieldDescription>
                   )}
-                  <FieldError>
+                  <FieldError data-testId='email-error'>
                     {state.errors?.email && state.errors.email.join(', ')}
                   </FieldError>
                 </Field>
@@ -134,6 +136,7 @@ export const AuthForm: React.FC<Props> = ({
                   <FieldLabel htmlFor='password'>Password</FieldLabel>
 
                   <Input
+                    data-testId='password-input'
                     name='password'
                     id='password'
                     type={passwordVisible ? 'text' : 'password'}
@@ -169,7 +172,7 @@ export const AuthForm: React.FC<Props> = ({
                       Must be at least 4 characters long.
                     </FieldDescription>
                   )}
-                  <FieldError>
+                  <FieldError data-testId='password-error'>
                     {state.errors?.password && state.errors.password.join(', ')}
                   </FieldError>
                 </Field>
@@ -217,6 +220,7 @@ export const AuthForm: React.FC<Props> = ({
                 )}
               </FieldGroup>
               <Button
+                data-testId='submit-button'
                 size='sm'
                 variant='outline'
                 type='submit'
