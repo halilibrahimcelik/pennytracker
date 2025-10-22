@@ -13,7 +13,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
 import { useActionState, useEffect } from 'react';
-import { forgotPassword, resetPassword } from '@/app/actions';
+import { forgotPassword } from '@/app/actions';
 import { toast } from 'sonner';
 
 const initialState = {
@@ -64,7 +64,7 @@ export const ForgotPasswordForm: React.FC = () => {
                   />
                   {!state?.errors.email && (
                     <FieldDescription>
-                      Choose an email for your account.sdsd
+                      Choose an email for your account.
                     </FieldDescription>
                   )}
                   <FieldError>
