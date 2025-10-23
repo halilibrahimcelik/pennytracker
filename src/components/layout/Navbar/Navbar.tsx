@@ -40,7 +40,7 @@ export const Navbar: React.FC<Props> = ({ user }) => {
         <div className='py-4 flex items-center justify-between'>
           <Link href={'/'}>
             <Image
-              src={'logo.svg'}
+              src={'/logo.svg'}
               width={70}
               priority
               className='rounded-full'
