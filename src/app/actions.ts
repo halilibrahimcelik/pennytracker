@@ -1,10 +1,9 @@
 'use server';
-import { success, z } from 'zod';
-import { signIn, signUp } from '@/lib/auth-client';
-import { redirect } from 'next/navigation';
+import {  z } from 'zod';
+import {  signUp } from '@/lib/auth-client';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-import { APIError, BetterAuthError } from 'better-auth';
+import { APIError } from 'better-auth';
 import { ROUTES } from '@/types';
 
 const schema = z
