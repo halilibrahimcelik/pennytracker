@@ -1,3 +1,4 @@
+import { CATEGORIES } from '@/constants';
 import { pgTable, text, timestamp, boolean } from 'drizzle-orm/pg-core';
 import { varchar } from 'drizzle-orm/singlestore-core';
 
@@ -77,16 +78,7 @@ export const transaction = pgTable('transaction', {
     enum: ['income', 'expense'],
   }).notNull(),
   category: text('category', {
-    enum: [
-      'food',
-      'transportation',
-      'utilities',
-      'leisure',
-      'health',
-      'other',
-      'freelance',
-      'salary',
-    ],
+    enum: [...CATEGORIES] as [string, ...string[]],
   }).notNull(),
   description: text('description').notNull(),
 });

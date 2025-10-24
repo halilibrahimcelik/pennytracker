@@ -36,7 +36,11 @@ const DatePicker: React.FC = () => {
       <PopoverContent className='w-auto p-0'>
         <Calendar mode='single' selected={date} onSelect={setDate} />
       </PopoverContent>
-      <input type='hidden' name='date' value={date?.toISOString() ?? ''} />{' '}
+      <input
+        type='hidden'
+        name='date'
+        value={date ? format(date, 'yyyy-MM-dd') : ''}
+      />{' '}
     </Popover>
   );
 };

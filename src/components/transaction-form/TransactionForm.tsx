@@ -22,22 +22,29 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import DatePicker from '../features/DatePicker';
 import { Textarea } from '../ui/textarea';
+import { useActionState } from 'react';
+import { addNewTransaction } from '@/app/actions/transactions/transactions.action';
+import { init } from 'next/dist/compiled/webpack/webpack';
+import { Spinner } from '../ui/spinner';
+import { CATEGORIES } from '@/constants';
 
-const categories = [
-  'Leisure',
-  'Food',
-  'Transport',
-  'Utilities',
-  'Health',
-  'Salary',
-  'Freelance',
-  'Investments',
-  'Others',
-];
+const initialState = {
+  success: false,
+  transactionType: null,
+  category: null,
+  amount: 0,
+  description: null,
+  date: null,
+};
 const TransactionForm: React.FC = () => {
+  const [state, formAction, pending] = useActionState(
+    addNewTransaction,
+    initialState
+  );
+  console.log('Transaction Form State:', state);
   return (
     <div>
-      <form>
+      <form action={formAction}>
         <FieldSet>
           <FieldGroup>
             <div className='flex flex-col sm:flex-row gap-2 md:gap-4 '>
@@ -68,8 +75,12 @@ const TransactionForm: React.FC = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      {categories.map((category) => (
-                        <SelectItem key={category} value={category}>
+                      {CATEGORIES.map((category) => (
+                        <SelectItem
+                          key={category}
+                          className='capitalize'
+                          value={category}
+                        >
                           {category}
                         </SelectItem>
                       ))}
@@ -116,7 +127,7 @@ const TransactionForm: React.FC = () => {
             variant='outline'
             type='submit'
           >
-            Submit
+            {pending ? <Spinner /> : 'Submit'}{' '}
           </Button>
         </FieldSet>
       </form>
