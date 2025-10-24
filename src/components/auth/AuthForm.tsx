@@ -42,20 +42,6 @@ export const AuthForm: React.FC<Props> = ({
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   const router = useRouter();
-  // useEffect(() => {
-  //   if (state.success) {
-  //     if (authType === 'sign-in') {
-  //       toast.success('You have successfully logged in', {});
-  //       router.replace(ROUTES.DASHBOARD);
-  //       router.refresh();
-  //     } else {
-  //       toast.success(
-  //         'Your account has been Created. Please check your email to verify it.',
-  //         {}
-  //       );
-  //     }
-  //   }
-  // }, [state]);
   const handleRouter = useCallback(() => {
     if (state?.success) {
       if (authType === 'sign-in') {
@@ -247,8 +233,7 @@ export const AuthForm: React.FC<Props> = ({
                 type='submit'
                 disabled={pending}
               >
-                {pending && <Spinner />}
-                Submit
+                {pending ? <Spinner /> : 'Submit'}
               </Button>
             </FieldSet>
           </form>
