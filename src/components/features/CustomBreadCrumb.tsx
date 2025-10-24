@@ -8,7 +8,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { ROUTES } from '@/types';
-import { DotIcon, DonutIcon } from 'lucide-react';
+import { DonutIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -48,7 +48,7 @@ const CustomBreadCrumb = () => {
             <BreadcrumbPage>New</BreadcrumbPage>
           ) : (
             <BreadcrumbLink asChild>
-              <Link href={ROUTES.NEW_TRANSACTION}>New</Link>
+              <Link href={ROUTES.NEW_TRANSACTION}>New Transaction</Link>
             </BreadcrumbLink>
           )}
         </BreadcrumbItem>

@@ -1,21 +1,14 @@
 import type { Metadata } from 'next';
-import { Inter, Inter_Tight } from 'next/font/google';
+import { AR_One_Sans, Adamina } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-const inter = Inter({
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-  variable: '--font-inter',
-  subsets: ['latin'],
-});
-
-const interTight = Inter_Tight({
-  variable: '--font-inter-tight',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-
+const arOneSans = AR_One_Sans({
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-arOneSans',
   subsets: ['latin'],
 });
 
@@ -35,7 +28,7 @@ export default async function RootLayout({
 
   return (
     <html lang='en' suppressHydrationWarning>
-      <body className={`${inter.variable} ${interTight.variable} antialiased`}>
+      <body className={`${arOneSans.variable} antialiased`}>
         <ThemeProvider
           attribute='class'
           defaultTheme='dark'
