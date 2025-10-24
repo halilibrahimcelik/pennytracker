@@ -1,9 +1,8 @@
 'use client';
 import { useControllableState } from '@radix-ui/react-use-controllable-state';
-import { Monitor, Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useCallback, useEffect, useState } from 'react';
-import { useTheme } from 'next-themes';
 
 import { cn } from '@/lib/utils';
 import { Skeleton } from './skeleton';

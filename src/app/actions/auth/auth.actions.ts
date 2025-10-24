@@ -1,48 +1,17 @@
 'use server';
-import {  z } from 'zod';
-import {  signUp } from '@/lib/auth-client';
+import {
+  emailSchema,
+  passwordSchema,
+  signInSchema,
+  signUpSchema,
+} from './auth.schema';
+import { signUp } from '@/lib/auth-client';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { APIError } from 'better-auth';
 import { ROUTES } from '@/types';
 
-const schema = z
-  .object({
-    name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
-    email: z.email({
-      message: 'Invalid email address',
-      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    }),
-    password: z
-      .string()
-      .min(4, { message: 'Password must be at least 4 characters long' })
-      .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/, {
-        message: 'Password must contain at least one letter and one number',
-      }),
-    confirmPassword: z
-      .string()
-      .min(4, { message: 'Please confirm your password' }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
-
-const signInSchema = z.object({
-  email: z.email({
-    message: 'Invalid email address',
-  }),
-  password: z
-    .string()
-    .min(4, { message: 'Password must be at least 4 characters long' })
-    .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/, {
-      message: 'Password must contain at least one letter and one number',
-    }),
-});
-const emailSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address' }),
-});
-export const signInUser = async (initialData: any, formData: FormData) => {
+export const signInUser = async (initialData: unknown, formData: FormData) => {
   const validatedData = signInSchema.safeParse({
     email: formData.get('email'),
     password: formData.get('password'),
@@ -91,10 +60,11 @@ export const signInUser = async (initialData: any, formData: FormData) => {
 };
 
 export const signUpCreateUser = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialData: any,
   formData: FormData
 ) => {
-  const validatedData = schema.safeParse({
+  const validatedData = signUpSchema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
     password: formData.get('password'),
@@ -118,7 +88,7 @@ export const signUpCreateUser = async (
     },
     {
       onSuccess: (user) => {
-        console.log('User signed up successfully:');
+        console.log('User signed up successfully:', user);
       },
       onError: (error) => {
         console.error('Error signing up user:', error);
@@ -152,6 +122,7 @@ export const signOutUser = async () => {
       };
     }
   } catch (error) {
+    console.error('Error during sign-out:', error);
     return {
       success: false,
       error: 'Error signing out',
@@ -159,7 +130,10 @@ export const signOutUser = async () => {
   }
 };
 
-export const forgotPassword = async (initialData: any, formData: FormData) => {
+export const forgotPassword = async (
+  initialData: unknown,
+  formData: FormData
+) => {
   const validatedData = emailSchema.safeParse({
     email: formData.get('email'),
   });
@@ -174,7 +148,7 @@ export const forgotPassword = async (initialData: any, formData: FormData) => {
   const { email } = validatedData.data;
   console.log('Resetting password for email:', email);
   try {
-    const data = await auth.api.requestPasswordReset({
+    await auth.api.requestPasswordReset({
       body: {
         email, // required
         redirectTo: process.env.BASE_URL! + ROUTES.RESET_PASSWORD, // Use your base URL
@@ -197,23 +171,10 @@ export const forgotPassword = async (initialData: any, formData: FormData) => {
   }
 };
 
-export const resetPassword = async (initialData: any, formData: FormData) => {
-  const passwordSchema = z
-    .object({
-      newPassword: z
-        .string()
-        .min(4, { message: 'Password must be at least 4 characters long' })
-        .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/, {
-          message: 'Password must contain at least one letter and one number',
-        }),
-      confirmPassword: z
-        .string()
-        .min(4, { message: 'Please confirm your password' }),
-    })
-    .refine((data) => data.newPassword === data.confirmPassword, {
-      message: 'Passwords do not match',
-      path: ['confirmPassword'],
-    });
+export const resetPassword = async (
+  initialData: unknown,
+  formData: FormData
+) => {
   const validatedData = passwordSchema.safeParse({
     newPassword: formData.get('newPassword'),
     confirmPassword: formData.get('confirmPassword'),

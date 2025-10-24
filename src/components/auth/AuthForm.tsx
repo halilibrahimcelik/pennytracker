@@ -8,7 +8,7 @@ import {
   FieldSet,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useCallback, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
 import { IoLogoGithub } from 'react-icons/io';
@@ -25,8 +25,10 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react';
 
 type Props = {
   title: string;
-  authMethod: any;
-  initialState: { [key: string]: any };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  authMethod: (initialData: any, formData: FormData) => Promise<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initialState: any;
   authType: 'sign-in' | 'sign-up';
 };
 export const AuthForm: React.FC<Props> = ({
@@ -40,8 +42,22 @@ export const AuthForm: React.FC<Props> = ({
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   const router = useRouter();
-  useEffect(() => {
-    if (state.success) {
+  // useEffect(() => {
+  //   if (state.success) {
+  //     if (authType === 'sign-in') {
+  //       toast.success('You have successfully logged in', {});
+  //       router.replace(ROUTES.DASHBOARD);
+  //       router.refresh();
+  //     } else {
+  //       toast.success(
+  //         'Your account has been Created. Please check your email to verify it.',
+  //         {}
+  //       );
+  //     }
+  //   }
+  // }, [state]);
+  const handleRouter = useCallback(() => {
+    if (state?.success) {
       if (authType === 'sign-in') {
         toast.success('You have successfully logged in', {});
         router.replace(ROUTES.DASHBOARD);
@@ -53,7 +69,11 @@ export const AuthForm: React.FC<Props> = ({
         );
       }
     }
-  }, [state]);
+  }, [state?.success, authType, router]);
+
+  useEffect(() => {
+    handleRouter();
+  }, [handleRouter]);
   const handleSignUpWithGithub = async () => {
     try {
       signIn.social({

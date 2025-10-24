@@ -12,11 +12,11 @@ import {
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
-import { useActionState, useEffect } from 'react';
-import { resetPassword } from '@/app/actions';
+import { useActionState, useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/types';
+import { resetPassword } from '@/app/actions/auth/auth.actions';
 
 const initialState = {
   success: false,
@@ -33,14 +33,27 @@ export const ResetPasswordForm: React.FC<Props> = ({ token }) => {
     initialState
   );
   const router = useRouter();
-  useEffect(() => {
+  // useEffect(() => {
+  //   if (state?.success) {
+  //     toast.success(
+  //       'Password has been reset successfully. You can now log in with your new password.'
+  //     );
+  //     router.push(ROUTES.SIGN_IN);
+  //   }
+  // }, [state]);
+
+  const handleLogin = useCallback(() => {
     if (state?.success) {
       toast.success(
         'Password has been reset successfully. You can now log in with your new password.'
       );
       router.push(ROUTES.SIGN_IN);
     }
-  }, [state]);
+  }, [state?.success, router]);
+
+  useEffect(() => {
+    handleLogin();
+  }, [handleLogin]);
   return (
     <Card className=' px-4 py-8 justify-center w-full  '>
       <CardTitle className='text-center text-2xl uppercase md:text-3xl font-semibold mb-4'>

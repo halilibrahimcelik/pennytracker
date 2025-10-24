@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { AR_One_Sans, Adamina } from 'next/font/google';
+import { AR_One_Sans } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { ThemeProvider } from '@/providers/ThemeProvider';

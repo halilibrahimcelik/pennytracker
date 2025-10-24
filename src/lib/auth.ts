@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '@/db'; // your drizzle instance
@@ -17,7 +19,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 4,
-    sendResetPassword: async ({ user, url, token }, request) => {
+    sendResetPassword: async ({ user, url }, _request) => {
       await resend.emails.send({
         to: user.email!,
         subject: 'Reset your password',
@@ -28,7 +30,7 @@ export const auth = betterAuth({
         `,
       });
     },
-    onPasswordReset: async ({ user }, request) => {
+    onPasswordReset: async ({ user }, _request) => {
       // your logic here
       console.log(`Password for user ${user.email} has been reset.`);
     },
@@ -47,7 +49,7 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     expiresIn: 60 * 180, // 3 hours
-    sendVerificationEmail: async ({ user, url, token }, request) => {
+    sendVerificationEmail: async ({ user, url, token }, _request) => {
       console.log('Sending verification email to:', user.email);
       console.log('Verification URL:', url);
       console.log('Verification Token:', token);

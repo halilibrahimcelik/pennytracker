@@ -1,18 +1,16 @@
 'use client';
-import { signOutUser } from '@/app/actions';
+import { signOutUser } from '@/app/actions/auth/auth.actions';
 import { Button } from '@/components/ui/button';
 import Container from '@/components/ui/container';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 import { SelectUser } from '@/db/schema';
-import { useSession } from '@/lib/auth-client';
 import { ROUTES } from '@/types';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
-import { set } from 'zod';
 
 type Props = {
   user: Omit<SelectUser, 'image'> | undefined;
@@ -27,13 +25,15 @@ export const Navbar: React.FC<Props> = ({ user }) => {
     success: false,
   });
   const router = useRouter();
-  useEffect(() => {
+  const handleSignOut = useCallback(() => {
     if (state?.success) {
       router.replace(ROUTES.SIGN_IN, {});
       toast.success('User signed out successfully');
     }
-  }, [state]);
-
+  }, [state?.success, router]);
+  useEffect(() => {
+    handleSignOut();
+  }, [handleSignOut]);
   return (
     <nav className='bg-primary text-accent'>
       <Container>
