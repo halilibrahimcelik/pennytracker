@@ -15,6 +15,9 @@ import { usePathname } from 'next/navigation';
 const CustomBreadCrumb = () => {
   const currentPath = usePathname();
   const isActive = (path: string) => currentPath === path;
+  // if (isActive(ROUTES.DASHBOARD)) {
+  //   return null;
+  // }
   return (
     <Breadcrumb>
       <BreadcrumbList>
