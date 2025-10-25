@@ -46,7 +46,7 @@ const TransactionTable = <TData, TValue>({
   });
 
   return (
-    <div className='overflow-hidden rounded-md border'>
+    <div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
