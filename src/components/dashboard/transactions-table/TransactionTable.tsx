@@ -25,14 +25,16 @@ import { Badge } from '@/components/ui/badge';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  count: number;
 }
 
 const TransactionTable = <TData, TValue>({
   columns,
   data,
+  count,
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-
+  console.log('Total Count:', count);
   const table = useReactTable({
     data,
     columns,

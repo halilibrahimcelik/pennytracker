@@ -24,14 +24,19 @@ import { MoreHorizontal, ArrowUpDown } from 'lucide-react';
 import { MdOutlineDeleteSweep } from 'react-icons/md';
 import { format } from 'date-fns';
 
-interface Transaction {
+export type Transaction = {
   id: string;
   description: string;
   amount: string;
   updatedAt: Date;
   transactionType: 'income' | 'expense';
   category: string;
-}
+};
+type TransactionColumn = {
+  transactions: Transaction;
+  count: number;
+};
+
 export const TransactionColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: 'description',

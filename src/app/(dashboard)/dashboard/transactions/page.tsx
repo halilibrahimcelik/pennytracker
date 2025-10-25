@@ -5,30 +5,47 @@ import TransactionTableSkeleton from '@/components/dashboard/transactions-table/
 import { db } from '@/db';
 import { transaction } from '@/db/schema';
 import { auth } from '@/lib/auth';
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, sql } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { ROUTES } from '@/types';
 import { Suspense } from 'react';
-const getTransactions = async (userId: string) => {
+const getTransactions = async (
+  userId: string,
+  page: number,
+  pageSize: number
+) => {
   try {
     const result = await db
-      .select()
+      .select({
+        transactions: transaction,
+        count: sql<number>`count(*) over()`.as('total_count'),
+      })
       .from(transaction)
 
       .where(eq(transaction.userId, userId))
       .orderBy(desc(transaction.createdAt))
-      .limit(10);
-    return result;
+      .limit(pageSize)
+      .offset((page - 1) * pageSize);
+    const newShape = {
+      transactions: result.map((r) => r.transactions),
+      count: result[0]?.count ?? 0,
+    };
+    return newShape;
   } catch (error) {
     console.error('Error fetching transactions:', error);
-    return [];
+    return { transactions: [], count: 0 };
   }
 };
 const TransactionsContent = async ({ userId }: { userId: string }) => {
-  const allTransactions = await getTransactions(userId);
+  const allTransactions = await getTransactions(userId, 1, 10);
+
   return (
-    <TransactionTable columns={TransactionColumns} data={allTransactions} />
+    <TransactionTable
+      columns={TransactionColumns}
+      data={allTransactions.transactions}
+      count={allTransactions.count}
+    />
   );
 };
 
