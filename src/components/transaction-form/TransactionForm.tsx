@@ -24,17 +24,32 @@ import DatePicker from '../features/DatePicker';
 import { Textarea } from '../ui/textarea';
 import { useActionState } from 'react';
 import { addNewTransaction } from '@/app/actions/transactions/transactions.action';
-import { init } from 'next/dist/compiled/webpack/webpack';
 import { Spinner } from '../ui/spinner';
 import { CATEGORIES } from '@/constants';
 
-const initialState = {
+type TransactionFormState = {
+  success: boolean;
+  transactionType: 'income' | 'expense';
+  category: string | null;
+  amount: number;
+  description: string | null;
+  date: Date | null;
+  errors: {
+    transactionType?: string[];
+    category?: string[];
+    amount?: string[];
+    description?: string[];
+    date?: string[];
+  };
+};
+const initialState: TransactionFormState = {
   success: false,
-  transactionType: null,
+  transactionType: 'income',
   category: null,
   amount: 0,
   description: null,
   date: null,
+  errors: {},
 };
 const TransactionForm: React.FC = () => {
   const [state, formAction, pending] = useActionState(

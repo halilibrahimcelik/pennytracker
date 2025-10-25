@@ -1,5 +1,5 @@
 import { CATEGORIES } from '@/constants';
-import { pgTable, text, timestamp, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, boolean, uuid } from 'drizzle-orm/pg-core';
 import { varchar } from 'drizzle-orm/singlestore-core';
 
 export const user = pgTable('user', {
@@ -64,7 +64,7 @@ export const verification = pgTable('verification', {
 });
 
 export const transaction = pgTable('transaction', {
-  id: text('id').primaryKey(),
+  id: uuid('id').defaultRandom().primaryKey(),
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
@@ -74,7 +74,7 @@ export const transaction = pgTable('transaction', {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
   amount: text('amount').notNull(),
-  transactioType: text('transaction_type', {
+  transactionType: text('transaction_type', {
     enum: ['income', 'expense'],
   }).notNull(),
   category: text('category', {
