@@ -20,19 +20,35 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { MoreHorizontal, DeleteIcon } from 'lucide-react';
+import { MoreHorizontal, ArrowUpDown } from 'lucide-react';
 import { MdOutlineDeleteSweep } from 'react-icons/md';
 
 interface Transaction {
   id: string;
+  description: string;
   amount: string;
   transactionType: 'income' | 'expense';
   category: string;
 }
-export const columns: ColumnDef<Transaction>[] = [
+export const TransactionColumns: ColumnDef<Transaction>[] = [
+  {
+    accessorKey: 'description',
+    header: 'Description',
+  },
   {
     accessorKey: 'amount',
-    header: () => <div>Amount</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          title='Sort by Amount'
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Amount
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('amount'));
       const formatted = new Intl.NumberFormat('en-US', {

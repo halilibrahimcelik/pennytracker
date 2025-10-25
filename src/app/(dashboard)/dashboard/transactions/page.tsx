@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import { columns } from '@/components/dashboard/transactions-table/colums';
+import { TransactionColumns } from '@/components/dashboard/transactions-table/colums';
 import TransactionTable from '@/components/dashboard/transactions-table/TransactionTable';
 import { db } from '@/db';
 import { transaction } from '@/db/schema';
@@ -30,7 +30,7 @@ const TransactionsPage: NextPage = async () => {
   const allTransactions = await getTransactions(session?.user.id);
   return (
     <div>
-      <TransactionTable columns={columns} data={allTransactions} />
+      <TransactionTable columns={TransactionColumns} data={allTransactions} />
     </div>
   );
 };
