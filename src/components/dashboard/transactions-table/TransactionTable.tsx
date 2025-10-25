@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/table';
 import DataTablePagination from './TablePagination';
 import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -72,11 +73,32 @@ const TransactionTable = <TData, TValue>({
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                {row.getVisibleCells().map((cell) => {
+                  if (cell.column.id === 'transactionType') {
+                    const value = String(cell.getValue());
+                    const capitalizedValue =
+                      value.charAt(0).toUpperCase() + value.slice(1);
+                    return (
+                      <TableCell key={cell.id}>
+                        <Badge
+                          variant={
+                            value === 'income' ? 'success' : 'destructive'
+                          }
+                        >
+                          {value}
+                        </Badge>
+                      </TableCell>
+                    );
+                  }
+                  return (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))
           ) : (
@@ -88,6 +110,7 @@ const TransactionTable = <TData, TValue>({
           )}
         </TableBody>
       </Table>
+      <hr />
       <DataTablePagination table={table} />
     </div>
   );

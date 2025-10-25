@@ -22,11 +22,13 @@ import {
 } from '@/components/ui/dialog';
 import { MoreHorizontal, ArrowUpDown } from 'lucide-react';
 import { MdOutlineDeleteSweep } from 'react-icons/md';
+import { format } from 'date-fns';
 
 interface Transaction {
   id: string;
   description: string;
   amount: string;
+  updatedAt: Date;
   transactionType: 'income' | 'expense';
   category: string;
 }
@@ -34,6 +36,28 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: 'description',
     header: 'Description',
+  },
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => {
+      return (
+        <Button
+          title='Sort by Date'
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Date
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+
+    cell: ({ row }) => {
+      format(new Date(row.getValue('createdAt')), 'dd/MM/yyyy');
+      return (
+        <div>{format(new Date(row.getValue('createdAt')), 'dd/MM/yyyy')}</div>
+      );
+    },
   },
   {
     accessorKey: 'amount',
