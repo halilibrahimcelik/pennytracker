@@ -1,4 +1,4 @@
-import TransactionForm from '@/components/transaction-form/TransactionForm';
+import TransactionForm from '@/components/dashboard/transaction-form/TransactionForm';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import Typography from '@/components/ui/typogprahy';

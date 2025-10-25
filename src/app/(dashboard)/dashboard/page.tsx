@@ -5,6 +5,10 @@ export const metadata: Metadata = {
 };
 
 const DashboardPage: NextPage = async () => {
-  return <div>Dashboard Page</div>;
+  return (
+    <div>
+      <h1>Welcome to your Dashboard</h1>
+    </div>
+  );
 };
 export default DashboardPage;

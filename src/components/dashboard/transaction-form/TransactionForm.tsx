@@ -20,11 +20,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import DatePicker from '../features/DatePicker';
-import { Textarea } from '../ui/textarea';
+import DatePicker from '../../features/DatePicker';
+import { Textarea } from '../../ui/textarea';
 import { useActionState } from 'react';
 import { addNewTransaction } from '@/app/actions/transactions/transactions.action';
-import { Spinner } from '../ui/spinner';
+import { Spinner } from '../../ui/spinner';
 import { CATEGORIES } from '@/constants';
 import { TransactionFormState } from '@/app/actions/transactions/transactions.types';
 
