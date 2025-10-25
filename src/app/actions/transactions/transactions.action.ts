@@ -4,8 +4,12 @@ import { transactionSchema } from './transactions.schema';
 import { headers } from 'next/headers';
 import { db } from '@/db';
 import { transaction } from '@/db/schema';
+import { TransactionFormState } from './transactions.types';
 
-const addNewTransaction = async (initialData: any, formData: FormData) => {
+const addNewTransaction = async (
+  initialData: TransactionFormState,
+  formData: FormData
+): Promise<TransactionFormState> => {
   const validatedData = transactionSchema.safeParse({
     transactionType: formData.get('transactionType'),
     category: formData.get('category'),
@@ -13,11 +17,15 @@ const addNewTransaction = async (initialData: any, formData: FormData) => {
     description: formData.get('description'),
     date: formData.get('date'),
   });
-
   if (!validatedData.success) {
     return {
       success: false,
       errors: validatedData.error.flatten().fieldErrors,
+      transactionType: initialData.transactionType,
+      category: initialData.category,
+      amount: initialData.amount,
+      description: initialData.description,
+      date: initialData.date,
     };
   }
 
@@ -33,6 +41,7 @@ const addNewTransaction = async (initialData: any, formData: FormData) => {
     amount,
     description,
     date,
+    errors: {},
   };
   if (!session?.user) {
     throw new Error('User not authenticated');

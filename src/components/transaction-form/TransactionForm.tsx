@@ -26,22 +26,8 @@ import { useActionState } from 'react';
 import { addNewTransaction } from '@/app/actions/transactions/transactions.action';
 import { Spinner } from '../ui/spinner';
 import { CATEGORIES } from '@/constants';
+import { TransactionFormState } from '@/app/actions/transactions/transactions.types';
 
-type TransactionFormState = {
-  success: boolean;
-  transactionType: 'income' | 'expense';
-  category: string | null;
-  amount: number;
-  description: string | null;
-  date: Date | null;
-  errors: {
-    transactionType?: string[];
-    category?: string[];
-    amount?: string[];
-    description?: string[];
-    date?: string[];
-  };
-};
 const initialState: TransactionFormState = {
   success: false,
   transactionType: 'income',
@@ -56,7 +42,7 @@ const TransactionForm: React.FC = () => {
     addNewTransaction,
     initialState
   );
-  console.log('Transaction Form State:', state);
+  console.log('Form State:', state);
   return (
     <div>
       <form action={formAction}>
@@ -80,7 +66,10 @@ const TransactionForm: React.FC = () => {
                   </div>
                 </RadioGroup>
                 <FieldDescription>Choose your transaction</FieldDescription>
-                <FieldError data-testid='email-error'></FieldError>
+                <FieldError data-testid='transactionType-error'>
+                  {state.errors.transactionType &&
+                    state.errors.transactionType.join(', ')}
+                </FieldError>
               </Field>
               <Field>
                 <FieldLabel htmlFor='category'>Category</FieldLabel>
@@ -102,13 +91,20 @@ const TransactionForm: React.FC = () => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-                <FieldError data-testid='category-error'></FieldError>
+                {
+                  <FieldError data-testid='category-error'>
+                    {state.errors.category && state.errors.category.join(', ')}
+                  </FieldError>
+                }{' '}
               </Field>
             </div>
             <div className='flex flex-col sm:flex-row gap-2 md:gap4 '>
               <Field>
                 <FieldLabel htmlFor='date'>Transaction Date</FieldLabel>
                 <DatePicker />
+                <FieldError data-testid='date-error'>
+                  {state.errors.date && state.errors.date.join(', ')}
+                </FieldError>
               </Field>
               <Field>
                 <FieldLabel htmlFor='amount'>Amount</FieldLabel>
@@ -120,7 +116,9 @@ const TransactionForm: React.FC = () => {
                 />
 
                 <FieldDescription>Enter transaction amount</FieldDescription>
-                <FieldError data-testid='amount-error'></FieldError>
+                <FieldError data-testid='amount-error'>
+                  {state.errors.amount && state.errors.amount.join(', ')}
+                </FieldError>
               </Field>
             </div>
             <Field>
@@ -132,7 +130,10 @@ const TransactionForm: React.FC = () => {
                 placeholder='Enter description'
               />
               <FieldDescription>Enter transaction description</FieldDescription>
-              <FieldError data-testid='description-error'></FieldError>
+              <FieldError data-testid='description-error'>
+                {state.errors.description &&
+                  state.errors.description.join(', ')}
+              </FieldError>
             </Field>
           </FieldGroup>
 
