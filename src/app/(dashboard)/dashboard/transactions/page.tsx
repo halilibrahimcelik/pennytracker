@@ -6,6 +6,8 @@ import { transaction } from '@/db/schema';
 import { auth } from '@/lib/auth';
 import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { ROUTES } from '@/types';
 const getTransactions = async (userId: string) => {
   try {
     const result = await db
@@ -22,15 +24,13 @@ const TransactionsPage: NextPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  console.log('Session Data:', session);
   if (!session?.user.id) {
-    return <div>Please log in to view your dashboard.</div>;
+    redirect(ROUTES.SIGN_IN);
   }
-  const transactions = await getTransactions(session?.user.id);
-  console.log('Transactions:', transactions);
+  const allTransactions = await getTransactions(session?.user.id);
   return (
     <div>
-      <TransactionTable columns={columns} data={transactions} />
+      <TransactionTable columns={columns} data={allTransactions} />
     </div>
   );
 };
