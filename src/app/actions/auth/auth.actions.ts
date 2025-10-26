@@ -5,8 +5,8 @@ import {
   signInSchema,
   signUpSchema,
 } from './auth.schema';
-import { signUp } from '@/lib/auth-client';
-import { auth } from '@/lib/auth';
+import { signUp } from '@/lib/auth/auth-client';
+import { auth } from '@/lib/auth/auth';
 import { headers } from 'next/headers';
 import { APIError } from 'better-auth';
 import { ROUTES } from '@/types';

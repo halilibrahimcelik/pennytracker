@@ -3,7 +3,7 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '@/db'; // your drizzle instance
-import { resend } from './resend';
+import { resend } from '../resend';
 import { schema } from '@/db/schema';
 import { nextCookies } from 'better-auth/next-js';
 

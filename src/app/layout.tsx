@@ -4,8 +4,9 @@ import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/auth/auth';
 import { headers } from 'next/headers';
+import TRPCAppProvider from '@/providers/TRPCProvider';
 const arOneSans = AR_One_Sans({
   weight: ['400', '500', '600', '700'],
   variable: '--font-arOneSans',
@@ -35,10 +36,10 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <>
+          <TRPCAppProvider>
             <Navbar user={session?.user} />
             {children}
-          </>
+          </TRPCAppProvider>
           <Toaster
             richColors
             position='bottom-center'

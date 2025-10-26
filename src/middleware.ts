@@ -1,4 +1,4 @@
-import type { auth } from '@/lib/auth';
+import type { auth } from '@/lib/auth/auth';
 import axios from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 import { ROUTES } from './types';

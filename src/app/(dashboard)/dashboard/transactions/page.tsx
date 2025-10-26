@@ -4,7 +4,7 @@ import TransactionTable from '@/components/dashboard/transactions-table/Transact
 import TransactionTableSkeleton from '@/components/dashboard/transactions-table/TransactionTableSkeleton';
 import { db } from '@/db';
 import { transaction } from '@/db/schema';
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/auth/auth';
 import { desc, eq, sql } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
