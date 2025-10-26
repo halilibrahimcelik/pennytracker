@@ -1,11 +1,8 @@
 import TransactionForm from '@/components/dashboard/transaction-form/TransactionForm';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import Typography from '@/components/ui/typogprahy';
-import { ROUTES } from '@/types';
 import { NextPage } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
 
 const NewTransactionPage: NextPage = () => {
   return (

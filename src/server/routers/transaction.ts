@@ -34,11 +34,20 @@ export const transactionRouter = router({
   create: protectedProcedure
     .input(
       z.object({
-        transactionType: z.enum(['income', 'expense']),
-        category: z.string(),
-        amount: z.number().min(0.01),
-        description: z.string().max(255),
-        date: z.date({ message: 'Please provide a valid date' }),
+        transactionType: z.enum(['income', 'expense'], {
+          message: 'Transaction type is required',
+        }),
+        category: z
+          .string({ message: 'Category is required' })
+          .nonempty('Please select a category'),
+        amount: z
+          .number({ message: 'Amount is required' })
+          .min(0.01, { message: 'Please write a valid amount' }),
+        description: z
+          .string({ message: 'Please write a valid description' })
+          .max(255)
+          .nonempty('Description cannot be empty'),
+        date: z.coerce.date({ message: 'Please provide a valid date' }),
       })
     )
     .mutation(async ({ input, ctx }) => {

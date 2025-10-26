@@ -22,30 +22,52 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import DatePicker from '../../features/DatePicker';
 import { Textarea } from '../../ui/textarea';
-import { useActionState } from 'react';
-import { addNewTransaction } from '@/app/actions/transactions/transactions.action';
 import { Spinner } from '../../ui/spinner';
 import { CATEGORIES } from '@/constants';
-import { TransactionFormState } from '@/app/actions/transactions/transactions.types';
-
-const initialState: TransactionFormState = {
-  success: false,
-  transactionType: 'income',
-  category: null,
-  amount: 0,
-  description: null,
-  date: null,
-  errors: {},
+import { toast } from 'sonner';
+import { trpc } from '@/lib/trpc/client';
+type FieldErrors = {
+  transactionType?: string[];
+  category?: string[];
+  amount?: string[];
+  description?: string[];
+  date?: string[];
 };
 const TransactionForm: React.FC = () => {
-  const [state, formAction, pending] = useActionState(
-    addNewTransaction,
-    initialState
-  );
-  console.log('Form State:', state);
+  const { mutate, isPending, error } = trpc.transaction.create.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+  // Extract Zod field errors
+  const fieldErrors = error?.data?.zodError as FieldErrors | undefined;
+  const getFieldError = (fieldName: keyof FieldErrors): string | undefined => {
+    return fieldErrors?.[fieldName]?.[0];
+  };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget; // Store reference before async operation
+    const formData = new FormData(form);
+    const input = {
+      transactionType: formData.get('transactionType') as 'income' | 'expense',
+      category: formData.get('category') as string,
+      amount: Number(formData.get('amount')),
+      description: formData.get('description') as string,
+      date: new Date(formData.get('date') as string),
+    };
+    mutate(input, {
+      onSuccess: () => {
+        form.reset();
+      },
+    });
+  };
+
   return (
     <div>
-      <form action={formAction}>
+      <form onSubmit={handleSubmit}>
         <FieldSet>
           <FieldGroup>
             <div className='flex flex-col sm:flex-row gap-2 md:gap-4 '>
@@ -66,10 +88,11 @@ const TransactionForm: React.FC = () => {
                   </div>
                 </RadioGroup>
                 <FieldDescription>Choose your transaction</FieldDescription>
-                <FieldError data-testid='transactionType-error'>
-                  {state.errors.transactionType &&
-                    state.errors.transactionType.join(', ')}
-                </FieldError>
+                {getFieldError('transactionType') && (
+                  <FieldError data-testid='transactionType-error'>
+                    {getFieldError('transactionType')}
+                  </FieldError>
+                )}
               </Field>
               <Field>
                 <FieldLabel htmlFor='category'>Category</FieldLabel>
@@ -91,34 +114,38 @@ const TransactionForm: React.FC = () => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-                {
+                {getFieldError('category') && (
                   <FieldError data-testid='category-error'>
-                    {state.errors.category && state.errors.category.join(', ')}
+                    {getFieldError('category')}
                   </FieldError>
-                }{' '}
+                )}
               </Field>
             </div>
             <div className='flex flex-col sm:flex-row gap-2 md:gap4 '>
               <Field>
                 <FieldLabel htmlFor='date'>Transaction Date</FieldLabel>
                 <DatePicker />
-                <FieldError data-testid='date-error'>
-                  {state.errors.date && state.errors.date.join(', ')}
-                </FieldError>
+                {getFieldError('date') && (
+                  <FieldError data-testid='date-error'>
+                    {getFieldError('date')}
+                  </FieldError>
+                )}
               </Field>
               <Field>
                 <FieldLabel htmlFor='amount'>Amount</FieldLabel>
                 <Input
                   type='number'
+                  step='0.01'
                   name='amount'
                   id='amount'
                   placeholder='Enter amount'
                 />
-
                 <FieldDescription>Enter transaction amount</FieldDescription>
-                <FieldError data-testid='amount-error'>
-                  {state.errors.amount && state.errors.amount.join(', ')}
-                </FieldError>
+                {getFieldError('amount') && (
+                  <FieldError data-testid='amount-error'>
+                    {getFieldError('amount')}
+                  </FieldError>
+                )}
               </Field>
             </div>
             <Field>
@@ -130,10 +157,11 @@ const TransactionForm: React.FC = () => {
                 placeholder='Enter description'
               />
               <FieldDescription>Enter transaction description</FieldDescription>
-              <FieldError data-testid='description-error'>
-                {state.errors.description &&
-                  state.errors.description.join(', ')}
-              </FieldError>
+              {getFieldError('description') && (
+                <FieldError data-testid='description-error'>
+                  {getFieldError('description')}
+                </FieldError>
+              )}
             </Field>
           </FieldGroup>
 
@@ -142,8 +170,9 @@ const TransactionForm: React.FC = () => {
             size='sm'
             variant='outline'
             type='submit'
+            disabled={isPending}
           >
-            {pending ? <Spinner /> : 'Submit'}{' '}
+            {isPending ? <Spinner /> : 'Submit'}
           </Button>
         </FieldSet>
       </form>

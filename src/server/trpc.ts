@@ -1,8 +1,22 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import { auth } from '@/lib/auth/auth';
 import { headers } from 'next/headers';
-const t = initTRPC.create();
-
+import { ZodError } from 'zod/v4';
+const t = initTRPC.create({
+  errorFormatter(opts) {
+    const { shape, error } = opts;
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError:
+          error.code === 'BAD_REQUEST' && error.cause instanceof ZodError
+            ? error.cause.flatten().fieldErrors
+            : null,
+      },
+    };
+  },
+});
 const isAuthenticated = t.middleware(async ({ next }) => {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) {
