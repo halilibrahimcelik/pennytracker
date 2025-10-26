@@ -10,6 +10,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { ROUTES } from '@/types';
 import { Suspense } from 'react';
+import { trpcServer } from '@/lib/trpc/server';
 const getTransactions = async (
   userId: string,
   page: number,
@@ -38,7 +39,11 @@ const getTransactions = async (
   }
 };
 const TransactionsContent = async ({ userId }: { userId: string }) => {
-  const allTransactions = await getTransactions(userId, 1, 10);
+  // const allTransactions = await getTransactions(userId, 1, 10);
+  const allTransactions = await trpcServer.transaction.list.query({
+    page: 1,
+    pageSize: 10,
+  });
 
   return (
     <TransactionTable
@@ -53,6 +58,7 @@ const TransactionsPage: NextPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+
   if (!session?.user.id) {
     redirect(ROUTES.SIGN_IN);
   }

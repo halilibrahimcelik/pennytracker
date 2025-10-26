@@ -34,7 +34,6 @@ const TransactionTable = <TData, TValue>({
   count,
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-  console.log('Total Count:', count);
   const table = useReactTable({
     data,
     columns,

@@ -1,8 +1,8 @@
 import { initTRPC, TRPCError } from '@trpc/server';
-import { auth } from '@/lib/auth/auth';
-import { headers } from 'next/headers';
+
 import { ZodError } from 'zod/v4';
-const t = initTRPC.create({
+import { Context } from './context';
+const t = initTRPC.context<Context>().create({
   errorFormatter(opts) {
     const { shape, error } = opts;
     return {
@@ -17,16 +17,15 @@ const t = initTRPC.create({
     };
   },
 });
-const isAuthenticated = t.middleware(async ({ next }) => {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user) {
+const isAuthenticated = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session || !ctx.session.user) {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
-      message: 'User not authenticated',
+      message: 'User is not authenticated',
     });
   }
   return next({
-    ctx: { userId: session.user.id },
+    ctx: { userId: ctx.session?.user.id },
   });
 });
 export const router = t.router;

@@ -25,7 +25,7 @@ import { Textarea } from '../../ui/textarea';
 import { Spinner } from '../../ui/spinner';
 import { CATEGORIES } from '@/constants';
 import { toast } from 'sonner';
-import { trpc } from '@/lib/trpc/client';
+import { trpcClientRouter } from '@/lib/trpc/client';
 type FieldErrors = {
   transactionType?: string[];
   category?: string[];
@@ -34,14 +34,15 @@ type FieldErrors = {
   date?: string[];
 };
 const TransactionForm: React.FC = () => {
-  const { mutate, isPending, error } = trpc.transaction.create.useMutation({
-    onSuccess: (data) => {
-      toast.success(data.message);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+  const { mutate, isPending, error } =
+    trpcClientRouter.transaction.create.useMutation({
+      onSuccess: (data) => {
+        toast.success(data.message);
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
   // Extract Zod field errors
   const fieldErrors = error?.data?.zodError as FieldErrors | undefined;
   const getFieldError = (fieldName: keyof FieldErrors): string | undefined => {

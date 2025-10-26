@@ -21,7 +21,7 @@ export const transactionRouter = router({
           count: sql<number>`count(*) over()`.as('total_count'),
         })
         .from(transaction)
-        .where(eq(transaction.userId, ctx.userId))
+        .where(eq(transaction.userId, ctx.session?.user.id!))
         .orderBy(desc(transaction.createdAt))
         .limit(input.pageSize)
         .offset((input.page - 1) * input.pageSize);
@@ -52,7 +52,7 @@ export const transactionRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       await db.insert(transaction).values({
-        userId: ctx.userId,
+        userId: ctx.session?.user.id!,
         ...input,
         amount: input.amount.toString(),
       });

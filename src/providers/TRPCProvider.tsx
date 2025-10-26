@@ -3,7 +3,7 @@ import { AppRouter } from '@/server/routers/_app';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { useState } from 'react';
-import { trpc } from '@/lib/trpc/client';
+import { trpcClientRouter } from '@/lib/trpc/client';
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
@@ -47,9 +47,9 @@ const TRPCAppProvider = ({ children }: { children: React.ReactNode }) => {
   );
   return (
     <QueryClientProvider client={queryClient}>
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <trpcClientRouter.Provider client={trpcClient} queryClient={queryClient}>
         {children}
-      </trpc.Provider>
+      </trpcClientRouter.Provider>
     </QueryClientProvider>
   );
 };
