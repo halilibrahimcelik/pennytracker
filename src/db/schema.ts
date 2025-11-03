@@ -1,6 +1,5 @@
 import { CATEGORIES } from '@/constants';
 import { pgTable, text, timestamp, boolean, uuid } from 'drizzle-orm/pg-core';
-import { varchar } from 'drizzle-orm/singlestore-core';
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),

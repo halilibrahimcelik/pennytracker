@@ -1,8 +1,8 @@
-import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
+import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import type { AppRouter } from '@/server/routers/_app';
 import { headers } from 'next/headers';
 
-export const trpcServer = createTRPCProxyClient<AppRouter>({
+export const trpcServer = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
       url: `${process.env.NEXT_PUBLIC_APP_URL}/api/trpc`,
