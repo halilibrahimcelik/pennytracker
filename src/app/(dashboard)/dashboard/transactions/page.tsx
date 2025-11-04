@@ -10,7 +10,7 @@ import { Suspense } from 'react';
 import { trpcServer } from '@/lib/trpc/server';
 
 const TransactionsContent = async ({ userId }: { userId: string }) => {
-  const allTransactions = await trpcServer.transaction.list.query({
+  const allTransactions = await trpcServer.transaction.list({
     page: 1,
     pageSize: 10,
   });
