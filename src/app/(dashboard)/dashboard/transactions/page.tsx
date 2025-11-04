@@ -8,35 +8,8 @@ import { redirect } from 'next/navigation';
 import { ROUTES } from '@/types';
 import { Suspense } from 'react';
 import { trpcServer } from '@/lib/trpc/server';
-// const getTransactions = async (
-//   userId: string,
-//   page: number,
-//   pageSize: number
-// ) => {
-//   try {
-//     const result = await db
-//       .select({
-//         transactions: transaction,
-//         count: sql<number>`count(*) over()`.as('total_count'),
-//       })
-//       .from(transaction)
 
-//       .where(eq(transaction.userId, userId))
-//       .orderBy(desc(transaction.createdAt))
-//       .limit(pageSize)
-//       .offset((page - 1) * pageSize);
-//     const newShape = {
-//       transactions: result.map((r) => r.transactions),
-//       count: result[0]?.count ?? 0,
-//     };
-//     return newShape;
-//   } catch (error) {
-//     console.error('Error fetching transactions:', error);
-//     return { transactions: [], count: 0 };
-//   }
-// };
 const TransactionsContent = async ({ userId }: { userId: string }) => {
-  // const allTransactions = await getTransactions(userId, 1, 10);
   const allTransactions = await trpcServer.transaction.list.query({
     page: 1,
     pageSize: 10,
