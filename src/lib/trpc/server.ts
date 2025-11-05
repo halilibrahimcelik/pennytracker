@@ -1,6 +1,4 @@
-import { createTRPCClient, httpBatchLink } from '@trpc/client';
-import { appRouter, type AppRouter } from '@/server/routers/_app';
-import { headers } from 'next/headers';
+import { appRouter } from '@/server/routers/_app';
 import { createServerContext } from '@/server/context';
 
 // export const trpcServer = createTRPCClient<AppRouter>({

@@ -46,7 +46,7 @@ const TransactionForm: React.FC = () => {
   // Extract Zod field errors
   const fieldErrors = error?.data?.zodError as FieldErrors | undefined;
   const getFieldError = (fieldName: keyof FieldErrors): string | undefined => {
-    return fieldErrors?.[fieldName]?.[0];
+    return fieldErrors?.[fieldName]?.[0] || 'Please check the field again';
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
