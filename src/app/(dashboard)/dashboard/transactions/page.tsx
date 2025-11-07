@@ -14,7 +14,7 @@ const TransactionsContent = async ({ userId }: { userId: string }) => {
     page: 1,
     pageSize: 10,
   });
-
+  console.log(allTransactions);
   return (
     <TransactionTable
       columns={TransactionColumns}

@@ -112,7 +112,7 @@ const TransactionTable = <TData, TValue>({
         </TableBody>
       </Table>
       <hr />
-      <DataTablePagination table={table} />
+      <DataTablePagination table={table} count={count} />
     </div>
   );
 };
