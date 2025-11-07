@@ -26,14 +26,23 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   count: number;
+  pagination: {
+    page: number;
+    pageSize: number;
+  };
 }
 
 const TransactionTable = <TData, TValue>({
   columns,
   data,
   count,
+  pagination: { page, pageSize },
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 20, // Change this to your desired default page size
+  });
   const table = useReactTable({
     data,
     columns,
@@ -43,9 +52,9 @@ const TransactionTable = <TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     state: {
       sorting,
+      pagination: pagination,
     },
   });
-
   return (
     <div>
       <Table>
@@ -112,7 +121,11 @@ const TransactionTable = <TData, TValue>({
         </TableBody>
       </Table>
       <hr />
-      <DataTablePagination table={table} count={count} />
+      <DataTablePagination
+        table={table}
+        count={count}
+        pagination={{ page, pageSize }}
+      />
     </div>
   );
 };

@@ -21,17 +21,22 @@ import { create } from 'domain';
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
   count: number;
+  pagination: {
+    page: number;
+    pageSize: number;
+  };
 }
 
 const DataTablePagination = <TData,>({
   table,
   count,
+  pagination,
 }: DataTablePaginationProps<TData>) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [pageIndex, setPageIndex] = useState(0);
+  const [pageIndex, setPageIndex] = useState(pagination.page - 1);
 
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(pagination.pageSize);
   const pageCount = useMemo(
     () => Math.ceil(count / pageSize),
     [count, pageSize]

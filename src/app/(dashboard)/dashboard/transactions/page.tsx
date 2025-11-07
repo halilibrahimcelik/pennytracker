@@ -9,14 +9,24 @@ import { ROUTES } from '@/types';
 import { Suspense } from 'react';
 import { trpcServer } from '@/lib/trpc/server';
 
-const TransactionsContent = async ({ userId }: { userId: string }) => {
+type Props = {
+  searchParams: Promise<TransactionsContentProps>;
+};
+type TransactionsContentProps = {
+  page: string | null | undefined;
+  pageSize: string | null | undefined;
+};
+const TransactionsContent = async ({
+  page,
+  pageSize,
+}: TransactionsContentProps) => {
   const allTransactions = await trpcServer.transaction.list({
-    page: 1,
-    pageSize: 10,
+    page: page ? Number(page) : 1,
+    pageSize: pageSize ? Number(pageSize) : 10,
   });
-  console.log(allTransactions);
   return (
     <TransactionTable
+      pagination={{ page: Number(page) || 1, pageSize: Number(pageSize) || 10 }}
       columns={TransactionColumns}
       data={allTransactions.transactions}
       count={allTransactions.count}
@@ -24,7 +34,8 @@ const TransactionsContent = async ({ userId }: { userId: string }) => {
   );
 };
 
-const TransactionsPage: NextPage = async () => {
+const TransactionsPage: NextPage<Props> = async ({ searchParams }) => {
+  const { page, pageSize } = await searchParams;
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -36,7 +47,7 @@ const TransactionsPage: NextPage = async () => {
   return (
     <div>
       <Suspense fallback={<TransactionTableSkeleton />}>
-        <TransactionsContent userId={session.user.id} />
+        <TransactionsContent page={page} pageSize={pageSize} />
       </Suspense>
     </div>
   );
