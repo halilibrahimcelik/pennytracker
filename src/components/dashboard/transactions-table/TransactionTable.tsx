@@ -41,7 +41,7 @@ const TransactionTable = <TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 20, // Change this to your desired default page size
+    pageSize: 20,
   });
   const table = useReactTable({
     data,
@@ -63,7 +63,16 @@ const TransactionTable = <TData, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    className={`${
+                      header.column.id === 'transactionDate' ||
+                      header.column.id === 'amount' ||
+                      header.column.id === 'transactionType'
+                        ? 'text-center'
+                        : ''
+                    }`}
+                    key={header.id}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -89,7 +98,10 @@ const TransactionTable = <TData, TValue>({
                     const capitalizedValue =
                       value.charAt(0).toUpperCase() + value.slice(1);
                     return (
-                      <TableCell key={cell.id}>
+                      <TableCell
+                        className='flex  items-center justify-center'
+                        key={cell.id}
+                      >
                         <Badge
                           variant={
                             value === 'income' ? 'success' : 'destructive'
@@ -101,7 +113,15 @@ const TransactionTable = <TData, TValue>({
                     );
                   }
                   return (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      className={`${
+                        cell.column.id === 'transactionDate' ||
+                        cell.column.id === 'amount'
+                          ? 'text-center'
+                          : ''
+                      }`}
+                      key={cell.id}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

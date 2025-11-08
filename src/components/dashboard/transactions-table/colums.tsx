@@ -42,7 +42,7 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
     header: 'Description',
   },
   {
-    accessorKey: 'createdAt',
+    accessorKey: 'transactionDate',
     header: ({ column }) => {
       return (
         <Button
@@ -50,16 +50,18 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Date
+          Transaction Date
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
     },
 
     cell: ({ row }) => {
-      format(new Date(row.getValue('createdAt')), 'dd/MM/yyyy');
+      format(new Date(row.getValue('transactionDate')), 'dd/MM/yyyy');
       return (
-        <div>{format(new Date(row.getValue('createdAt')), 'dd/MM/yyyy')}</div>
+        <div>
+          {format(new Date(row.getValue('transactionDate')), 'dd/MM/yyyy')}
+        </div>
       );
     },
   },

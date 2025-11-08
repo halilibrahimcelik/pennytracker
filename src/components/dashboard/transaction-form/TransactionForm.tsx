@@ -46,7 +46,7 @@ const TransactionForm: React.FC = () => {
   // Extract Zod field errors
   const fieldErrors = error?.data?.zodError as FieldErrors | undefined;
   const getFieldError = (fieldName: keyof FieldErrors): string | undefined => {
-    return fieldErrors?.[fieldName]?.[0] || 'Please check the field again';
+    return fieldErrors?.[fieldName]?.[0];
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,7 +57,7 @@ const TransactionForm: React.FC = () => {
       category: formData.get('category') as string,
       amount: Number(formData.get('amount')),
       description: formData.get('description') as string,
-      date: new Date(formData.get('date') as string),
+      transactionDate: new Date(formData.get('date') as string),
     };
     mutate(input, {
       onSuccess: () => {

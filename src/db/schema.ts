@@ -68,6 +68,7 @@ export const transaction = pgTable('transaction', {
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+  transactionDate: timestamp('transaction_date').notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())

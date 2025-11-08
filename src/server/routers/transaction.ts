@@ -47,7 +47,9 @@ export const transactionRouter = router({
           .string({ message: 'Please write a valid description' })
           .max(255)
           .nonempty('Description cannot be empty'),
-        date: z.coerce.date({ message: 'Please provide a valid date' }),
+        transactionDate: z.coerce.date({
+          message: 'Please provide a valid date',
+        }),
       })
     )
     .mutation(async ({ input, ctx }) => {
