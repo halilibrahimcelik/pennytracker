@@ -38,6 +38,10 @@ type TransactionColumn = {
 
 export const TransactionColumns: ColumnDef<Transaction>[] = [
   {
+    accessorKey: 'id',
+    header: '#',
+  },
+  {
     accessorKey: 'description',
     header: 'Description',
   },
@@ -94,8 +98,6 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
     id: 'actions',
     header: 'Actions',
     cell: ({ row }) => {
-      const transaction = row.original;
-
       return (
         <>
           <DropdownMenu>
@@ -124,7 +126,7 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
                 <DialogContent className='sm:max-w-[425px]'>
                   <DialogHeader>
                     <DialogTitle>
-                      Delete Transaction #{transaction.id}{' '}
+                      Delete Transaction #{row.index + 1}{' '}
                     </DialogTitle>
                     <DialogDescription>
                       Are you sure you want to delete this transaction? This

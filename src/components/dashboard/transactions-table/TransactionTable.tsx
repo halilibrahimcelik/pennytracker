@@ -67,7 +67,8 @@ const TransactionTable = <TData, TValue>({
                     className={`${
                       header.column.id === 'transactionDate' ||
                       header.column.id === 'amount' ||
-                      header.column.id === 'transactionType'
+                      header.column.id === 'transactionType' ||
+                      header.column.id === 'id'
                         ? 'text-center'
                         : ''
                     }`}
@@ -87,7 +88,7 @@ const TransactionTable = <TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+            table.getRowModel().rows.map((row, index) => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
@@ -95,8 +96,7 @@ const TransactionTable = <TData, TValue>({
                 {row.getVisibleCells().map((cell) => {
                   if (cell.column.id === 'transactionType') {
                     const value = String(cell.getValue());
-                    const capitalizedValue =
-                      value.charAt(0).toUpperCase() + value.slice(1);
+
                     return (
                       <TableCell
                         className='flex  items-center justify-center'
@@ -109,6 +109,16 @@ const TransactionTable = <TData, TValue>({
                         >
                           {value}
                         </Badge>
+                      </TableCell>
+                    );
+                  }
+                  if (cell.column.id === 'id') {
+                    return (
+                      <TableCell
+                        className='flex  items-center justify-center'
+                        key={cell.id}
+                      >
+                        {index + 1}
                       </TableCell>
                     );
                   }
