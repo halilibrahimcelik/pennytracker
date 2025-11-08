@@ -23,6 +23,10 @@ import {
 import { MoreHorizontal, ArrowUpDown } from 'lucide-react';
 import { MdOutlineDeleteSweep } from 'react-icons/md';
 import { format } from 'date-fns';
+import { trpcClientRouter } from '@/lib/trpc/client';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export type Transaction = {
   id: string;
@@ -98,9 +102,29 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
     id: 'actions',
     header: 'Actions',
     cell: ({ row }) => {
+      const mutation = trpcClientRouter.transaction.delete.useMutation();
+      const [isDialogOpen, setIsDialogOpen] = useState(false);
+      const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+      const router = useRouter();
+      const handleDelete = () => {
+        try {
+          mutation.mutate({ id: row.getValue('id') });
+        } catch (error) {
+          console.log('Error deleting transaction:', error);
+        }
+      };
+      useEffect(() => {
+        if (mutation.isSuccess) {
+          toast.success('Transaction deleted successfully');
+          router.refresh();
+          setIsDialogOpen(false);
+          setIsDropdownOpen(false);
+        }
+      }, [mutation.isSuccess]);
       return (
         <>
-          <DropdownMenu>
+          <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant='ghost' className='h-8 w-8 p-0'>
                 <span className='sr-only'>Open menu</span>
@@ -110,7 +134,7 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
             <DropdownMenuContent align='end'>
               <DropdownMenuItem className='w-full'>Details </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <Dialog>
+              <Dialog onOpenChange={setIsDialogOpen} open={isDialogOpen}>
                 <DialogTrigger asChild>
                   <DropdownMenuItem
                     onSelect={(e) => {
@@ -137,7 +161,13 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
                     <DialogClose asChild>
                       <Button variant='outline'>Cancel</Button>
                     </DialogClose>
-                    <Button type='submit'>Yes</Button>
+                    <Button
+                      onClick={handleDelete}
+                      disabled={mutation.isPending}
+                      type='submit'
+                    >
+                      Yes
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
