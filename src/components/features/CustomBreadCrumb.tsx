@@ -10,10 +10,12 @@ import {
 import { ROUTES } from '@/types';
 import { DonutIcon } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 
 const CustomBreadCrumb = () => {
   const currentPath = usePathname();
+  const params = useParams();
+  console.log(params.slug);
   const isActive = (path: string) => currentPath === path;
   // if (isActive(ROUTES.DASHBOARD)) {
   //   return null;
@@ -47,12 +49,16 @@ const CustomBreadCrumb = () => {
           <DonutIcon />
         </BreadcrumbSeparator>
         <BreadcrumbItem>
-          {isActive(ROUTES.NEW_TRANSACTION) ? (
-            <BreadcrumbPage>New</BreadcrumbPage>
+          {!params.slug ? (
+            isActive(ROUTES.NEW_TRANSACTION) ? (
+              <BreadcrumbPage>New</BreadcrumbPage>
+            ) : (
+              <BreadcrumbLink asChild>
+                <Link href={ROUTES.NEW_TRANSACTION}>New Transaction</Link>
+              </BreadcrumbLink>
+            )
           ) : (
-            <BreadcrumbLink asChild>
-              <Link href={ROUTES.NEW_TRANSACTION}>New Transaction</Link>
-            </BreadcrumbLink>
+            <BreadcrumbPage>Update</BreadcrumbPage>
           )}
         </BreadcrumbItem>
       </BreadcrumbList>
