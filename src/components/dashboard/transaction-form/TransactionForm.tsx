@@ -26,6 +26,8 @@ import { Spinner } from '../../ui/spinner';
 import { CATEGORIES } from '@/constants';
 import { toast } from 'sonner';
 import { trpcClientRouter } from '@/lib/trpc/client';
+import { SelectTransaction } from '@/db/schema';
+import { useTransactionMutation } from '@/hooks';
 type FieldErrors = {
   transactionType?: string[];
   category?: string[];
@@ -33,16 +35,15 @@ type FieldErrors = {
   description?: string[];
   date?: string[];
 };
-const TransactionForm: React.FC = () => {
-  const { mutate, isPending, error } =
-    trpcClientRouter.transaction.create.useMutation({
-      onSuccess: (data) => {
-        toast.success(data.message);
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    });
+type TransactionFormProps = {
+  transaction?: SelectTransaction;
+};
+
+const TransactionForm: React.FC<TransactionFormProps> = ({ transaction }) => {
+  const isEditMode = !!transaction;
+  const { mutate, isPending, error } = useTransactionMutation(
+    isEditMode ? 'update' : 'create'
+  );
   // Extract Zod field errors
   const fieldErrors = error?.data?.zodError as FieldErrors | undefined;
   const getFieldError = (fieldName: keyof FieldErrors): string | undefined => {
@@ -53,12 +54,14 @@ const TransactionForm: React.FC = () => {
     const form = e.currentTarget; // Store reference before async operation
     const formData = new FormData(form);
     const input = {
+      ...(isEditMode && { id: transaction!.id }),
       transactionType: formData.get('transactionType') as 'income' | 'expense',
       category: formData.get('category') as string,
       amount: Number(formData.get('amount')),
       description: formData.get('description') as string,
       transactionDate: new Date(formData.get('date') as string),
     };
+
     mutate(input, {
       onSuccess: () => {
         form.reset();
@@ -77,7 +80,9 @@ const TransactionForm: React.FC = () => {
                 <RadioGroup
                   name='transactionType'
                   className='flex'
-                  defaultValue='expense'
+                  defaultValue={
+                    transaction ? transaction.transactionType : 'expense'
+                  }
                 >
                   <div className='flex items-center space-x-2'>
                     <RadioGroupItem value='expense' id='expense' />
@@ -97,8 +102,14 @@ const TransactionForm: React.FC = () => {
               </Field>
               <Field>
                 <FieldLabel htmlFor='category'>Category</FieldLabel>
-                <Select name='category'>
-                  <SelectTrigger className='w-[180px]'>
+                <Select
+                  defaultValue={transaction ? transaction.category : ''}
+                  name='category'
+                >
+                  <SelectTrigger
+                    defaultValue={transaction ? transaction.category : ''}
+                    className='w-[180px]'
+                  >
                     <SelectValue placeholder='Select a category' />
                   </SelectTrigger>
                   <SelectContent>
@@ -125,7 +136,11 @@ const TransactionForm: React.FC = () => {
             <div className='flex flex-col sm:flex-row gap-2 md:gap4 '>
               <Field>
                 <FieldLabel htmlFor='date'>Transaction Date</FieldLabel>
-                <DatePicker />
+                <DatePicker
+                  defaultValue={
+                    transaction ? transaction.transactionDate : undefined
+                  }
+                />
                 {getFieldError('date') && (
                   <FieldError data-testid='date-error'>
                     {getFieldError('date')}
@@ -135,6 +150,7 @@ const TransactionForm: React.FC = () => {
               <Field>
                 <FieldLabel htmlFor='amount'>Amount</FieldLabel>
                 <Input
+                  defaultValue={transaction ? transaction.amount : ''}
                   type='number'
                   step='0.01'
                   name='amount'
@@ -152,6 +168,7 @@ const TransactionForm: React.FC = () => {
             <Field>
               <FieldLabel htmlFor='description'>Description</FieldLabel>
               <Textarea
+                defaultValue={transaction ? transaction.description : ''}
                 cols={3}
                 name='description'
                 id='description'

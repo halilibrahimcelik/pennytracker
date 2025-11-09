@@ -60,6 +60,50 @@ export const transactionRouter = router({
       });
       return { success: true, message: 'Transaction created successfully' };
     }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().optional(),
+        transactionType: z.enum(['income', 'expense'], {
+          message: 'Transaction type is required',
+        }),
+        category: z
+          .string({ message: 'Category is required' })
+          .nonempty('Please select a category'),
+        amount: z
+          .number({ message: 'Amount is required' })
+          .min(0.01, { message: 'Please write a valid amount' }),
+        description: z
+          .string({ message: 'Please write a valid description' })
+          .max(255)
+          .nonempty('Description cannot be empty'),
+        transactionDate: z.coerce.date({
+          message: 'Please provide a valid date',
+        }),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await db
+        .update(transaction)
+        .set({
+          transactionType: input.transactionType,
+          category: input.category,
+          amount: input.amount.toString(),
+          description: input.description,
+          transactionDate: input.transactionDate,
+        })
+        .where(eq(transaction.id, input.id!));
+      return { success: true, message: 'Transaction updated successfully' };
+    }),
+  getById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const result = await db
+        .select()
+        .from(transaction)
+        .where(eq(transaction.id, input.id));
+      return result[0];
+    }),
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {

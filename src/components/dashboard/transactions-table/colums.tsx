@@ -27,6 +27,8 @@ import { trpcClientRouter } from '@/lib/trpc/client';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { ROUTES } from '@/types';
 
 export type Transaction = {
   id: string;
@@ -126,13 +128,20 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
         <>
           <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
             <DropdownMenuTrigger asChild>
-              <Button variant='ghost' className='h-8 w-8 p-0'>
+              <Button variant='ghost' className='h-8 w-8 p-0 cursor-pointer'>
                 <span className='sr-only'>Open menu</span>
-                <MoreHorizontal className='h-4 w-4' />
+                <MoreHorizontal className='h-2 w-4' />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
-              <DropdownMenuItem className='w-full'>Details </DropdownMenuItem>
+              <DropdownMenuItem className='w-full cursor-pointer'>
+                <Link
+                  href={`${ROUTES.TRANSACTIONS}/${row.getValue('id')}`}
+                  className='w-full'
+                >
+                  Details{' '}
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <Dialog onOpenChange={setIsDialogOpen} open={isDialogOpen}>
                 <DialogTrigger asChild>
@@ -142,6 +151,7 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
                     }}
                     title='Delete'
                     variant='destructive'
+                    className='cursor-pointer'
                   >
                     <MdOutlineDeleteSweep className='text-danger' />
                     Delete

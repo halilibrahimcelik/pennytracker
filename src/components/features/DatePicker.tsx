@@ -12,8 +12,11 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
-const DatePicker: React.FC = () => {
-  const [date, setDate] = React.useState<Date>();
+type DatePickerProps = {
+  defaultValue?: Date;
+};
+const DatePicker: React.FC<DatePickerProps> = ({ defaultValue }) => {
+  const [date, setDate] = React.useState<Date | undefined>(defaultValue);
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => {
     if (date) {
