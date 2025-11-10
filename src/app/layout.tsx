@@ -6,6 +6,8 @@ import { ThemeProvider } from '@/providers/ThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
 import { auth } from '@/lib/auth/auth';
 import { headers } from 'next/headers';
+import NextTopLoader from 'nextjs-toploader';
+
 import TRPCAppProvider from '@/providers/TRPCProvider';
 const arOneSans = AR_One_Sans({
   weight: ['400', '500', '600', '700'],
@@ -36,6 +38,21 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <NextTopLoader
+            color='#f4ac96de'
+            initialPosition={0.08}
+            crawlSpeed={200}
+            height={3}
+            crawl={true}
+            easing='ease'
+            speed={200}
+            shadow='0 0 10px #f4ac96de,0 0 5px #f4ac96de'
+            template='<div class="bar" role="bar"><div class="peg"></div></div> 
+  <div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
+            zIndex={1600}
+            showAtBottom={false}
+          />
+
           <TRPCAppProvider>
             <Navbar user={session?.user} />
             {children}
