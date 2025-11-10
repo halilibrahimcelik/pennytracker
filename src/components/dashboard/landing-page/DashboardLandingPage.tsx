@@ -11,13 +11,14 @@ import Container from '@/components/ui/container';
 import { useSession } from '@/lib/auth/auth-client';
 import { ROUTES } from '@/types';
 import Link from 'next/link';
+import DashboardPieChart from './DashboardPieChart';
 
 const DashboardLandingPageConent: React.FC = () => {
   const session = useSession();
 
   return (
     <Container className='my-20'>
-      <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
+      <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-10'>
         <Card className='col-span-1 md:col-span-2 '>
           <CardHeader>
             <CardTitle>Welcome back, {session?.data?.user.name}</CardTitle>
@@ -40,6 +41,7 @@ const DashboardLandingPageConent: React.FC = () => {
           </div>
         </div>
       </div>
+      <DashboardPieChart />
     </Container>
   );
 };
