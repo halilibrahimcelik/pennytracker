@@ -64,18 +64,50 @@ export const dashboardRouter = router({
         coalesce(sum(CASE WHEN ${transaction.transactionType} = 'income'
           THEN (${transaction.amount})::numeric ELSE 0 END),0)`,
           totalExpense: sql<number>`
-        coalesce(sum(CASE WHEN ${transaction.transactionType}= "expense"
+        coalesce(sum(CASE WHEN ${transaction.transactionType}= 'expense'
           THEN (${transaction.amount})::numeric ELSE 0 END),0
         )`,
         })
         .from(transaction)
         .where(where)
-        .groupBy(sql`date_trunc("month",${transaction.transactionDate})`)
-        .orderBy(sql`date_trunc("month",${transaction.transactionDate}) asc`);
+        .groupBy(sql`date_trunc('month',${transaction.transactionDate})`)
+        .orderBy(sql`date_trunc('month',${transaction.transactionDate}) asc`);
       return rows.map((row) => ({
         month: row.bucket,
         totalIncome: parseFloat(Number(row.totalIncome).toFixed(2)),
         totalExpense: parseFloat(Number(row.totalExpense).toFixed(2)),
+      }));
+    }),
+  getTransactionByCategory: protectedProcedure
+    .input(
+      z.object({
+        from: z.coerce.date().optional(),
+        to: z.coerce.date().optional(),
+        transactionType: z.enum(['expense', 'income']),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session?.user.id!;
+      const transactionType = input.transactionType;
+      const where = and(
+        eq(transaction.userId, userId),
+        eq(transaction.transactionType, transactionType),
+        input?.from ? gte(transaction.transactionDate, input.from) : undefined,
+        input?.to ? lte(transaction.transactionDate, input.to) : undefined
+      );
+
+      const rows = await db
+        .select({
+          category: transaction.category,
+          total: sql<number>`coalesce(sum((${transaction.amount})::numeric),0) as total`,
+        })
+        .from(transaction)
+        .where(where)
+        .groupBy(transaction.category)
+        .orderBy(sql`total desc`);
+      return rows.map((row) => ({
+        category: row.category,
+        total: parseFloat(Number(row.total).toFixed(2)),
       }));
     }),
 });
