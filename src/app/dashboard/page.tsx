@@ -10,17 +10,29 @@ const DashboardPage: NextPage = async () => {
   const to = new Date();
   const from = new Date();
   from.setMonth(from.getMonth() - 5);
-  const [summary, monthlyFlow, transactionByCategory] = await Promise.all([
+  const [
+    summary,
+    monthlyFlow,
+    transactionByCategoryIncome,
+    transactionByCategoryExpense,
+  ] = await Promise.all([
     trpcServer.dashboard.summary({ from, to }),
     trpcServer.dashboard.montlyFlow({ months: 6, to }),
     trpcServer.dashboard.getTransactionByCategory({
       transactionType: 'income',
     }),
+    trpcServer.dashboard.getTransactionByCategory({
+      transactionType: 'income',
+    }),
   ]);
-  console.log({ summary, monthlyFlow, transactionByCategory });
   return (
     <>
-      <DashboardLandingPageConent />
+      <DashboardLandingPageConent
+        summary={summary}
+        monthlyFlow={monthlyFlow}
+        transactionByCategoryIncome={transactionByCategoryIncome}
+        transactionByCategoryExpense={transactionByCategoryExpense}
+      />
     </>
   );
 };

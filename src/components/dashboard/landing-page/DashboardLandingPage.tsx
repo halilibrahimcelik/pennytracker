@@ -11,13 +11,40 @@ import Container from '@/components/ui/container';
 import { useSession } from '@/lib/auth/auth-client';
 import { ROUTES } from '@/types';
 import Link from 'next/link';
-import DashboardPieChart from './DashboardPieChart';
+import ExpenseIncomePieChart from './ExpenseIncomePieChart';
+import ExpenseIncomeBarChart from './ExpenseIncomeBarChart';
+import CategoryBarChart from './CategoryBarChart';
 
-const DashboardLandingPageConent: React.FC = () => {
+type Props = {
+  summary: {
+    totalIncome: number;
+    totalExpense: number;
+    net: number;
+  };
+  monthlyFlow: {
+    month: string;
+    totalIncome: number;
+    totalExpense: number;
+  }[];
+  transactionByCategoryIncome: {
+    category: string;
+    total: number;
+  }[];
+  transactionByCategoryExpense: {
+    category: string;
+    total: number;
+  }[];
+};
+const DashboardLandingPageConent: React.FC<Props> = ({
+  summary,
+  monthlyFlow,
+  transactionByCategoryIncome,
+  transactionByCategoryExpense,
+}) => {
   const session = useSession();
 
   return (
-    <Container className='my-20'>
+    <Container className='my-20 px-20'>
       <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-10'>
         <Card className='col-span-1 md:col-span-2 '>
           <CardHeader>
@@ -41,7 +68,13 @@ const DashboardLandingPageConent: React.FC = () => {
           </div>
         </div>
       </div>
-      <DashboardPieChart />
+      <div className='grid grid-cols-1  gap-8 md:grid-cols-2 '>
+        <ExpenseIncomePieChart summary={summary} />
+        <ExpenseIncomeBarChart />
+        <div className='col-span-1 md:col-span-2 '>
+          <CategoryBarChart />
+        </div>
+      </div>
     </Container>
   );
 };
