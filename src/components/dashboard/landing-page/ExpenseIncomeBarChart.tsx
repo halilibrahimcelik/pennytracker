@@ -17,38 +17,82 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
+import { format } from 'date-fns';
+import { useMemo } from 'react';
 
 export const description = 'A multiple bar chart';
 
-const chartData = [
-  { month: 'January', desktop: 186, mobile: 80 },
-  { month: 'February', desktop: 305, mobile: 200 },
-  { month: 'March', desktop: 237, mobile: 120 },
-  { month: 'April', desktop: 73, mobile: 190 },
-  { month: 'May', desktop: 209, mobile: 130 },
-  { month: 'June', desktop: 214, mobile: 140 },
-];
+// const chartData = [
+//   { month: 'January', desktop: 186, mobile: 80 },
+//   { month: 'February', desktop: 305, mobile: 200 },
+//   { month: 'March', desktop: 237, mobile: 120 },
+//   { month: 'April', desktop: 73, mobile: 190 },
+//   { month: 'May', desktop: 209, mobile: 130 },
+//   { month: 'June', desktop: 214, mobile: 140 },
+//   { month: 'July', desktop: 240, mobile: 150 },
+//   { month: 'August', desktop: 220, mobile: 160 },
+//   { month: 'September', desktop: 250, mobile: 170 },
+//   { month: 'October', desktop: 260, mobile: 180 },
+
+//   { month: 'November', desktop: 270, mobile: 190 },
+//   { month: 'December', desktop: 300, mobile: 200 },
+// ];
 
 const chartConfig = {
-  desktop: {
-    label: 'Desktop',
+  income: {
+    label: 'Income',
     color: 'var(--chart-1)',
   },
-  mobile: {
-    label: 'Mobile',
+  expense: {
+    label: 'Expense',
     color: 'var(--chart-2)',
   },
 } satisfies ChartConfig;
 
-const ExpenseIncomeBarChart = () => {
+type Props = {
+  monthlyFlow: {
+    month: string;
+    totalIncome: number;
+    totalExpense: number;
+  }[];
+};
+const ExpenseIncomeBarChart: React.FC<Props> = ({ monthlyFlow }) => {
+  const chartData = useMemo(() => {
+    const monthsArray: string[] = [];
+    const date = new Date();
+    date.setMonth(date.getMonth() - 11);
+    for (let i = 0; i < 12; i++) {
+      const monthStr = format(date, 'MMM yy');
+      monthsArray.push(monthStr);
+      date.setMonth(date.getMonth() + 1);
+    }
+    const obj = {
+      month: '',
+      income: 0,
+      expense: 0,
+    };
+    const array: (typeof obj)[] = [];
+    monthsArray.forEach((month, index) => {
+      const dataForMonth = monthlyFlow.find((data) => data.month === month);
+      array.push({
+        month: month,
+        income: dataForMonth ? dataForMonth.totalIncome : 0,
+        expense: dataForMonth ? dataForMonth.totalExpense : 0,
+      });
+    });
+    return array;
+  }, [monthlyFlow]);
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle> Expense Income Flow for last 12 months</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer
+          className='aspect-auto h-[250px] w-full'
+          config={chartConfig}
+        >
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -56,25 +100,25 @@ const ExpenseIncomeBarChart = () => {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0)}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator='dashed' />}
             />
-            <Bar dataKey='desktop' fill='var(--color-desktop)' radius={4} />
-            <Bar dataKey='mobile' fill='var(--color-mobile)' radius={4} />
+            <Bar dataKey='income' fill='var(--color-income)' radius={4} />
+            <Bar dataKey='expense' fill='var(--color-expense)' radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className='flex-col items-start gap-2 text-sm'>
+      {/* <CardFooter className='flex-col items-start gap-2 text-sm'>
         <div className='flex gap-2 leading-none font-medium'>
           Trending up by 5.2% this month <TrendingUp className='h-4 w-4' />
         </div>
         <div className='text-muted-foreground leading-none'>
           Showing total visitors for the last 6 months
         </div>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 };

@@ -17,7 +17,7 @@ const DashboardPage: NextPage = async () => {
     transactionByCategoryExpense,
   ] = await Promise.all([
     trpcServer.dashboard.summary({ from, to }),
-    trpcServer.dashboard.montlyFlow({ months: 6, to }),
+    trpcServer.dashboard.montlyFlow({ months: 12 }),
     trpcServer.dashboard.getTransactionByCategory({
       transactionType: 'income',
     }),

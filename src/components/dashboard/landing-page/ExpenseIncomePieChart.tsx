@@ -100,7 +100,6 @@ const ExpenseIncomePieChart: React.FC<Props> = ({
       },
     ];
   }, [summerData.totalIncome, summerData.totalExpense]);
-  // console.log(data);
 
   return (
     <Card className='flex flex-col'>

@@ -78,9 +78,9 @@ const DashboardLandingPageConent: React.FC<Props> = ({
           fromDate={fromDate}
           toDate={toDate}
         />
-        <ExpenseIncomeBarChart />
+        <CategoryBarChart />
         <div className='col-span-1 md:col-span-2 '>
-          <CategoryBarChart />
+          <ExpenseIncomeBarChart monthlyFlow={monthlyFlow} />
         </div>
       </div>
     </Container>

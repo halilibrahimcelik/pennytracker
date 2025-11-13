@@ -42,7 +42,7 @@ export const dashboardRouter = router({
   montlyFlow: protectedProcedure
     .input(
       z.object({
-        months: z.number().min(1).max(12).default(6),
+        months: z.number().min(1).default(6),
         to: z.coerce.date().optional(),
       })
     )
@@ -50,6 +50,7 @@ export const dashboardRouter = router({
       const userId = ctx.session?.user.id!;
       const toDate = input.to || new Date();
       const from = new Date(toDate);
+
       from.setMonth(from.getMonth() - (input?.months ?? 6) + 1);
       const where = and(
         eq(transaction.userId, userId),
@@ -59,7 +60,7 @@ export const dashboardRouter = router({
       const rows = await db
         .select({
           bucket: sql<string>`
-        to_char(date_trunc('month', ${transaction.transactionDate}), 'YYYY-MM')`,
+        to_char(date_trunc('month', ${transaction.transactionDate}), 'Mon YY')`,
           totalIncome: sql<number>`
         coalesce(sum(CASE WHEN ${transaction.transactionType} = 'income'
           THEN (${transaction.amount})::numeric ELSE 0 END),0)`,
