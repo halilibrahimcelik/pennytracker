@@ -28,6 +28,8 @@ const DashboardPage: NextPage = async () => {
   return (
     <>
       <DashboardLandingPageConent
+        fromDate={from}
+        toDate={to}
         summary={summary}
         monthlyFlow={monthlyFlow}
         transactionByCategoryIncome={transactionByCategoryIncome}

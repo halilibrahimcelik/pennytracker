@@ -14,13 +14,20 @@ import {
 
 type DatePickerProps = {
   defaultValue?: Date;
+  label?: string;
+  onDateChange?: (date: Date) => void;
 };
-const DatePicker: React.FC<DatePickerProps> = ({ defaultValue }) => {
+const DatePicker: React.FC<DatePickerProps> = ({
+  defaultValue,
+  label = 'Pick a date',
+  onDateChange,
+}) => {
   const [date, setDate] = React.useState<Date | undefined>(defaultValue);
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => {
     if (date) {
       setOpen((prev) => !prev);
+      onDateChange?.(date);
     }
   }, [date]);
 
@@ -30,14 +37,20 @@ const DatePicker: React.FC<DatePickerProps> = ({ defaultValue }) => {
         <Button
           variant='outline'
           data-empty={!date}
-          className='data-[empty=true]:text-muted-foreground w-[280px] justify-start text-left font-normal'
+          className='data-[empty=true]:text-muted-foreground justify-start text-left font-normal'
         >
           <CalendarIcon />
-          {date ? format(date, 'PPP') : <span>Pick a date</span>}
+          {date && !onDateChange ? format(date, 'PPP') : <span>{label}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-auto p-0'>
-        <Calendar mode='single' selected={date} onSelect={setDate} />
+        <Calendar
+          mode='single'
+          // defaultMonth={date}
+          selected={date}
+          onSelect={setDate}
+          captionLayout='dropdown'
+        />
       </PopoverContent>
       <input
         type='hidden'

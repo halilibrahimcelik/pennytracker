@@ -34,12 +34,16 @@ type Props = {
     category: string;
     total: number;
   }[];
+  fromDate: Date;
+  toDate: Date;
 };
 const DashboardLandingPageConent: React.FC<Props> = ({
   summary,
   monthlyFlow,
   transactionByCategoryIncome,
   transactionByCategoryExpense,
+  fromDate,
+  toDate,
 }) => {
   const session = useSession();
 
@@ -69,7 +73,11 @@ const DashboardLandingPageConent: React.FC<Props> = ({
         </div>
       </div>
       <div className='grid grid-cols-1  gap-8 md:grid-cols-2 '>
-        <ExpenseIncomePieChart summary={summary} />
+        <ExpenseIncomePieChart
+          summary={summary}
+          fromDate={fromDate}
+          toDate={toDate}
+        />
         <ExpenseIncomeBarChart />
         <div className='col-span-1 md:col-span-2 '>
           <CategoryBarChart />
