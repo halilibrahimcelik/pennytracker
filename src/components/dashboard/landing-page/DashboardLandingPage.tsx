@@ -14,6 +14,7 @@ import Link from 'next/link';
 import ExpenseIncomePieChart from './ExpenseIncomePieChart';
 import ExpenseIncomeBarChart from './ExpenseIncomeBarChart';
 import CategoryBarChart from './CategoryBarChart';
+import { TbTransactionPound, TbTableDashed } from 'react-icons/tb';
 
 type Props = {
   summary: {
@@ -48,25 +49,38 @@ const DashboardLandingPageConent: React.FC<Props> = ({
   const session = useSession();
   return (
     <Container className='my-20 px-20'>
-      <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-10'>
-        <div className='col-span-1 md:col-span-2 '>
-          <CardHeader>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-10'>
+        <Card className='m-0 p-0 border-0 gap-0 shadow-none bg-transparent'>
+          <CardHeader className='m-0 p-0'>
             <CardTitle>Welcome back, {session?.data?.user.name}</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className='m-0 p-0'>
             <CardDescription>
               Here is an overview of your dashboard.
             </CardDescription>
           </CardContent>
-        </div>
-        <div className=''>
-          <div className='px-2 w-full h-full flex items-center justify-center'>
+        </Card>
+        <div className='col-span-1'>
+          <div className='  h-full grid sm:grid-cols-2  gap-2 sm:justify-center'>
             <Button
-              className='cursor-pointer w-full'
+              className='cursor-pointer  group h-full w-full'
               asChild
               variant={'default'}
             >
-              <Link href={ROUTES.NEW_TRANSACTION}>New Transaction</Link>
+              <div>
+                <TbTransactionPound className='group-hover:scale-120 transition-transform ease-in' />
+                <Link href={ROUTES.NEW_TRANSACTION}>New Transaction</Link>
+              </div>
+            </Button>
+            <Button
+              className='cursor-pointer group   h-full w-full'
+              asChild
+              variant={'default'}
+            >
+              <div>
+                <TbTableDashed className='group-hover:scale-120 transition-transform ease-in' />
+                <Link href={ROUTES.TRANSACTIONS}>All Transaction</Link>
+              </div>
             </Button>
           </div>
         </div>
