@@ -29,6 +29,8 @@ export const dashboardRouter = router({
             coalesce(sum(CASE WHEN ${transaction.transactionType} = 'expense'
               THEN (${transaction.amount})::numeric ELSE 0 END), 0)
           `,
+          latestTransactionDate: sql<Date>`
+            coalesce(max(${transaction.transactionDate}), null)`,
         })
         .from(transaction)
         .where(where);
@@ -37,6 +39,7 @@ export const dashboardRouter = router({
         totalIncome: parseFloat(Number(row.totalIncome).toFixed(2)),
         totalExpense: parseFloat(Number(row.totalExpense).toFixed(2)),
         net: parseFloat(net.toFixed(2)),
+        latestTransactionDate: row.latestTransactionDate,
       };
     }),
   montlyFlow: protectedProcedure
@@ -54,8 +57,7 @@ export const dashboardRouter = router({
       from.setMonth(from.getMonth() - (input?.months ?? 6) + 1);
       const where = and(
         eq(transaction.userId, userId),
-        gte(transaction.transactionDate, from),
-        lte(transaction.transactionDate, toDate)
+        input?.to ? lte(transaction.transactionDate, toDate) : undefined
       );
       const rows = await db
         .select({

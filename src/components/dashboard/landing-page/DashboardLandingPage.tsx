@@ -46,7 +46,6 @@ const DashboardLandingPageConent: React.FC<Props> = ({
   toDate,
 }) => {
   const session = useSession();
-
   return (
     <Container className='my-20 px-20'>
       <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-10'>
@@ -83,7 +82,7 @@ const DashboardLandingPageConent: React.FC<Props> = ({
           transactionByCategoryExpense={transactionByCategoryExpense}
         />
         <div className='col-span-1 md:col-span-2 '>
-          <ExpenseIncomeBarChart monthlyFlow={monthlyFlow} />
+          <ExpenseIncomeBarChart monthlyFlow={monthlyFlow} toDate={toDate} />
         </div>
       </div>
     </Container>

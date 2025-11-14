@@ -55,11 +55,12 @@ type Props = {
     totalIncome: number;
     totalExpense: number;
   }[];
+  toDate: Date;
 };
-const ExpenseIncomeBarChart: React.FC<Props> = ({ monthlyFlow }) => {
+const ExpenseIncomeBarChart: React.FC<Props> = ({ monthlyFlow, toDate }) => {
   const chartData = useMemo(() => {
     const monthsArray: string[] = [];
-    const date = new Date();
+    const date = new Date(toDate);
     date.setMonth(date.getMonth() - 11);
     for (let i = 0; i < 12; i++) {
       const monthStr = format(date, 'MMM yy');

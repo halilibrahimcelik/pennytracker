@@ -43,8 +43,6 @@ const CategoryBarChart: React.FC<Props> = ({
   transactionByCategoryIncome,
   transactionByCategoryExpense,
 }) => {
-  console.log(transactionByCategoryIncome, 'transactionByCategoryIncome');
-  console.log(transactionByCategoryExpense, 'transactionByCategoryExpense');
   const [toggleTransactionType, setToggleTransactionType] = useState<
     'income' | 'expense'
   >('income');

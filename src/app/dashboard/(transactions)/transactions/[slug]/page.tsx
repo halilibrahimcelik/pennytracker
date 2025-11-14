@@ -18,7 +18,6 @@ const TransactionDetailsPage: NextPage<TransactionDetailsPageProps> = async ({
     redirect(ROUTES.NEW_TRANSACTION);
   }
   const transactionData = await trpcServer.transaction.getById({ id: slug });
-  console.log(transactionData);
   return (
     <div>
       <div className='grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>

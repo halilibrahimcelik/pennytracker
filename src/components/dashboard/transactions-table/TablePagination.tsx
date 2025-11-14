@@ -69,7 +69,6 @@ const DataTablePagination = <TData,>({
               table.setPageSize(newSize);
               setPageSize(newSize);
               setPageIndex(0);
-              console.log(value);
               createQueryString(['pageSize'], [value]);
 
               router.push(
@@ -113,7 +112,6 @@ const DataTablePagination = <TData,>({
             className='size-8'
             onClick={() => {
               setPageIndex((old) => old - 1);
-              console.log(pageIndex, 'bbbb');
               router.push(
                 `?${createQueryString(['page'], [pageIndex.toString()])}`
               );
@@ -129,7 +127,6 @@ const DataTablePagination = <TData,>({
             className='size-8'
             onClick={() => {
               setPageIndex((old) => old + 1);
-              console.log(pageIndex + 1, 'aaaa');
               const pageParam = searchParams.get('page') ?? '1';
               router.push(
                 `?${createQueryString(

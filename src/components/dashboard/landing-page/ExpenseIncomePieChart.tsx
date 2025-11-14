@@ -129,8 +129,9 @@ const ExpenseIncomePieChart: React.FC<Props> = ({
           <div className='flex flex-col h-full w-full items-center justify-center text-muted-foreground'>
             <PiCloudWarningDuotone size={50} />
 
-            <Typography variant='p'>
-              No data to display, please change the date range
+            <Typography textAlign='center' variant='p'>
+              No data to display, please change the date range or add new
+              transactions.
             </Typography>
           </div>
         ) : (
