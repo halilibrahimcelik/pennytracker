@@ -86,7 +86,7 @@ const ExpenseIncomeBarChart: React.FC<Props> = ({ monthlyFlow }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle> Expense Income Flow for last 12 months</CardTitle>
+        <CardTitle> Expense - Income Flow for last 12 months</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer

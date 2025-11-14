@@ -50,7 +50,7 @@ const DashboardLandingPageConent: React.FC<Props> = ({
   return (
     <Container className='my-20 px-20'>
       <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-10'>
-        <Card className='col-span-1 md:col-span-2 '>
+        <div className='col-span-1 md:col-span-2 '>
           <CardHeader>
             <CardTitle>Welcome back, {session?.data?.user.name}</CardTitle>
           </CardHeader>
@@ -59,7 +59,7 @@ const DashboardLandingPageConent: React.FC<Props> = ({
               Here is an overview of your dashboard.
             </CardDescription>
           </CardContent>
-        </Card>
+        </div>
         <div className=''>
           <div className='px-2 w-full h-full flex items-center justify-center'>
             <Button

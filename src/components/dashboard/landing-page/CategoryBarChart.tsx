@@ -1,7 +1,7 @@
 'use client';
 
 import { TrendingUp } from 'lucide-react';
-import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Label, XAxis, YAxis } from 'recharts';
 
 import {
   Card,
@@ -66,7 +66,7 @@ const CategoryBarChart: React.FC<Props> = ({
     transactionByCategoryExpense,
   ]);
   return (
-    <Card className='max-h-[500px]'>
+    <Card className='max-h-[600px]'>
       <CardHeader className='flex items-center justify-between gap-2 flex-wrap'>
         <CardTitle>
           {`Transaction by Category - ${
@@ -75,6 +75,7 @@ const CategoryBarChart: React.FC<Props> = ({
         </CardTitle>
         {/* <CardDescription>January - June 2024</CardDescription> */}
         <Switch
+          className='cursor-pointer'
           title='Toggle Transaction Type'
           checked={toggleTransactionType === 'expense'}
           onCheckedChange={(e) =>
@@ -84,7 +85,7 @@ const CategoryBarChart: React.FC<Props> = ({
       </CardHeader>
       <CardContent>
         <ChartContainer
-          className='aspect-auto h-[250px] w-full'
+          className='aspect-auto h-[350px] w-full '
           config={{
             category: {
               label: 'Category',
@@ -95,15 +96,37 @@ const CategoryBarChart: React.FC<Props> = ({
             },
           }}
         >
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart
+            margin={{
+              bottom: 50,
+              top: 20,
+            }}
+            accessibilityLayer
+            data={chartData}
+          >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey='category'
+              className='mb-20'
               tickLine={false}
-              tickMargin={10}
-              axisLine={false}
+              tickMargin={40}
+              angle={-90}
+              axisLine={true}
               tickFormatter={(value) => value.slice(0)}
             />
+            <YAxis>
+              <Label
+                angle={0}
+                position='insideTop'
+                offset={-20}
+                dx={22}
+                style={{
+                  textAnchor: 'start',
+                  fontSize: '130%',
+                }}
+                value={'£'}
+              />
+            </YAxis>
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
@@ -113,11 +136,8 @@ const CategoryBarChart: React.FC<Props> = ({
         </ChartContainer>
       </CardContent>
       <CardFooter className='flex-col items-start gap-2 text-sm'>
-        <div className='flex gap-2 leading-none font-medium'>
-          Trending up by 5.2% this month <TrendingUp className='h-4 w-4' />
-        </div>
         <div className='text-muted-foreground leading-none'>
-          Showing total visitors for the last 6 months
+          This chart shows your entire {toggleTransactionType} by category
         </div>
       </CardFooter>
     </Card>
