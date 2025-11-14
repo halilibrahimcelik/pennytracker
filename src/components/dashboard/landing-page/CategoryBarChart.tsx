@@ -85,6 +85,7 @@ const CategoryBarChart: React.FC<Props> = ({
       </CardHeader>
       <CardContent>
         <ChartContainer
+          data-testid='category-bar-chart'
           className='aspect-auto h-[350px] w-full '
           config={{
             category: {

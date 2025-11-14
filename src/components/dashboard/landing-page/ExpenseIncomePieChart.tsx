@@ -135,6 +135,7 @@ const ExpenseIncomePieChart: React.FC<Props> = ({
           </div>
         ) : (
           <ChartContainer
+            data-testid='expense-income-pie-chart'
             config={chartConfig}
             className='mx-auto aspect-square max-h-[250px]'
           >

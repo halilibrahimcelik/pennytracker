@@ -5,7 +5,7 @@ describe('Route Protection', () => {
     cy.step('Verify redirection to the sign-in page');
     cy.url().should('include', '/sign-in');
   });
-  it.only('should allow access to protected route when authenticated', () => {
+  it('should allow access to protected route when authenticated', () => {
     cy.session(
       'authenticatedUser',
       () => {

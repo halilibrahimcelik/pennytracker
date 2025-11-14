@@ -90,6 +90,7 @@ const ExpenseIncomeBarChart: React.FC<Props> = ({ monthlyFlow }) => {
       </CardHeader>
       <CardContent>
         <ChartContainer
+          data-testid='expense-income-bar-chart'
           className='aspect-auto h-[250px] w-full'
           config={chartConfig}
         >
