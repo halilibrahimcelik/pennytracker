@@ -56,7 +56,7 @@ const DashboardLandingPageConent: React.FC<Props> = ({
           </CardHeader>
           <CardContent className='m-0 p-0'>
             <CardDescription>
-              Here is an overview of your dashboard.
+              Here is an overview of your transactions.
             </CardDescription>
           </CardContent>
         </Card>
@@ -79,7 +79,7 @@ const DashboardLandingPageConent: React.FC<Props> = ({
             >
               <div>
                 <TbTableDashed className='group-hover:scale-120 transition-transform ease-in' />
-                <Link href={ROUTES.TRANSACTIONS}>All Transaction</Link>
+                <Link href={ROUTES.TRANSACTIONS}>All Transactions</Link>
               </div>
             </Button>
           </div>

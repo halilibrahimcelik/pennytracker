@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/chart';
 import { useMemo, useState } from 'react';
 import { Switch } from '@/components/ui/switch';
+import { CATEGORIES } from '@/constants';
 
 export const description = 'A bar chart';
 
@@ -29,15 +30,25 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+interface CategoryData {
+  category: string;
+  total: number;
+}
 type Props = {
-  transactionByCategoryIncome: {
-    category: string;
-    total: number;
-  }[];
-  transactionByCategoryExpense: {
-    category: string;
-    total: number;
-  }[];
+  transactionByCategoryIncome: CategoryData[];
+  transactionByCategoryExpense: CategoryData[];
+};
+const utilFn = (
+  arr: CategoryData[],
+  arr2: { category: string; GBP: number }[]
+) => {
+  arr.forEach((item) => {
+    const categoryObj = arr2.find((cat) => cat.category === item.category);
+    if (categoryObj) {
+      categoryObj.GBP = item.total;
+    }
+  });
+  return arr2;
 };
 const CategoryBarChart: React.FC<Props> = ({
   transactionByCategoryIncome,
@@ -46,17 +57,18 @@ const CategoryBarChart: React.FC<Props> = ({
   const [toggleTransactionType, setToggleTransactionType] = useState<
     'income' | 'expense'
   >('income');
+
   const chartData = useMemo(() => {
+    const defaultCategoriesArr = CATEGORIES.map((cat) => {
+      return {
+        category: cat,
+        GBP: 0,
+      };
+    });
     if (toggleTransactionType === 'income') {
-      return transactionByCategoryIncome.map((item) => ({
-        category: item.category,
-        GBP: item.total,
-      }));
+      return utilFn(transactionByCategoryIncome, defaultCategoriesArr);
     } else {
-      return transactionByCategoryExpense.map((item) => ({
-        category: item.category,
-        GBP: item.total,
-      }));
+      return utilFn(transactionByCategoryExpense, defaultCategoriesArr);
     }
   }, [
     toggleTransactionType,
