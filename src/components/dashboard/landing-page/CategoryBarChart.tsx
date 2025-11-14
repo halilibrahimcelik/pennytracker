@@ -17,51 +17,98 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
+import { useMemo, useState } from 'react';
+import { Switch } from '@/components/ui/switch';
 
 export const description = 'A bar chart';
 
-const chartData = [
-  { month: 'January', desktop: 186 },
-  { month: 'February', desktop: 305 },
-  { month: 'March', desktop: 237 },
-  { month: 'April', desktop: 73 },
-  { month: 'May', desktop: 209 },
-  { month: 'June', desktop: 214 },
-];
-
 const chartConfig = {
-  desktop: {
+  category: {
     label: 'Desktop',
-    color: 'var(--chart-1)',
+    color: 'var(--chart-2)',
   },
 } satisfies ChartConfig;
 
-const CategoryBarChart = () => {
+type Props = {
+  transactionByCategoryIncome: {
+    category: string;
+    total: number;
+  }[];
+  transactionByCategoryExpense: {
+    category: string;
+    total: number;
+  }[];
+};
+const CategoryBarChart: React.FC<Props> = ({
+  transactionByCategoryIncome,
+  transactionByCategoryExpense,
+}) => {
+  console.log(transactionByCategoryIncome, 'transactionByCategoryIncome');
+  console.log(transactionByCategoryExpense, 'transactionByCategoryExpense');
+  const [toggleTransactionType, setToggleTransactionType] = useState<
+    'income' | 'expense'
+  >('income');
+  const chartData = useMemo(() => {
+    if (toggleTransactionType === 'income') {
+      return transactionByCategoryIncome.map((item) => ({
+        category: item.category,
+        GBP: item.total,
+      }));
+    } else {
+      return transactionByCategoryExpense.map((item) => ({
+        category: item.category,
+        GBP: item.total,
+      }));
+    }
+  }, [
+    toggleTransactionType,
+    transactionByCategoryIncome,
+    transactionByCategoryExpense,
+  ]);
   return (
     <Card className='max-h-[500px]'>
-      <CardHeader>
-        <CardTitle>Bar Chart</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+      <CardHeader className='flex items-center justify-between gap-2 flex-wrap'>
+        <CardTitle>
+          {`Transaction by Category - ${
+            toggleTransactionType === 'income' ? 'Income' : 'Expense'
+          }`}
+        </CardTitle>
+        {/* <CardDescription>January - June 2024</CardDescription> */}
+        <Switch
+          title='Toggle Transaction Type'
+          checked={toggleTransactionType === 'expense'}
+          onCheckedChange={(e) =>
+            setToggleTransactionType(e ? 'expense' : 'income')
+          }
+        />{' '}
       </CardHeader>
       <CardContent>
         <ChartContainer
           className='aspect-auto h-[250px] w-full'
-          config={chartConfig}
+          config={{
+            category: {
+              label: 'Category',
+              color:
+                toggleTransactionType === 'income'
+                  ? 'var(--chart-1)'
+                  : 'var(--chart-2)',
+            },
+          }}
         >
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey='month'
+              dataKey='category'
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0)}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey='desktop' fill='var(--color-desktop)' radius={8} />
+            <Bar dataKey='GBP' fill='var(--color-category)' radius={8} />
           </BarChart>
         </ChartContainer>
       </CardContent>

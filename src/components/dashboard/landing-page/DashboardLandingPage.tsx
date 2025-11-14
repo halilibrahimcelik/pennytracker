@@ -78,7 +78,10 @@ const DashboardLandingPageConent: React.FC<Props> = ({
           fromDate={fromDate}
           toDate={toDate}
         />
-        <CategoryBarChart />
+        <CategoryBarChart
+          transactionByCategoryIncome={transactionByCategoryIncome}
+          transactionByCategoryExpense={transactionByCategoryExpense}
+        />
         <div className='col-span-1 md:col-span-2 '>
           <ExpenseIncomeBarChart monthlyFlow={monthlyFlow} />
         </div>

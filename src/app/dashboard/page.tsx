@@ -22,7 +22,7 @@ const DashboardPage: NextPage = async () => {
       transactionType: 'income',
     }),
     trpcServer.dashboard.getTransactionByCategory({
-      transactionType: 'income',
+      transactionType: 'expense',
     }),
   ]);
   return (
