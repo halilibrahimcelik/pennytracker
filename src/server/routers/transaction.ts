@@ -4,7 +4,7 @@ import { transaction } from '@/db/schema';
 
 import { z } from 'zod';
 
-import { eq, desc, sql } from 'drizzle-orm';
+import { eq, desc, sql, and } from 'drizzle-orm';
 
 export const transactionRouter = router({
   list: protectedProcedure
@@ -63,7 +63,7 @@ export const transactionRouter = router({
   update: protectedProcedure
     .input(
       z.object({
-        id: z.string().optional(),
+        id: z.string(),
         transactionType: z.enum(['income', 'expense'], {
           message: 'Transaction type is required',
         }),
@@ -83,6 +83,11 @@ export const transactionRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session?.user.id!;
+      const where = and(
+        eq(transaction.id, input.id),
+        eq(transaction.userId, userId)
+      );
       await db
         .update(transaction)
         .set({
@@ -92,7 +97,7 @@ export const transactionRouter = router({
           description: input.description,
           transactionDate: input.transactionDate,
         })
-        .where(eq(transaction.id, input.id!));
+        .where(where);
       return { success: true, message: 'Transaction updated successfully' };
     }),
   getById: protectedProcedure
@@ -107,7 +112,12 @@ export const transactionRouter = router({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      await db.delete(transaction).where(eq(transaction.id, input.id));
+      const userId = ctx.session?.user.id!;
+      const where = and(
+        eq(transaction.id, input.id),
+        eq(transaction.userId, userId)
+      );
+      await db.delete(transaction).where(where);
       return { success: true, message: 'Transaction deleted successfully' };
     }),
 });

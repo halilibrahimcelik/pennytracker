@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { transaction } from './schema';
 import { db } from '.';
 import { CATEGORIES } from '@/constants';
-import { create } from 'domain';
+
 export async function seedTransactions(userId: string, count: number) {
   const transactions = Array.from({ length: count }, () => ({
     userId,

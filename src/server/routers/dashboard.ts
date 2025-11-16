@@ -42,7 +42,7 @@ export const dashboardRouter = router({
         latestTransactionDate: row.latestTransactionDate,
       };
     }),
-  montlyFlow: protectedProcedure
+  monthlyFlow: protectedProcedure
     .input(
       z.object({
         months: z.number().min(1).default(6),

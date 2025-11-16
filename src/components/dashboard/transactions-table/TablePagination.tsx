@@ -15,8 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useCallback, useMemo, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { create } from 'domain';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;

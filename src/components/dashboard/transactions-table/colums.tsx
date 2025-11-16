@@ -67,7 +67,6 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
     },
 
     cell: ({ row }) => {
-      format(new Date(row.getValue('transactionDate')), 'dd/MM/yyyy');
       return (
         <div>
           {format(new Date(row.getValue('transactionDate')), 'dd/MM/yyyy')}
