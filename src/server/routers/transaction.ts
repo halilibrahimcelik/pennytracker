@@ -63,7 +63,7 @@ export const transactionRouter = router({
   update: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
+        id: z.string().optional(),
         transactionType: z.enum(['income', 'expense'], {
           message: 'Transaction type is required',
         }),
@@ -85,7 +85,7 @@ export const transactionRouter = router({
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session?.user.id!;
       const where = and(
-        eq(transaction.id, input.id),
+        eq(transaction.id, input.id!),
         eq(transaction.userId, userId)
       );
       await db

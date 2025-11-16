@@ -1,16 +1,7 @@
 'use client';
-
-import { TrendingUp } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   ChartConfig,
   ChartContainer,
@@ -67,13 +58,9 @@ const ExpenseIncomeBarChart: React.FC<Props> = ({ monthlyFlow, toDate }) => {
       monthsArray.push(monthStr);
       date.setMonth(date.getMonth() + 1);
     }
-    const obj = {
-      month: '',
-      income: 0,
-      expense: 0,
-    };
-    const array: (typeof obj)[] = [];
-    monthsArray.forEach((month, index) => {
+
+    const array: { month: string; income: number; expense: number }[] = [];
+    monthsArray.forEach((month) => {
       const dataForMonth = monthlyFlow.find((data) => data.month === month);
       array.push({
         month: month,

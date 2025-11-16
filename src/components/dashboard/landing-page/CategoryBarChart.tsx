@@ -1,12 +1,9 @@
 'use client';
-
-import { TrendingUp } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, Label, XAxis, YAxis } from 'recharts';
 
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -22,13 +19,6 @@ import { Switch } from '@/components/ui/switch';
 import { CATEGORIES } from '@/constants';
 
 export const description = 'A bar chart';
-
-const chartConfig = {
-  category: {
-    label: 'Desktop',
-    color: 'var(--chart-2)',
-  },
-} satisfies ChartConfig;
 
 interface CategoryData {
   category: string;
