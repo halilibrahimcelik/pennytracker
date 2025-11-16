@@ -24,8 +24,6 @@ import DatePicker from '../../features/DatePicker';
 import { Textarea } from '../../ui/textarea';
 import { Spinner } from '../../ui/spinner';
 import { CATEGORIES } from '@/constants';
-import { toast } from 'sonner';
-import { trpcClientRouter } from '@/lib/trpc/client';
 import { SelectTransaction } from '@/db/schema';
 import { useTransactionMutation } from '@/hooks';
 type FieldErrors = {

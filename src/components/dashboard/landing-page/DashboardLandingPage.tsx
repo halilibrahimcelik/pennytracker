@@ -63,24 +63,25 @@ const DashboardLandingPageConent: React.FC<Props> = ({
         <div className='col-span-1'>
           <div className='  h-full grid sm:grid-cols-2  gap-2 sm:justify-center'>
             <Button
-              className='cursor-pointer  group h-full w-full'
+              className='cursor-pointer   group h-full w-full'
               asChild
               variant={'default'}
             >
-              <div>
+              <Link className='w-full h-full' href={ROUTES.NEW_TRANSACTION}>
                 <TbTransactionPound className='group-hover:scale-120 transition-transform ease-in' />
-                <Link href={ROUTES.NEW_TRANSACTION}>New Transaction</Link>
-              </div>
+                New Transaction
+              </Link>
             </Button>
             <Button
               className='cursor-pointer group   h-full w-full'
               asChild
               variant={'default'}
             >
-              <div>
+              <Link href={ROUTES.TRANSACTIONS}>
+                {' '}
                 <TbTableDashed className='group-hover:scale-120 transition-transform ease-in' />
-                <Link href={ROUTES.TRANSACTIONS}>All Transactions</Link>
-              </div>
+                All Transactions
+              </Link>
             </Button>
           </div>
         </div>

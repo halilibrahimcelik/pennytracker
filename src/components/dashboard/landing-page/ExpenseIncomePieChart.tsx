@@ -126,7 +126,10 @@ const ExpenseIncomePieChart: React.FC<Props> = ({
       </CardHeader>
       <CardContent className='flex-1 pb-0'>
         {data?.totalExpense === 0 && data?.totalIncome === 0 ? (
-          <div className='flex flex-col h-full w-full items-center justify-center text-muted-foreground'>
+          <div
+            data-testid='empty-state-message'
+            className='flex flex-col h-full w-full items-center justify-center text-muted-foreground'
+          >
             <PiCloudWarningDuotone size={50} />
 
             <Typography textAlign='center' variant='p'>
