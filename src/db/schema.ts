@@ -1,4 +1,5 @@
-import { pgTable, text, timestamp, boolean } from 'drizzle-orm/pg-core';
+import { CATEGORIES } from '@/constants';
+import { pgTable, text, timestamp, boolean, uuid } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -61,12 +62,35 @@ export const verification = pgTable('verification', {
     .notNull(),
 });
 
+export const transaction = pgTable('transaction', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  transactionDate: timestamp('transaction_date').notNull(),
+  updatedAt: timestamp('updated_at')
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  amount: text('amount').notNull(),
+  transactionType: text('transaction_type', {
+    enum: ['income', 'expense'],
+  }).notNull(),
+  category: text('category', {
+    enum: [...CATEGORIES] as [string, ...string[]],
+  }).notNull(),
+  description: text('description').notNull(),
+});
 export const schema = {
   user,
   session,
   account,
   verification,
+  transaction,
   // Add other tables here
 };
 export type InsertUser = typeof user.$inferInsert;
 export type SelectUser = typeof user.$inferSelect;
+export type InsertTransaction = typeof transaction.$inferInsert;
+export type SelectTransaction = typeof transaction.$inferSelect;

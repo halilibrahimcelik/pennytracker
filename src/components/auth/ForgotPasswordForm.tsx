@@ -13,8 +13,8 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
 import { useActionState, useEffect } from 'react';
-import { forgotPassword } from '@/app/actions';
 import { toast } from 'sonner';
+import { forgotPassword } from '@/app/actions/auth/auth.actions';
 
 const initialState = {
   success: false,

@@ -1,7 +1,4 @@
-import { signUpCreateUser } from '@/app/actions';
-import { AuthForm } from '@/components/auth';
 import Container from '@/components/ui/container';
-import { NextPage } from 'next';
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main>

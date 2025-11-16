@@ -5,4 +5,6 @@ export enum ROUTES {
   FORGOT_PASSWORD = '/forgot-password',
   RESET_PASSWORD = '/reset-password',
   DASHBOARD = '/dashboard',
+  TRANSACTIONS = '/dashboard/transactions',
+  NEW_TRANSACTION = '/dashboard/transactions/new',
 }

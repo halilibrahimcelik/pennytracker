@@ -1,4 +1,4 @@
-import { signInUser } from '@/app/actions';
+import { signInUser } from '@/app/actions/auth/auth.actions';
 import { AuthForm } from '@/components/auth';
 import { NextPage } from 'next';
 
