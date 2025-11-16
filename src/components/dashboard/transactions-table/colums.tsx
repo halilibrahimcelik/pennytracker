@@ -1,12 +1,11 @@
 'use client';
 
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, Row } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -36,10 +35,6 @@ export type Transaction = {
   amount: string;
   transactionType: 'income' | 'expense';
   category: string;
-};
-type TransactionColumn = {
-  transactions: Transaction;
-  count: number;
 };
 
 export const TransactionColumns: ColumnDef<Transaction>[] = [
@@ -102,88 +97,90 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
   {
     id: 'actions',
     header: 'Actions',
-    cell: ({ row }) => {
-      const mutation = trpcClientRouter.transaction.delete.useMutation();
-      const [isDialogOpen, setIsDialogOpen] = useState(false);
-      const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-      const router = useRouter();
-      const handleDelete = () => {
-        try {
-          mutation.mutate({ id: row.getValue('id') });
-        } catch (error) {
-          console.log('Error deleting transaction:', error);
-        }
-      };
-      useEffect(() => {
-        if (mutation.isSuccess) {
-          toast.success('Transaction deleted successfully');
-          router.refresh();
-          setIsDialogOpen(false);
-          setIsDropdownOpen(false);
-        }
-      }, [mutation.isSuccess]);
-      return (
-        <>
-          <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-            <DropdownMenuTrigger asChild>
-              <Button variant='ghost' className='h-8 w-8 p-0 cursor-pointer'>
-                <span className='sr-only'>Open menu</span>
-                <MoreHorizontal className='h-2 w-4' />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align='end'>
-              <DropdownMenuItem className='w-full cursor-pointer'>
-                <Link
-                  href={`${ROUTES.TRANSACTIONS}/${row.getValue('id')}`}
-                  className='w-full'
-                >
-                  Details{' '}
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <Dialog onOpenChange={setIsDialogOpen} open={isDialogOpen}>
-                <DialogTrigger asChild>
-                  <DropdownMenuItem
-                    onSelect={(e) => {
-                      e.preventDefault();
-                    }}
-                    title='Delete'
-                    variant='destructive'
-                    className='cursor-pointer'
-                  >
-                    <MdOutlineDeleteSweep className='text-danger' />
-                    Delete
-                  </DropdownMenuItem>
-                </DialogTrigger>
-                <DialogContent className='sm:max-w-[425px]'>
-                  <DialogHeader>
-                    <DialogTitle>
-                      Delete Transaction #{row.index + 1}{' '}
-                    </DialogTitle>
-                    <DialogDescription>
-                      Are you sure you want to delete this transaction? This
-                      action cannot be undone.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button variant='outline'>Cancel</Button>
-                    </DialogClose>
-                    <Button
-                      onClick={handleDelete}
-                      disabled={mutation.isPending}
-                      type='submit'
-                    >
-                      Yes
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </>
-      );
-    },
+    cell: ({ row }) => <ActionsCell row={row} />,
   },
 ];
+
+// Separate component for actions to properly use React Hooks
+const ActionsCell = ({ row }: { row: Row<Transaction> }) => {
+  const mutation = trpcClientRouter.transaction.delete.useMutation();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const router = useRouter();
+
+  const handleDelete = () => {
+    try {
+      mutation.mutate({ id: row.getValue('id') });
+    } catch (error) {
+      console.log('Error deleting transaction:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      toast.success('Transaction deleted successfully');
+      router.refresh();
+      setIsDialogOpen(false);
+      setIsDropdownOpen(false);
+    }
+  }, [mutation.isSuccess, router]);
+  return (
+    <>
+      <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button variant='ghost' className='h-8 w-8 p-0 cursor-pointer'>
+            <span className='sr-only'>Open menu</span>
+            <MoreHorizontal className='h-2 w-4' />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align='end'>
+          <DropdownMenuItem className='w-full cursor-pointer'>
+            <Link
+              href={`${ROUTES.TRANSACTIONS}/${row.getValue('id')}`}
+              className='w-full'
+            >
+              Details{' '}
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <Dialog onOpenChange={setIsDialogOpen} open={isDialogOpen}>
+            <DialogTrigger asChild>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                }}
+                title='Delete'
+                variant='destructive'
+                className='cursor-pointer'
+              >
+                <MdOutlineDeleteSweep className='text-danger' />
+                Delete
+              </DropdownMenuItem>
+            </DialogTrigger>
+            <DialogContent className='sm:max-w-[425px]'>
+              <DialogHeader>
+                <DialogTitle>Delete Transaction #{row.index + 1} </DialogTitle>
+                <DialogDescription>
+                  Are you sure you want to delete this transaction? This action
+                  cannot be undone.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant='outline'>Cancel</Button>
+                </DialogClose>
+                <Button
+                  onClick={handleDelete}
+                  disabled={mutation.isPending}
+                  type='submit'
+                >
+                  Yes
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
+  );
+};

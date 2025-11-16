@@ -29,7 +29,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       setOpen((prev) => !prev);
       onDateChange?.(date);
     }
-  }, [date]);
+  }, [date, onDateChange]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

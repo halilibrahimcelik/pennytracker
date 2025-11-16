@@ -3,7 +3,6 @@ import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -28,17 +27,6 @@ export const description = 'A multiple bar chart';
 //   { month: 'November', desktop: 270, mobile: 190 },
 //   { month: 'December', desktop: 300, mobile: 200 },
 // ];
-
-const chartConfig = {
-  income: {
-    label: 'Income',
-    color: 'var(--chart-1)',
-  },
-  expense: {
-    label: 'Expense',
-    color: 'var(--chart-2)',
-  },
-} satisfies ChartConfig;
 
 type Props = {
   monthlyFlow: {
@@ -69,7 +57,7 @@ const ExpenseIncomeBarChart: React.FC<Props> = ({ monthlyFlow, toDate }) => {
       });
     });
     return array;
-  }, [monthlyFlow]);
+  }, [monthlyFlow, toDate]);
 
   return (
     <Card>
@@ -80,7 +68,16 @@ const ExpenseIncomeBarChart: React.FC<Props> = ({ monthlyFlow, toDate }) => {
         <ChartContainer
           data-testid='expense-income-bar-chart'
           className='aspect-auto h-[250px] w-full'
-          config={chartConfig}
+          config={{
+            income: {
+              label: 'Income',
+              color: 'var(--chart-1)',
+            },
+            expense: {
+              label: 'Expense',
+              color: 'var(--chart-2)',
+            },
+          }}
         >
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />

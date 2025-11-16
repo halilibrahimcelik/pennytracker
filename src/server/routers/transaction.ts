@@ -21,7 +21,7 @@ export const transactionRouter = router({
           count: sql<number>`count(*) over()`.as('total_count'),
         })
         .from(transaction)
-        .where(eq(transaction.userId, ctx.session?.user.id!))
+        .where(eq(transaction.userId, ctx.session?.user?.id ?? ''))
         .orderBy(desc(transaction.createdAt))
         .limit(input.pageSize)
         .offset((input.page - 1) * input.pageSize);
@@ -53,8 +53,10 @@ export const transactionRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session?.user?.id;
+      if (!userId) throw new Error('Unauthorized');
       await db.insert(transaction).values({
-        userId: ctx.session?.user.id!,
+        userId,
         ...input,
         amount: input.amount.toString(),
       });
@@ -83,7 +85,8 @@ export const transactionRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user.id!;
+      const userId = ctx.session?.user?.id;
+      if (!userId) throw new Error('Unauthorized');
       const where = and(
         eq(transaction.id, input.id!),
         eq(transaction.userId, userId)
@@ -102,7 +105,7 @@ export const transactionRouter = router({
     }),
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input }) => {
       const result = await db
         .select()
         .from(transaction)
@@ -112,7 +115,8 @@ export const transactionRouter = router({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user.id!;
+      const userId = ctx.session?.user?.id;
+      if (!userId) throw new Error('Unauthorized');
       const where = and(
         eq(transaction.id, input.id),
         eq(transaction.userId, userId)

@@ -69,11 +69,10 @@ const ExpenseIncomePieChart: React.FC<Props> = ({
 
   const [fromStateDate, setFromDate] = React.useState<Date>(fromDate);
   const [toStateDate, setToDate] = React.useState<Date>(toDate);
-  const { data, isLoading, error } =
-    trpcClientRouter.dashboard.summary.useQuery({
-      from: fromStateDate,
-      to: toStateDate,
-    });
+  const { data } = trpcClientRouter.dashboard.summary.useQuery({
+    from: fromStateDate,
+    to: toStateDate,
+  });
   const monthsDiff = useMemo(() => {
     const diff =
       toStateDate.getMonth() -

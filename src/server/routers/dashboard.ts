@@ -1,6 +1,6 @@
 import { protectedProcedure, router } from '../trpc';
-import { and, eq, desc, gte, lte, sql } from 'drizzle-orm';
-import { transaction, user } from '@/db/schema';
+import { and, eq, gte, lte, sql } from 'drizzle-orm';
+import { transaction } from '@/db/schema';
 import { db } from '@/db';
 
 import { z } from 'zod';
@@ -13,7 +13,8 @@ export const dashboardRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const userId = ctx.session?.user.id!;
+      const userId = ctx.session?.user?.id;
+      if (!userId) throw new Error('Unauthorized');
       const where = and(
         eq(transaction.userId, userId),
         input?.from ? gte(transaction.transactionDate, input.from) : undefined,
@@ -50,7 +51,8 @@ export const dashboardRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const userId = ctx.session?.user.id!;
+      const userId = ctx.session?.user?.id;
+      if (!userId) throw new Error('Unauthorized');
       const toDate = input.to || new Date();
       const from = new Date(toDate);
 
@@ -90,7 +92,8 @@ export const dashboardRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const userId = ctx.session?.user.id!;
+      const userId = ctx.session?.user?.id;
+      if (!userId) throw new Error('Unauthorized');
       const transactionType = input.transactionType;
       const where = and(
         eq(transaction.userId, userId),

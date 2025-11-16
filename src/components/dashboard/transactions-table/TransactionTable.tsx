@@ -39,7 +39,7 @@ const TransactionTable = <TData, TValue>({
   pagination: { page, pageSize },
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [pagination, setPagination] = useState({
+  const [pagination] = useState({
     pageIndex: 0,
     pageSize: 20,
   });
