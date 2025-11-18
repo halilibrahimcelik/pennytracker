@@ -16,7 +16,7 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 2, // 2 days,
   },
-  trustedOrigins: [process.env.BASE_URL!, process.env.NEXT_PUBLIC_BASE_URL!],
+  trustedOrigins: [process.env.BASE_URL!, process.env.PROD_BASE_URL!],
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 4,
