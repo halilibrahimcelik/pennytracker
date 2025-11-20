@@ -42,8 +42,14 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     },
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId:
+        process.env.NODE_ENV === 'development'
+          ? (process.env.GOOGLE_CLIENT_ID as string)
+          : (process.env.PROD_GOOGLE_CLIENT_ID as string),
+      clientSecret:
+        process.env.NODE_ENV === 'development'
+          ? (process.env.GOOGLE_CLIENT_SECRET as string)
+          : (process.env.PROD_GOOGLE_ClIENT_SECRET as string),
     },
   },
   emailVerification: {
