@@ -35,7 +35,7 @@ describe('Dashboard Page Test suites', () => {
     pieChart.should('be.visible');
   });
 
-  it.only("should display empty state message when there's no data", () => {
+  it("should display empty state message when there's no data", () => {
     // Set up ALL intercepts for the dashboard page
     cy.intercept('GET', '/api/trpc/dashboard.summary*', {
       statusCode: 200,

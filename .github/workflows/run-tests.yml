@@ -5,25 +5,26 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+
 jobs:
-  build:
+  cypress-run:
     runs-on: ubuntu-latest
+    container:
+      image: cypress/browsers:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+        run: npm install -g pnpm@8
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "22"
-          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
 
+      - name: Build application
+        run: pnpm run build
+
+      # Run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        with:
-          install-command: pnpm install
