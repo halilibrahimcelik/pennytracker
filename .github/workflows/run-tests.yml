@@ -33,6 +33,8 @@ jobs:
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
           BETTER_AUTH_URL: http://localhost:3000
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
         run: pnpm build
 
       - name: Install Cypress
@@ -46,4 +48,6 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
         run: pnpm dlx start-server-and-test "pnpm start" http://localhost:3000 "pnpm cypress run"
