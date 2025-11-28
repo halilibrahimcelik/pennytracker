@@ -27,16 +27,6 @@ jobs:
       - name: Install Packages
         run: pnpm install
 
-      - name: Get Build
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-          BETTER_AUTH_URL: http://localhost:3000
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          BASE_URL: ${{ secrets.BASE_URL }}
-          PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
-        run: pnpm build
-
       - name: Install Cypress
         run: pnpm add cypress --save-dev && pnpm cypress install
 
@@ -50,4 +40,27 @@ jobs:
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
           BASE_URL: ${{ secrets.BASE_URL }}
           PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
-        run: pnpm dlx start-server-and-test "pnpm start" http://localhost:3000 "pnpm cypress run"
+        run: pnpm dlx start-server-and-test "pnpm dev" http://localhost:3000 "pnpm cypress run"
+  build:
+    needs: dashboard-e2e-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v6
+
+      - name: Install Dependencies with pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.7.1
+
+      - name: Install Packages
+        run: pnpm install
+      - name: Get Build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          BETTER_AUTH_URL: http://localhost:3000
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+        run: pnpm build
