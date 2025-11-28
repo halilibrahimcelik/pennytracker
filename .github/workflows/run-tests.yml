@@ -1,4 +1,4 @@
-name: Run E2E Tests
+name: e2e-tests
 
 on:
   push:
@@ -6,79 +6,32 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
-  cypress-e2e-tests:
+  cypress:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 25
+    container:
+      image: cypress/browsers
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Get Code
+        uses: actions/checkout@v6
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install pnpm
+      - name: Install Dependencies with pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 10.7.1
 
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - name: Install Packages
+        run: pnpm install
 
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+      - name: Get Build
+        run: pnpm build
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Install Cypress
+        run: pnpm add cypress --save-dev && pnpm cypress install
 
-      - name: Build application
-        run: pnpm run build
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-          BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-
-      - name: Run Cypress E2E tests
-        uses: cypress-io/github-action@v6
-        with:
-          build: pnpm run build
-          start: pnpm start
-          wait-on: "http://localhost:3000"
-          wait-on-timeout: 120
-          browser: chrome
-          record: false
-          config-file: cypress.config.ts
-        env:
-          BASE_URL: http://localhost:3000
-          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
-          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-          BETTER_AUTH_URL: http://localhost:3000
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-
-      - name: Upload Cypress screenshots on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-screenshots
-          path: cypress/screenshots
-          if-no-files-found: ignore
-
-      - name: Upload Cypress videos
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-videos
-          path: cypress/videos
-          if-no-files-found: ignore
+      - name: Run E2E Tests
+        run: pnpm dlx start-server-and-test "pnpm start" http://localhost:3000 "pnpm cypress run"

@@ -5,8 +5,8 @@ describe('Dashboard Page Test suites', () => {
     cy.getTestById('email-input').type(Cypress.env('TEST_EMAIL'));
     cy.getTestById('password-input').type(Cypress.env('TEST_PASSWORD'));
     cy.getTestById('submit-button').click();
-    cy.wait(5000);
-    cy.get('div[data-title]').should(
+
+    cy.get('div[data-title]', { timeout: 10000 }).should(
       'contain.text',
       'You have successfully logged in'
     );
