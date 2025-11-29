@@ -18,7 +18,13 @@ jobs:
     steps:
       - name: Get Code
         uses: actions/checkout@v6
-
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
       - name: Install Dependencies with pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -47,7 +53,13 @@ jobs:
     steps:
       - name: Get Code
         uses: actions/checkout@v6
-
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
       - name: Install Dependencies with pnpm
         uses: pnpm/action-setup@v4
         with:
