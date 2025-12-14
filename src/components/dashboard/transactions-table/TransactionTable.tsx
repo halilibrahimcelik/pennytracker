@@ -4,6 +4,7 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
@@ -19,8 +20,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import DataTablePagination from './TablePagination';
-import { useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useDebounce } from '@/hooks';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -39,24 +43,47 @@ const TransactionTable = <TData, TValue>({
   pagination: { page, pageSize },
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
+    const [searchValue, setSearchValue] = useState('');
+  const debouncedSearchValue = useDebounce(searchValue, 400);
   const [pagination] = useState({
     pageIndex: 0,
     pageSize: 20,
   });
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
+    getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     state: {
       sorting,
       pagination: pagination,
     },
   });
+
+  // Update filter when debounced value changes
+  useEffect(() => {
+    table.getColumn("description")?.setFilterValue(debouncedSearchValue || undefined);
+  }, [debouncedSearchValue, table]);
+
+  const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+  };
+
+
   return (
     <div>
+      <div className='flex justify-end mb-4'>
+    <Input 
+    aria-label='search transactions'
+    id="search" placeholder="Search.."
+    value={searchValue}
+    onChange={handleOnChange}
+ className='w-full lg:max-w-md py-2 px-4' />    
+      </div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
