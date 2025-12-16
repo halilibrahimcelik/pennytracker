@@ -27,15 +27,8 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ROUTES } from '@/types';
+import { ROUTES, Transaction } from '@/types';
 
-export type Transaction = {
-  id: string;
-  description: string;
-  amount: string;
-  transactionType: 'income' | 'expense';
-  category: string;
-};
 
 export const TransactionColumns: ColumnDef<Transaction>[] = [
   {

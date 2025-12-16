@@ -73,7 +73,7 @@ const TransactionTable = <TData, TValue>({
     setSearchValue(event.target.value);
   };
 
-
+console.log( table.getRowModel().rows)
   return (
     <div>
       <div className='flex justify-end mb-4'>
@@ -84,7 +84,7 @@ const TransactionTable = <TData, TValue>({
     onChange={handleOnChange}
  className='w-full lg:max-w-md py-2 px-4' />    
       </div>
-      <Table>
+      <Table data-testid='transactions-table'>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -117,6 +117,7 @@ const TransactionTable = <TData, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row, index) => (
               <TableRow
+               data-testid={`transaction-row-${row.id}`}
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
               >
