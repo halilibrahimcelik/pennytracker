@@ -73,7 +73,6 @@ const TransactionTable = <TData, TValue>({
     setSearchValue(event.target.value);
   };
 
-console.log( table.getRowModel().rows)
   return (
     <div>
       <div className='flex justify-end mb-4'>
