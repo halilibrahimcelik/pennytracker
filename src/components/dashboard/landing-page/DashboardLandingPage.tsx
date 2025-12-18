@@ -48,7 +48,7 @@ const DashboardLandingPageContent: React.FC<Props> = ({
 }) => {
   const session = useSession();
   return (
-    <Container className="my-20 px-20">
+    <Container className="px-20">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
         <Card className="m-0 p-0 border-0 gap-0 shadow-none bg-transparent">
           <CardHeader className="m-0 p-0">

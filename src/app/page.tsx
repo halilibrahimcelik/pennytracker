@@ -8,8 +8,8 @@ import Link from "next/dist/client/link";
 import Image from "next/image";
 export default function Home() {
   return (
-    <main>
-      <Container className="pt-24">
+    <>
+      <Container className="pt-44">
         <Typography variant="h1" textAlign="center">
           Welcome to Penny Tracker <br />
         </Typography>
@@ -51,6 +51,6 @@ export default function Home() {
           <Carousel loop autoplay />
         </div>
       </Container>
-    </main>
+    </>
   );
 }
