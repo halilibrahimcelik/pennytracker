@@ -1,4 +1,5 @@
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -6,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 
 interface TransactionTableSkeletonProps {
   rows?: number;
@@ -18,13 +19,16 @@ const TransactionTableSkeleton = ({
   columns = 5,
 }: TransactionTableSkeletonProps) => {
   return (
-    <div>
+    <Card className="p-2 ">
+      <div>
+        <Skeleton className="h-8 w-48 mb-4 ml-auto" />
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
             {Array.from({ length: columns }).map((_, index) => (
               <TableHead key={index}>
-                <Skeleton className='h-6 w-20' />
+                <Skeleton className="h-6 w-20" />
               </TableHead>
             ))}
           </TableRow>
@@ -34,7 +38,7 @@ const TransactionTableSkeleton = ({
             <TableRow key={rowIndex}>
               {Array.from({ length: columns }).map((_, colIndex) => (
                 <TableCell key={colIndex}>
-                  <Skeleton className='h-8 w-full' />
+                  <Skeleton className="h-8 w-full" />
                 </TableCell>
               ))}
             </TableRow>
@@ -42,14 +46,14 @@ const TransactionTableSkeleton = ({
         </TableBody>
       </Table>
       <hr />
-      <div className='flex items-center justify-between px-2 py-4'>
+      <div className="flex items-center justify-between px-2 py-4">
         <div></div>
-        <div className='flex items-center space-x-2'>
-          <Skeleton className='h-8 w-20' />
-          <Skeleton className='h-8 w-20' />
+        <div className="flex items-center space-x-2">
+          <Skeleton className="h-8 w-20" />
+          <Skeleton className="h-8 w-20" />
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

@@ -1,3 +1,4 @@
+import Carousel from "@/components/features/Carousel";
 import DotGrid from "@/components/features/DotGrid";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,22 +8,8 @@ import Link from "next/dist/client/link";
 import Image from "next/image";
 export default function Home() {
   return (
-    <main className="w-full h-screen relative">
-      <DotGrid
-        dotSize={2}
-        gap={15}
-        baseColor="#e05d38"
-        activeColor="#e05d38"
-        proximity={100}
-        shockRadius={50}
-        shockStrength={50}
-        resistance={750}
-        returnDuration={1.5}
-        style={{
-          position: "absolute",
-        }}
-      />
-      <Container className="pt-44">
+    <main>
+      <Container className="pt-24">
         <Typography variant="h1" textAlign="center">
           Welcome to Penny Tracker <br />
         </Typography>
@@ -58,6 +45,10 @@ export default function Home() {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        <div className="max-w-3xl mx-auto">
+          <Carousel loop autoplay />
         </div>
       </Container>
     </main>

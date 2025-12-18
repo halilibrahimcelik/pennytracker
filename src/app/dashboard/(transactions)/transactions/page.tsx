@@ -1,13 +1,13 @@
-import { NextPage } from 'next';
-import { TransactionColumns } from '@/components/dashboard/transactions-table/colums';
-import TransactionTable from '@/components/dashboard/transactions-table/TransactionTable';
-import TransactionTableSkeleton from '@/components/dashboard/transactions-table/TransactionTableSkeleton';
-import { auth } from '@/lib/auth/auth';
-import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { ROUTES } from '@/types';
-import { Suspense } from 'react';
-import { trpcServer } from '@/lib/trpc/server';
+import { NextPage } from "next";
+import { TransactionColumns } from "@/components/dashboard/transactions-table/colums";
+import TransactionTable from "@/components/dashboard/transactions-table/TransactionTable";
+import TransactionTableSkeleton from "@/components/dashboard/transactions-table/TransactionTableSkeleton";
+import { auth } from "@/lib/auth/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { ROUTES } from "@/types";
+import { Suspense } from "react";
+import { trpcServer } from "@/lib/trpc/server";
 
 type Props = {
   searchParams: Promise<TransactionsContentProps>;
