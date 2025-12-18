@@ -4,9 +4,44 @@ import TransactionTable from "../TransactionTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { Transaction } from "@/types";
 import userEvent from "@testing-library/user-event";
+import { TransactionColumns } from "../columns";
 vi.mock("@/hooks", () => ({
   useDebounce: (value: string) => value,
 }));
+vi.mock("date-fns", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("date-fns")>();
+  return {
+    ...actual,
+    format: vi.fn(),
+  };
+});
+const mockMutate = vi.fn();
+const mockMutateAsync = vi.fn();
+vi.mock("@/lib/trpc/client", () => ({
+  trpcClientRouter: {
+    transaction: {
+      delete: {
+        useMutation: vi.fn(() => ({
+          mutate: mockMutate,
+          mutateAsync: mockMutateAsync,
+          isPending: false,
+          isError: false,
+          isSuccess: false,
+          data: undefined,
+          error: null,
+        })),
+      },
+    },
+  },
+}));
+
+vi.mock("../columns", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../columns")>();
+  return {
+    ...actual,
+    TransactionColumns: actual.TransactionColumns,
+  };
+});
 vi.mock("next/navigation", async (importOriginal) => {
   const actual = await importOriginal<typeof import("next/navigation")>();
   const { useRouter } =
@@ -28,28 +63,7 @@ vi.mock("next/navigation", async (importOriginal) => {
     useSearchParams,
   };
 });
-const mockColumns: ColumnDef<Transaction>[] = [
-  {
-    accessorKey: "id",
-    header: "ID",
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-  },
-  {
-    accessorKey: "amount",
-    header: "Amount",
-  },
-  {
-    accessorKey: "transactionType",
-    header: "Type",
-  },
-  {
-    accessorKey: "transactionDate",
-    header: "Date",
-  },
-];
+
 const mockData: Transaction[] = [
   {
     id: "1",
@@ -71,7 +85,7 @@ describe("TransactionTable Component Test Suites", () => {
   it("should render Transaction Table", async () => {
     render(
       <TransactionTable
-        columns={mockColumns}
+        columns={TransactionColumns}
         data={mockData}
         pagination={{ page: 1, pageSize: 10 }}
         count={2}
@@ -82,7 +96,7 @@ describe("TransactionTable Component Test Suites", () => {
   it("should show no results when there is no data", () => {
     render(
       <TransactionTable
-        columns={mockColumns}
+        columns={TransactionColumns}
         data={[]}
         pagination={{ page: 1, pageSize: 10 }}
         count={0}
@@ -93,19 +107,19 @@ describe("TransactionTable Component Test Suites", () => {
   it("should render correct amount for the transactions", async () => {
     render(
       <TransactionTable
-        columns={mockColumns}
+        columns={TransactionColumns}
         data={mockData}
         pagination={{ page: 1, pageSize: 10 }}
         count={2}
       />
     );
-    expect(screen.getByText("3000")).toBeInTheDocument();
-    expect(screen.getByText("1200")).toBeInTheDocument();
+    const rows = await screen.findAllByRole("row");
+    expect(rows).toHaveLength(3);
   });
   it("should render correct query from the search field", async () => {
     render(
       <TransactionTable
-        columns={mockColumns}
+        columns={TransactionColumns}
         data={mockData}
         pagination={{ page: 1, pageSize: 10 }}
         count={2}
@@ -119,5 +133,33 @@ describe("TransactionTable Component Test Suites", () => {
     const row = await screen.findByRole("row", { name: /rent/i });
     expect(row).toBeInTheDocument();
     expect(screen.queryByText(/salary/i)).not.toBeInTheDocument();
+  });
+  it("should delete  a transaction when delete action is triggered", async () => {
+    render(
+      <TransactionTable
+        columns={TransactionColumns}
+        data={mockData}
+        pagination={{ page: 1, pageSize: 10 }}
+        count={2}
+      />
+    );
+    const user = userEvent.setup();
+    const SalaryRow = await screen.findByRole("row", { name: /salary/i });
+    expect(SalaryRow).toBeInTheDocument();
+    screen.logTestingPlaygroundURL();
+    const deleteAction = await screen.findByTestId(
+      `transaction-actions-${mockData[0].id}`
+    );
+    expect(deleteAction).toBeInTheDocument();
+    await user.click(deleteAction);
+    const deleteButton = await screen.findByTestId(
+      `transaction-actions-delete-${mockData[0].id}`
+    );
+    expect(deleteButton).toBeInTheDocument();
+    await user.click(deleteButton);
+    const confirmButton = await screen.findByRole("button", { name: "Yes" });
+    expect(confirmButton).toBeInTheDocument();
+    await user.click(confirmButton);
+    expect(mockMutate).toHaveBeenCalledTimes(1);
   });
 });

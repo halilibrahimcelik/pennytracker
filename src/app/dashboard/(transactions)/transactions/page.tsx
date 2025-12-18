@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { TransactionColumns } from "@/components/dashboard/transactions-table/colums";
+import { TransactionColumns } from "@/components/dashboard/transactions-table/columns";
 import TransactionTable from "@/components/dashboard/transactions-table/TransactionTable";
 import TransactionTableSkeleton from "@/components/dashboard/transactions-table/TransactionTableSkeleton";
 import { auth } from "@/lib/auth/auth";
