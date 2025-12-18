@@ -263,8 +263,8 @@ const DotGrid = ({
   ]);
 
   return (
-    <section
-      className={`p-4 flex items-center justify-center h-full w-full relative ${className}`}
+    <div
+      className={` flex items-center justify-center h-full w-full relative ${className}`}
       style={style}
     >
       <div ref={wrapperRef} className="w-full h-full relative">
@@ -273,7 +273,7 @@ const DotGrid = ({
           className="absolute inset-0 w-full h-full pointer-events-none"
         />
       </div>
-    </section>
+    </div>
   );
 };
 
