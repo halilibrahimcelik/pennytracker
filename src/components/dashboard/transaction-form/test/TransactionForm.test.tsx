@@ -2,15 +2,17 @@ import { render, screen, waitFor } from "@testing-library/react";
 import TransactionForm from "../TransactionForm";
 import { beforeAll, expect, Mock, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
+
 beforeAll(() => {
   window.HTMLElement.prototype.hasPointerCapture = vi.fn();
   window.HTMLElement.prototype.scrollIntoView = function () {};
 });
-var mockMutate = vi.fn();
+
+const mockMutate = vi.fn();
 
 vi.mock("@/hooks", () => {
   return {
-    useTransactionMutation: vi.fn().mockReturnValue({
+    useTransactionMutation: () => ({
       mutate: mockMutate,
       isPending: false,
       error: undefined,
@@ -22,15 +24,15 @@ vi.mock("@/lib/trpc/client", () => ({
   trpcClientRouter: {
     transaction: {
       create: {
-        useMutation: vi.fn().mockReturnValue({
-          mutate: vi.fn(),
+        useMutation: (callbacks?: any) => ({
+          mutate: mockMutate,
           isPending: false,
           error: undefined,
         }),
       },
       update: {
-        useMutation: vi.fn().mockReturnValue({
-          mutate: vi.fn(),
+        useMutation: (callbacks?: any) => ({
+          mutate: mockMutate,
           isPending: false,
           error: undefined,
         }),
@@ -40,6 +42,10 @@ vi.mock("@/lib/trpc/client", () => ({
 }));
 
 describe("TransactionForm Component Test Suites", () => {
+  beforeEach(() => {
+    mockMutate.mockClear();
+  });
+
   test("should render TransactionForm Component", () => {
     render(<TransactionForm />);
     const formComponent = screen.getByTestId("transaction-form");
@@ -83,17 +89,22 @@ describe("TransactionForm Component Test Suites", () => {
       expect(selectDropdown).toHaveTextContent("Leisure");
     });
 
-    // await user.click(datePicker);
-    // const dayToSelect = await screen.findByRole("button", { name: "15" });
-    // await user.click(dayToSelect);
+    await user.click(datePicker);
 
-    //await user.click(submitButton);
+    waitFor(async () => {
+      const dayToSelect = await screen.findByRole("button", { name: "15" });
+      await user.click(dayToSelect);
+    });
+    await user.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockMutate).toHaveBeenCalled();
+      expect(mockMutate).toHaveBeenCalledTimes(1);
+    });
 
     expect(radioBtn).toBeInTheDocument();
     expect(selectDropdown).toBeInTheDocument();
     expect(datePicker).toBeInTheDocument();
     // expect(dayToSelect).toBeInTheDocument();
-
-    screen.logTestingPlaygroundURL();
   });
 });
