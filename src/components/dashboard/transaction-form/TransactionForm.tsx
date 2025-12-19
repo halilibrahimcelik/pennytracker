@@ -1,5 +1,5 @@
-'use client';
-import { Button } from '@/components/ui/button';
+"use client";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -7,7 +7,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
 import {
   Field,
@@ -16,16 +16,16 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSet,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import DatePicker from '../../features/DatePicker';
-import { Textarea } from '../../ui/textarea';
-import { Spinner } from '../../ui/spinner';
-import { CATEGORIES } from '@/constants';
-import { SelectTransaction } from '@/db/schema';
-import { useTransactionMutation } from '@/hooks';
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import DatePicker from "../../features/DatePicker";
+import { Textarea } from "../../ui/textarea";
+import { Spinner } from "../../ui/spinner";
+import { CATEGORIES } from "@/constants";
+import { SelectTransaction } from "@/db/schema";
+import { useTransactionMutation } from "@/hooks";
 type FieldErrors = {
   transactionType?: string[];
   category?: string[];
@@ -40,7 +40,7 @@ type TransactionFormProps = {
 const TransactionForm: React.FC<TransactionFormProps> = ({ transaction }) => {
   const isEditMode = !!transaction;
   const { mutate, isPending, error } = useTransactionMutation(
-    isEditMode ? 'update' : 'create'
+    isEditMode ? "update" : "create"
   );
   // Extract Zod field errors
   const fieldErrors = error?.data?.zodError as FieldErrors | undefined;
@@ -53,11 +53,11 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction }) => {
     const formData = new FormData(form);
     const input = {
       ...(isEditMode && { id: transaction!.id }),
-      transactionType: formData.get('transactionType') as 'income' | 'expense',
-      category: formData.get('category') as string,
-      amount: Number(formData.get('amount')),
-      description: formData.get('description') as string,
-      transactionDate: new Date(formData.get('date') as string),
+      transactionType: formData.get("transactionType") as "income" | "expense",
+      category: formData.get("category") as string,
+      amount: Number(formData.get("amount")),
+      description: formData.get("description") as string,
+      transactionDate: new Date(formData.get("date") as string),
     };
 
     mutate(input, {
@@ -69,53 +69,63 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form data-testid="transaction-form" onSubmit={handleSubmit}>
         <FieldSet>
           <FieldGroup>
-            <div className='flex flex-col sm:flex-row gap-2 md:gap-4 '>
+            <div className="flex flex-col sm:flex-row gap-2 md:gap-4 ">
               <Field>
-                <FieldLabel htmlFor='email'>Transaction Type</FieldLabel>
+                <FieldLabel htmlFor="email">Transaction Type</FieldLabel>
                 <RadioGroup
-                  name='transactionType'
-                  className='flex'
+                  data-testid="Transaction Type"
+                  name="transactionType"
+                  className="flex"
                   defaultValue={
-                    transaction ? transaction.transactionType : 'expense'
+                    transaction ? transaction.transactionType : "expense"
                   }
                 >
-                  <div className='flex items-center space-x-2'>
-                    <RadioGroupItem value='expense' id='expense' />
-                    <Label htmlFor='expense'>Expense</Label>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      value="expense"
+                      id="expense"
+                      aria-label="Expense"
+                    />
+                    <Label htmlFor="expense">Expense</Label>
                   </div>
-                  <div className='flex items-center space-x-2'>
-                    <RadioGroupItem value='income' id='income' />
-                    <Label htmlFor='income'>Income</Label>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      value="income"
+                      id="income"
+                      aria-label="Income"
+                    />
+                    <Label htmlFor="income">Income</Label>
                   </div>
                 </RadioGroup>
                 <FieldDescription>Choose your transaction</FieldDescription>
-                {getFieldError('transactionType') && (
-                  <FieldError data-testid='transactionType-error'>
-                    {getFieldError('transactionType')}
+                {getFieldError("transactionType") && (
+                  <FieldError data-testid="transactionType-error">
+                    {getFieldError("transactionType")}
                   </FieldError>
                 )}
               </Field>
               <Field>
-                <FieldLabel htmlFor='category'>Category</FieldLabel>
+                <FieldLabel htmlFor="category">Category</FieldLabel>
                 <Select
-                  defaultValue={transaction ? transaction.category : ''}
-                  name='category'
+                  defaultValue={transaction ? transaction.category : ""}
+                  name="category"
                 >
                   <SelectTrigger
-                    defaultValue={transaction ? transaction.category : ''}
-                    className='w-[180px]'
+                    aria-label="Category"
+                    defaultValue={transaction ? transaction.category : ""}
+                    className="w-[180px]"
                   >
-                    <SelectValue placeholder='Select a category' />
+                    <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
                       {CATEGORIES.map((category) => (
                         <SelectItem
                           key={category}
-                          className='capitalize'
+                          className="capitalize"
                           value={category}
                         >
                           {category}
@@ -124,71 +134,73 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction }) => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-                {getFieldError('category') && (
-                  <FieldError data-testid='category-error'>
-                    {getFieldError('category')}
+                {getFieldError("category") && (
+                  <FieldError data-testid="category-error">
+                    {getFieldError("category")}
                   </FieldError>
                 )}
               </Field>
             </div>
-            <div className='flex flex-col sm:flex-row gap-2 md:gap4 '>
+            <div className="flex flex-col sm:flex-row gap-2 md:gap4 ">
               <Field>
-                <FieldLabel htmlFor='date'>Transaction Date</FieldLabel>
+                <FieldLabel htmlFor="date">Transaction Date</FieldLabel>
                 <DatePicker
                   defaultValue={
                     transaction ? transaction.transactionDate : undefined
                   }
                 />
-                {getFieldError('date') && (
-                  <FieldError data-testid='date-error'>
-                    {getFieldError('date')}
+                {getFieldError("date") && (
+                  <FieldError data-testid="date-error">
+                    {getFieldError("date")}
                   </FieldError>
                 )}
               </Field>
               <Field>
-                <FieldLabel htmlFor='amount'>Amount</FieldLabel>
+                <FieldLabel htmlFor="amount">Amount</FieldLabel>
                 <Input
-                  defaultValue={transaction ? transaction.amount : ''}
-                  type='number'
-                  step='0.01'
-                  name='amount'
-                  id='amount'
-                  placeholder='Enter amount'
+                  defaultValue={transaction ? transaction.amount : ""}
+                  type="number"
+                  step="0.01"
+                  name="amount"
+                  aria-label="Amount"
+                  id="amount"
+                  placeholder="Enter amount"
                 />
                 <FieldDescription>Enter transaction amount</FieldDescription>
-                {getFieldError('amount') && (
-                  <FieldError data-testid='amount-error'>
-                    {getFieldError('amount')}
+                {getFieldError("amount") && (
+                  <FieldError data-testid="amount-error">
+                    {getFieldError("amount")}
                   </FieldError>
                 )}
               </Field>
             </div>
             <Field>
-              <FieldLabel htmlFor='description'>Description</FieldLabel>
+              <FieldLabel htmlFor="description">Description</FieldLabel>
               <Textarea
-                defaultValue={transaction ? transaction.description : ''}
+                defaultValue={transaction ? transaction.description : ""}
                 cols={3}
-                name='description'
-                id='description'
-                placeholder='Enter description'
+                aria-label="Description"
+                name="description"
+                id="description"
+                placeholder="Enter description"
               />
               <FieldDescription>Enter transaction description</FieldDescription>
-              {getFieldError('description') && (
-                <FieldError data-testid='description-error'>
-                  {getFieldError('description')}
+              {getFieldError("description") && (
+                <FieldError data-testid="description-error">
+                  {getFieldError("description")}
                 </FieldError>
               )}
             </Field>
           </FieldGroup>
 
           <Button
-            data-testid='submit-button'
-            size='sm'
-            variant='outline'
-            type='submit'
+            data-testid="submit-button"
+            size="sm"
+            variant="outline"
+            type="submit"
             disabled={isPending}
           >
-            {isPending ? <Spinner /> : 'Submit'}
+            {isPending ? <Spinner /> : "Submit"}
           </Button>
         </FieldSet>
       </form>

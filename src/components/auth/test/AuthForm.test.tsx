@@ -71,7 +71,5 @@ describe("Transaction Form Test Suites", () => {
     expect(confirmPasswordInput).toHaveValue("password123");
     await user.click(submitButton);
     expect(mockAuthMethod).toHaveBeenCalledTimes(1);
-    screen.debug();
-    screen.logTestingPlaygroundURL();
   });
 });
