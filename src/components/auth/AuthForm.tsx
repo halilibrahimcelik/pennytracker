@@ -146,6 +146,8 @@ export const AuthForm: React.FC<Props> = ({
                   <FieldLabel htmlFor="password">Password</FieldLabel>
 
                   <Input
+                    title="password"
+                    aria-label="password"
                     data-testid="password-input"
                     name="password"
                     id="password"
