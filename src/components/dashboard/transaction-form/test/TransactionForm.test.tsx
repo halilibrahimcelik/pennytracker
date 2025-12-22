@@ -24,15 +24,15 @@ vi.mock("@/lib/trpc/client", () => ({
   trpcClientRouter: {
     transaction: {
       create: {
-        useMutation: (callbacks?: any) => ({
-          mutate: mockMutate,
+        useMutation: vi.fn().mockReturnValue({
+          mutate: vi.fn(),
           isPending: false,
           error: undefined,
         }),
       },
       update: {
-        useMutation: (callbacks?: any) => ({
-          mutate: mockMutate,
+        useMutation: vi.fn().mockReturnValue({
+          mutate: vi.fn(),
           isPending: false,
           error: undefined,
         }),
@@ -42,9 +42,9 @@ vi.mock("@/lib/trpc/client", () => ({
 }));
 
 describe("TransactionForm Component Test Suites", () => {
-  beforeEach(() => {
-    mockMutate.mockClear();
-  });
+  // beforeEach(() => {
+  //   mockMutate.mockClear();
+  // });
 
   test("should render TransactionForm Component", () => {
     render(<TransactionForm />);
@@ -52,12 +52,11 @@ describe("TransactionForm Component Test Suites", () => {
     expect(formComponent).toBeInTheDocument();
   });
 
-  test.only("should  submit the form with correct data", async () => {
+  test("should  submit the form with correct data", async () => {
     const user = userEvent.setup();
     render(<TransactionForm />);
 
     // Get form elements
-    const incomeRadio = screen.getByLabelText(/income/i);
     const radioBtn = screen.getByTestId("Transaction Type");
     const expenseRadio = screen.getByLabelText(/expense/i);
     const selectDropdown = screen.getByRole("combobox", {
@@ -105,6 +104,5 @@ describe("TransactionForm Component Test Suites", () => {
     expect(radioBtn).toBeInTheDocument();
     expect(selectDropdown).toBeInTheDocument();
     expect(datePicker).toBeInTheDocument();
-    // expect(dayToSelect).toBeInTheDocument();
   });
 });

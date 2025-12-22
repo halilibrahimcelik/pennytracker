@@ -146,7 +146,6 @@ describe("TransactionTable Component Test Suites", () => {
     const user = userEvent.setup();
     const SalaryRow = await screen.findByRole("row", { name: /salary/i });
     expect(SalaryRow).toBeInTheDocument();
-    screen.logTestingPlaygroundURL();
     const deleteAction = await screen.findByTestId(
       `transaction-actions-${mockData[0].id}`
     );

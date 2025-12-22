@@ -41,7 +41,7 @@ describe("Transaction Form Test Suites", () => {
     const transactionFromTitle = screen.getByRole("heading", { level: 2 });
     expect(transactionFromTitle).toBeInTheDocument();
   });
-  it.only("should  call authMethod on form submission", async () => {
+  it("should  call authMethod on form submission", async () => {
     render(
       <AuthForm
         title="New Transaction"

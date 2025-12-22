@@ -1,0 +1,35 @@
+name: "Run Unit Tests"
+on:
+  push:
+    branches:
+        [main]
+  pull_request:
+    branches:
+        [main] 
+
+jobs:
+    tests:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+            - name: Set up Node.js
+              with:
+                node-version: '20'
+              uses: actions/setup-node@v6
+            - name: Cache Dependencies
+              uses: actions/cache@v4
+              with:
+                path: ~/.pnpm-store
+                key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+                restore-keys: |
+                  ${{ runner.os }}-pnpm-
+            - uses: pnpm/action-setup@v4
+              name: Install pnpm
+              with:
+                version: 10.7.1
+
+            - name: Install dependencies
+              run: pnpm install
+            - name: Run Unit Tests
+              run: pnpm test
