@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import TransactionForm from "../TransactionForm";
-import { beforeAll, expect, Mock, vi } from "vitest";
+import { beforeAll, expect, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 
 beforeAll(() => {

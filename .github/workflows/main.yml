@@ -13,71 +13,53 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v6
-            - name: Set up Node.js
+            - name: Load & Cache Dependencies
+              id: load-cache-deps
+              uses: ./.github/workflows/actions/cache-deps
               with:
-                node-version: '20'
-              uses: actions/setup-node@v6
-            - name: Cache Dependencies
-              uses: actions/cache@v4
-              with:
-                path: ~/.pnpm-store
-                key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-                restore-keys: |
-                  ${{ runner.os }}-pnpm-
-            - uses: pnpm/action-setup@v4
-              name: Install pnpm
-              with:
-                version: 10.7.1
-
-            - name: Install dependencies
-              run: pnpm install
+                caching: "true"
+            - name: Output Cache Status
+              run: echo "Used cache ${{steps.load-cache-deps.outputs.used-cache}}"
             - name: Run Unit Tests
               run: pnpm test
+            - name: Upload Coverage Report
+              uses: actions/upload-artifact@v4
+              with:
+                name: coverage-report
+                path: coverage/
+                retention-days: 30
+              if: always()
     lint:
+        needs: tests
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
               uses: actions/checkout@v6
-            - name: Set up Node.js
+            - name: Load & Cache Dependencies
+              id: load-cache-deps
+              uses: ./.github/workflows/actions/cache-deps
               with:
-                node-version: '20'
-              uses: actions/setup-node@v6
-            - name: Cache Dependencies
-              uses: actions/cache@v4
-              with:
-                path: ~/.pnpm-store
-                key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-                restore-keys: |
-                  ${{ runner.os }}-pnpm-
-            - name: Install pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                version: 10.7.1
-            - name: Install dependencies
-              run: pnpm install
+                caching: "true"
+            - name: Output Cache Status
+              run: echo "Used cache ${{steps.load-cache-deps.outputs.used-cache}}"
             - name: Run Linter
               run: pnpm lint
+            - name: Lint Status
+              run: echo "Linting completed successfully"
     build:
+        needs: [tests, lint]
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
               uses: actions/checkout@v6
-            - name: Set up Node.js
+            - name: Load & Cache Dependencies
+              id: load-cache-deps
+              uses: ./.github/workflows/actions/cache-deps
               with:
-                node-version: '20'
-              uses: actions/setup-node@v6
-            - name: Cache Dependencies
-              uses: actions/cache@v4
-              with:
-                path: ~/.pnpm-store
-                key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-                restore-keys: |
-                  ${{ runner.os }}-pnpm-
-            - name: Install pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                version: 10.7.1
-            - name: Install dependencies
-              run: pnpm install
+                caching: "true"
+            - name: Output Cache Status
+              run: echo "Used cache ${{steps.load-cache-deps.outputs.used-cache}}"
             - name: Build Project
               run: pnpm build
+            - name: Build Status
+              run: echo "Build completed successfully"

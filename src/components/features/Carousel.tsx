@@ -2,16 +2,8 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useMotionValue, useTransform } from "motion/react";
-// replace icons with your own if needed
-import {
-  FiCircle,
-  FiCode,
-  FiFileText,
-  FiLayers,
-  FiLayout,
-} from "react-icons/fi";
+import { FiFileText, FiLayers } from "react-icons/fi";
 import Image from "next/image";
-import { Button } from "../ui/button";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 
 const DEFAULT_ITEMS = [

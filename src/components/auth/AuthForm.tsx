@@ -16,7 +16,7 @@ import { FcGoogle } from "react-icons/fc";
 
 import { toast } from "sonner";
 import { signIn } from "@/lib/auth/auth-client";
-import { Card, CardContent, CardTitle } from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import { ROUTES } from "@/types";

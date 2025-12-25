@@ -11,7 +11,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useActionState, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { RiCollapseHorizontalLine } from "react-icons/ri";
 
 type Props = {

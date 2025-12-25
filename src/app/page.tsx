@@ -1,5 +1,4 @@
 import Carousel from "@/components/features/Carousel";
-import DotGrid from "@/components/features/DotGrid";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Container from "@/components/ui/container";

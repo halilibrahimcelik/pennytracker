@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeAll } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import TransactionTable from "../TransactionTable";
-import { ColumnDef } from "@tanstack/react-table";
 import { Transaction } from "@/types";
 import userEvent from "@testing-library/user-event";
 import { TransactionColumns } from "../columns";
