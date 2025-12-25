@@ -10,6 +10,9 @@ import { auth } from '@/lib/auth/auth';
 import { headers } from 'next/headers';
 import { APIError } from 'better-auth';
 import { ROUTES } from '@/types';
+import { db } from '@/db';
+import { account,user } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
 export const signInUser = async (initialData: unknown, formData: FormData) => {
   const validatedData = signInSchema.safeParse({
@@ -87,9 +90,19 @@ export const signUpCreateUser = async (
       name,
     },
     {
-      onSuccess: (user) => {
-        console.log('User signed up successfully:', user);
-      },
+      onSuccess:async (data) => {
+
+        try {
+         await db.update(account).set({
+          userEmail: email,
+        }).where(eq(account.userId, data.data.user.id));
+       
+        } catch (error) {
+          if(error instanceof Error){
+            console.error('Error updating user email in account table:', error.message);
+          }
+        }
+        },
       onError: (error) => {
         console.error('Error signing up user:', error);
       },
@@ -137,7 +150,6 @@ export const forgotPassword = async (
   const validatedData = emailSchema.safeParse({
     email: formData.get('email'),
   });
-  console.log(validatedData);
   if (!validatedData.success) {
     return {
       success: false,
@@ -146,9 +158,17 @@ export const forgotPassword = async (
   }
 
   const { email } = validatedData.data;
-  console.log('Resetting password for email:', email);
+  
   try {
-    await auth.api.requestPasswordReset({
+
+    const isRegisteredWithPassword=await isAccountRegisteredWithPassword(email);
+    if(!isRegisteredWithPassword){
+      return {
+        success: false,
+        errors: { email: ['This  email is used by OAuth provider. Please use the OAuth provider to sign in.'] },
+      };
+    }
+  const res=  await auth.api.requestPasswordReset({
       body: {
         email, // required
         redirectTo: process.env.BASE_URL! + ROUTES.RESET_PASSWORD, // Use your base URL
@@ -216,3 +236,19 @@ export const resetPassword = async (
     };
   }
 };
+
+const isAccountRegisteredWithPassword=async(email:string):Promise<boolean>=>{
+  try {
+    const data=await db.select().from(account).where(eq(account.userEmail,email));
+    if(data.length===0){
+      return false;
+    }
+    const acc=data[0];
+    return acc.password !==null && acc.password !==undefined;
+  } catch (error) {
+    if(error instanceof Error){
+      console.error('Error checking account registration method:', error.message);
+    }
+    return false;
+  }
+}
