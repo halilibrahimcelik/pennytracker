@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { ColumnDef, Row } from '@tanstack/react-table';
-import { Button } from '@/components/ui/button';
+import { ColumnDef, Row } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogClose,
@@ -18,45 +18,37 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { MoreHorizontal, ArrowUpDown } from 'lucide-react';
-import { MdOutlineDeleteSweep } from 'react-icons/md';
-import { format } from 'date-fns';
-import { trpcClientRouter } from '@/lib/trpc/client';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { ROUTES } from '@/types';
-
-export type Transaction = {
-  id: string;
-  description: string;
-  amount: string;
-  transactionType: 'income' | 'expense';
-  category: string;
-};
+} from "@/components/ui/dialog";
+import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { MdOutlineDeleteSweep } from "react-icons/md";
+import { format } from "date-fns";
+import { trpcClientRouter } from "@/lib/trpc/client";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { ROUTES, Transaction } from "@/types";
 
 export const TransactionColumns: ColumnDef<Transaction>[] = [
   {
-    accessorKey: 'id',
-    header: '#',
+    accessorKey: "id",
+    header: "#",
   },
   {
-    accessorKey: 'description',
-    header: 'Description',
+    accessorKey: "description",
+    header: "Description",
   },
   {
-    accessorKey: 'transactionDate',
+    accessorKey: "transactionDate",
     header: ({ column }) => {
       return (
         <Button
-          title='Sort by Date'
-          variant='ghost'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          title="Sort by Date"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Transaction Date
-          <ArrowUpDown className='ml-2 h-4 w-4' />
+          <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
@@ -64,39 +56,39 @@ export const TransactionColumns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => {
       return (
         <div>
-          {format(new Date(row.getValue('transactionDate')), 'dd/MM/yyyy')}
+          {format(new Date(row.getValue("transactionDate")), "dd/MM/yyyy")}
         </div>
       );
     },
   },
   {
-    accessorKey: 'amount',
+    accessorKey: "amount",
     header: ({ column }) => {
       return (
         <Button
-          title='Sort by Amount'
-          variant='ghost'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          title="Sort by Amount"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Amount
-          <ArrowUpDown className='ml-2 h-4 w-4' />
+          <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('amount'));
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'GBP',
+      const amount = parseFloat(row.getValue("amount"));
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "GBP",
       }).format(amount);
       return <div>{formatted}</div>;
     },
   },
-  { accessorKey: 'transactionType', header: 'Type' },
-  { accessorKey: 'category', header: 'Category' },
+  { accessorKey: "transactionType", header: "Type" },
+  { accessorKey: "category", header: "Category" },
   {
-    id: 'actions',
-    header: 'Actions',
+    id: "actions",
+    header: "Actions",
     cell: ({ row }) => <ActionsCell row={row} />,
   },
 ];
@@ -110,15 +102,15 @@ const ActionsCell = ({ row }: { row: Row<Transaction> }) => {
 
   const handleDelete = () => {
     try {
-      mutation.mutate({ id: row.getValue('id') });
+      mutation.mutate({ id: row.getValue("id") });
     } catch (error) {
-      console.log('Error deleting transaction:', error);
+      console.log("Error deleting transaction:", error);
     }
   };
 
   useEffect(() => {
     if (mutation.isSuccess) {
-      toast.success('Transaction deleted successfully');
+      toast.success("Transaction deleted successfully");
       router.refresh();
       setIsDialogOpen(false);
       setIsDropdownOpen(false);
@@ -128,18 +120,22 @@ const ActionsCell = ({ row }: { row: Row<Transaction> }) => {
     <>
       <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
         <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='h-8 w-8 p-0 cursor-pointer'>
-            <span className='sr-only'>Open menu</span>
-            <MoreHorizontal className='h-2 w-4' />
+          <Button
+            data-testid={`transaction-actions-${row.getValue("id")}`}
+            variant="ghost"
+            className="h-8 w-8 p-0 cursor-pointer"
+          >
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-2 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align='end'>
-          <DropdownMenuItem className='w-full cursor-pointer'>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem className="w-full cursor-pointer">
             <Link
-              href={`${ROUTES.TRANSACTIONS}/${row.getValue('id')}`}
-              className='w-full'
+              href={`${ROUTES.TRANSACTIONS}/${row.getValue("id")}`}
+              className="w-full"
             >
-              Details{' '}
+              Details{" "}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -149,15 +145,16 @@ const ActionsCell = ({ row }: { row: Row<Transaction> }) => {
                 onSelect={(e) => {
                   e.preventDefault();
                 }}
-                title='Delete'
-                variant='destructive'
-                className='cursor-pointer'
+                title="Delete"
+                variant="destructive"
+                className="cursor-pointer"
+                data-testid={`transaction-actions-delete-${row.getValue("id")}`}
               >
-                <MdOutlineDeleteSweep className='text-danger' />
+                <MdOutlineDeleteSweep className="text-danger" />
                 Delete
               </DropdownMenuItem>
             </DialogTrigger>
-            <DialogContent className='sm:max-w-[425px]'>
+            <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Delete Transaction #{row.index + 1} </DialogTitle>
                 <DialogDescription>
@@ -167,12 +164,12 @@ const ActionsCell = ({ row }: { row: Row<Transaction> }) => {
               </DialogHeader>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant='outline'>Cancel</Button>
+                  <Button variant="outline">Cancel</Button>
                 </DialogClose>
                 <Button
                   onClick={handleDelete}
                   disabled={mutation.isPending}
-                  type='submit'
+                  type="submit"
                 >
                   Yes
                 </Button>

@@ -20,8 +20,8 @@ export async function seedTransactions(userId: string, count: number) {
 // Usage example:
 
 const main = async () => {
-  // Seed 10 transactions for a user with ID 'user-123'
-  await seedTransactions('bfxBiPxvY9E5RQVPcG3iH3DIpsjU0aRo', 10);
+  // Seed 30 transactions for a user with ID 'user-123'
+  await seedTransactions(process.env.TEST_USER_ID!, 30);
 };
 
 main().catch((e) => {

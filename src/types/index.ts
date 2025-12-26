@@ -8,3 +8,12 @@ export enum ROUTES {
   TRANSACTIONS = '/dashboard/transactions',
   NEW_TRANSACTION = '/dashboard/transactions/new',
 }
+
+
+export type Transaction = {
+  id: string;
+  description: string;
+  amount: string;
+  transactionType: 'income' | 'expense';
+  category: string;
+};

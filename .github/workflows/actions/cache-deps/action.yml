@@ -1,0 +1,42 @@
+name: 'Setup Node and pnpm and cache dependencies'
+description: 'an action to setup node, pnpm and cache dependencies for workflows'
+inputs:
+    caching:
+        description: "Whether to cache dependencies"
+        required: false
+        default: "true"
+outputs:
+    used-cache:
+        description: "Whether the cache was used"
+        value: ${{steps.install-deps.outputs.cache}}
+runs:
+  using: 'composite'
+  steps:
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: '20'
+        
+    - name: Cache Dependencies
+      if: ${{inputs.caching == 'true'}}
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.pnpm-store
+        key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-
+          
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10.7.1
+        
+    - name: Install dependencies
+      id: install-deps
+      if: ${{steps.cache.outputs.cache-hit != 'true'}} || ${{inputs.caching == 'false'}}
+      run: |
+        pnpm install
+        echo "cache=${{inputs.caching}}" >> $GITHUB_OUTPUT
+      shell: bash

@@ -29,6 +29,20 @@
       "when": 1762616669310,
       "tag": "0003_simple_vertigo",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1766689975791,
+      "tag": "0004_flashy_thena",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1766692645530,
+      "tag": "0005_mushy_madame_masque",
+      "breakpoints": true
     }
   ]
 }

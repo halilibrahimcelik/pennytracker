@@ -1,13 +1,13 @@
-import DashboardLandingPageConent from '@/components/dashboard/landing-page/DashboardLandingPage';
-import { auth } from '@/lib/auth/auth';
-import { trpcServer } from '@/lib/trpc/server';
-import { ROUTES } from '@/types';
-import { Metadata, NextPage } from 'next';
-import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
+import DashboardLandingPageContent from "@/components/dashboard/landing-page/DashboardLandingPage";
+import { auth } from "@/lib/auth/auth";
+import { trpcServer } from "@/lib/trpc/server";
+import { ROUTES } from "@/types";
+import { Metadata, NextPage } from "next";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 export const metadata: Metadata = {
-  title: 'Dashboard',
-  description: 'User Dashboard Page',
+  title: "Dashboard",
+  description: "User Dashboard Page",
 };
 
 const DashboardPage: NextPage = async () => {
@@ -30,15 +30,15 @@ const DashboardPage: NextPage = async () => {
     trpcServer.dashboard.summary({ from }),
     trpcServer.dashboard.monthlyFlow({ months: 12 }),
     trpcServer.dashboard.getTransactionByCategory({
-      transactionType: 'income',
+      transactionType: "income",
     }),
     trpcServer.dashboard.getTransactionByCategory({
-      transactionType: 'expense',
+      transactionType: "expense",
     }),
   ]);
   return (
     <>
-      <DashboardLandingPageConent
+      <DashboardLandingPageContent
         fromDate={from}
         toDate={
           (summary.latestTransactionDate &&

@@ -1,13 +1,13 @@
-import Container from '@/components/ui/container';
+import Container from "@/components/ui/container";
 
-import CustomBreadCrumb from '@/components/features/CustomBreadCrumb';
+import CustomBreadCrumb from "@/components/features/CustomBreadCrumb";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Container className='mt-10 '>
+    <Container className="">
       <CustomBreadCrumb />
 
-      <div className='my-5'>{children}</div>
+      <div className="my-5">{children}</div>
     </Container>
   );
 };

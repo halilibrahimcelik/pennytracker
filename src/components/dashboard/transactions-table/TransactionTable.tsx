@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   ColumnDef,
@@ -9,7 +9,7 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -18,13 +18,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import DataTablePagination from './TablePagination';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useDebounce } from '@/hooks';
+} from "@/components/ui/table";
+import DataTablePagination from "./TablePagination";
+import { ChangeEvent, useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { useDebounce } from "@/hooks";
+import { Card } from "@/components/ui/card";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -43,7 +43,7 @@ const TransactionTable = <TData, TValue>({
   pagination: { page, pageSize },
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-    const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const debouncedSearchValue = useDebounce(searchValue, 400);
   const [pagination] = useState({
     pageIndex: 0,
@@ -66,25 +66,28 @@ const TransactionTable = <TData, TValue>({
 
   // Update filter when debounced value changes
   useEffect(() => {
-    table.getColumn("description")?.setFilterValue(debouncedSearchValue || undefined);
+    table
+      .getColumn("description")
+      ?.setFilterValue(debouncedSearchValue || undefined);
   }, [debouncedSearchValue, table]);
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   };
 
-
   return (
-    <div>
-      <div className='flex justify-end mb-4'>
-    <Input 
-    aria-label='search transactions'
-    id="search" placeholder="Search.."
-    value={searchValue}
-    onChange={handleOnChange}
- className='w-full lg:max-w-md py-2 px-4' />    
+    <Card className="p-2 ">
+      <div className="flex justify-end ">
+        <Input
+          aria-label="search transactions"
+          id="search"
+          placeholder="Search.."
+          value={searchValue}
+          onChange={handleOnChange}
+          className="w-full lg:max-w-md py-2 px-4"
+        />
       </div>
-      <Table>
+      <Table data-testid="transactions-table">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -92,12 +95,12 @@ const TransactionTable = <TData, TValue>({
                 return (
                   <TableHead
                     className={`${
-                      header.column.id === 'transactionDate' ||
-                      header.column.id === 'amount' ||
-                      header.column.id === 'transactionType' ||
-                      header.column.id === 'id'
-                        ? 'text-center'
-                        : ''
+                      header.column.id === "transactionDate" ||
+                      header.column.id === "amount" ||
+                      header.column.id === "transactionType" ||
+                      header.column.id === "id"
+                        ? "text-center"
+                        : ""
                     }`}
                     key={header.id}
                   >
@@ -117,21 +120,22 @@ const TransactionTable = <TData, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row, index) => (
               <TableRow
+                data-testid={`transaction-row-${row.id}`}
                 key={row.id}
-                data-state={row.getIsSelected() && 'selected'}
+                data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => {
-                  if (cell.column.id === 'transactionType') {
+                  if (cell.column.id === "transactionType") {
                     const value = String(cell.getValue());
 
                     return (
                       <TableCell
-                        className='flex  items-center justify-center'
+                        className="flex  items-center justify-center"
                         key={cell.id}
                       >
                         <Badge
                           variant={
-                            value === 'income' ? 'success' : 'destructive'
+                            value === "income" ? "success" : "destructive"
                           }
                         >
                           {value}
@@ -139,10 +143,10 @@ const TransactionTable = <TData, TValue>({
                       </TableCell>
                     );
                   }
-                  if (cell.column.id === 'id') {
+                  if (cell.column.id === "id") {
                     return (
                       <TableCell
-                        className='flex  items-center justify-center'
+                        className="flex  items-center justify-center"
                         key={cell.id}
                       >
                         {index + 1}
@@ -152,10 +156,10 @@ const TransactionTable = <TData, TValue>({
                   return (
                     <TableCell
                       className={`${
-                        cell.column.id === 'transactionDate' ||
-                        cell.column.id === 'amount'
-                          ? 'text-center'
-                          : ''
+                        cell.column.id === "transactionDate" ||
+                        cell.column.id === "amount"
+                          ? "text-center"
+                          : ""
                       }`}
                       key={cell.id}
                     >
@@ -170,7 +174,7 @@ const TransactionTable = <TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className='h-24 text-center'>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
                 No results.
               </TableCell>
             </TableRow>
@@ -183,7 +187,7 @@ const TransactionTable = <TData, TValue>({
         count={count}
         pagination={{ page, pageSize }}
       />
-    </div>
+    </Card>
   );
 };
 

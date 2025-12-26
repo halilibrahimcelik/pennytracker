@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import * as React from "react";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
+} from "@/components/ui/popover";
 
 type DatePickerProps = {
   defaultValue?: Date;
@@ -19,7 +19,7 @@ type DatePickerProps = {
 };
 const DatePicker: React.FC<DatePickerProps> = ({
   defaultValue,
-  label = 'Pick a date',
+  label = "Pick a date",
   onDateChange,
 }) => {
   const [date, setDate] = React.useState<Date | undefined>(defaultValue);
@@ -35,28 +35,31 @@ const DatePicker: React.FC<DatePickerProps> = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant='outline'
+          aria-label="Select date"
+          data-testid="date-picker-trigger"
+          variant="outline"
           data-empty={!date}
-          className='data-[empty=true]:text-muted-foreground justify-start text-left font-normal'
+          className="data-[empty=true]:text-muted-foreground justify-start text-left font-normal"
         >
           <CalendarIcon />
-          {date && !onDateChange ? format(date, 'PPP') : <span>{label}</span>}
+          {date && !onDateChange ? format(date, "PPP") : <span>{label}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-auto p-0'>
+      <PopoverContent className="w-auto p-0">
         <Calendar
-          mode='single'
+          mode="single"
           // defaultMonth={date}
           selected={date}
           onSelect={setDate}
-          captionLayout='dropdown'
+          captionLayout="dropdown"
         />
       </PopoverContent>
       <input
-        type='hidden'
-        name='date'
-        value={date ? format(date, 'yyyy-MM-dd') : ''}
-      />{' '}
+        type="hidden"
+        name="date"
+        aria-label="date"
+        value={date ? format(date, "yyyy-MM-dd") : ""}
+      />{" "}
     </Popover>
   );
 };
