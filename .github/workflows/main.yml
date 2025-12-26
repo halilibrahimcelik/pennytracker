@@ -12,7 +12,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v6
+              uses: actions/checkout@v4
             - name: Load & Cache Dependencies
               id: load-cache-deps
               uses: ./.github/workflows/actions/cache-deps
@@ -38,7 +38,7 @@ jobs:
           image: cypress/browsers:latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v6
+              uses: actions/checkout@v4
             - name: Load & Cache Dependencies
               id: load-cache-deps
               uses: ./.github/workflows/actions/cache-deps
@@ -61,7 +61,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v6
+              uses: actions/checkout@v4
             - name: Load & Cache Dependencies
               id: load-cache-deps
               uses: ./.github/workflows/actions/cache-deps
@@ -78,7 +78,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v6
+              uses: actions/checkout@v4
             - name: Load & Cache Dependencies
               id: load-cache-deps
               uses: ./.github/workflows/actions/cache-deps
@@ -87,6 +87,14 @@ jobs:
             - name: Output Cache Status
               run: echo "Used cache ${{steps.load-cache-deps.outputs.used-cache}}"
             - name: Build Project
+              env:
+                DATABASE_URL: ${{ secrets.DATABASE_URL }}
+                BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+                BETTER_AUTH_URL: http://localhost:3000
+                BETTER_AUTH_TRUSTED_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
+                RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+                BASE_URL: http://localhost:3000
+                PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
               run: pnpm build
             - name: Build Status
               run: echo "Build completed successfully"
