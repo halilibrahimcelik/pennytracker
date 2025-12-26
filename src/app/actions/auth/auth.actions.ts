@@ -11,7 +11,7 @@ import { headers } from "next/headers";
 import { APIError } from "better-auth";
 import { ROUTES } from "@/types";
 import { db } from "@/db";
-import { account, user } from "@/db/schema";
+import { account } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export const signInUser = async (initialData: unknown, formData: FormData) => {
@@ -185,7 +185,7 @@ export const forgotPassword = async (
         },
       };
     }
-    const res = await auth.api.requestPasswordReset({
+    await auth.api.requestPasswordReset({
       body: {
         email, // required
         redirectTo: process.env.BASE_URL! + ROUTES.RESET_PASSWORD, // Use your base URL
@@ -286,9 +286,6 @@ export const handleMagicLinkSignIn = async () => {
         success: false,
         message: "Guest login is currently not configured.",
       };
-      throw new Error(
-        "TEST_EMAIL or TEST_PASSWORD environment variables are not set."
-      );
     }
     const res = await auth.api.signInEmail({
       body: {
@@ -305,7 +302,7 @@ export const handleMagicLinkSignIn = async () => {
       };
     }
   } catch (error) {
-    console.error("Error during guest user sign-in.");
+    console.error("Error during guest sign-in:", error);
     return {
       success: false,
       message: "Failed to log in as a guest user. Try again later.",
