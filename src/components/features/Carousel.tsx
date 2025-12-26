@@ -24,7 +24,7 @@ const DEFAULT_ITEMS = [
   },
   {
     title: "Display All Transactions in One Place",
-    description: "View all your financial transactions in a single,table ",
+    description: "View all your financial transactions in a single, table",
     id: 3,
     icon: <FiLayers className="h-[16px] w-[16px] " />,
     imageSrc: "/transactions-table.png",
@@ -313,13 +313,7 @@ export default function Carousel({
             >
               <motion.div
                 className={`h-2 w-2 rounded-full transition-colors duration-150 ${
-                  activeIndex === index
-                    ? round
-                      ? "bg-"
-                      : "bg-primary"
-                    : round
-                    ? "bg-red-500"
-                    : "bg-primary/65"
+                  activeIndex === index ? "bg-primary" : "bg-primary/65"
                 }`}
                 animate={{
                   scale: activeIndex === index ? 1.2 : 1,

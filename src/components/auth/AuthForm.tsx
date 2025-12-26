@@ -75,7 +75,10 @@ export const AuthForm: React.FC<Props> = ({
       }
     } catch (error) {
       setLoadingGuest(false);
-      toast.error("Error during guest login:");
+      console.error("Error during guest login:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error(`Error during guest login: ${errorMessage}`);
     } finally {
       setLoadingGuest(false);
     }
