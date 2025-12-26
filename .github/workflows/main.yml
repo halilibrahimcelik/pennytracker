@@ -29,6 +29,8 @@ jobs:
                 RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
                 BASE_URL: http://localhost:3000
                 PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+                PROD_BASE_SECOND_URL: ${{ secrets.PROD_BASE_SECOND_URL }}
+                PROD_BASE_THIRD_URL: ${{ secrets.PROD_BASE_THIRD_URL }}
               run: pnpm test
     e2e-tests:
         needs: tests
@@ -53,8 +55,11 @@ jobs:
                 better-auth-secret: ${{ secrets.BETTER_AUTH_SECRET }}
                 resend-api-key: ${{ secrets.RESEND_API_KEY }}
                 prod-base-url: ${{ secrets.PROD_BASE_URL }}
+                prod-base-second-url: ${{ secrets.PROD_BASE_SECOND_URL }}
+                prod-base-third-url: ${{ secrets.PROD_BASE_THIRD_URL }}
                 test-email: ${{ secrets.TEST_EMAIL }}
                 test-password: ${{ secrets.TEST_PASSWORD }}
+
  
     lint:
         needs: [tests, e2e-tests]
@@ -95,6 +100,8 @@ jobs:
                 RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
                 BASE_URL: http://localhost:3000
                 PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+                PROD_BASE_SECOND_URL: ${{ secrets.PROD_BASE_SECOND_URL }}
+                PROD_BASE_THIRD_URL: ${{ secrets.PROD_BASE_THIRD_URL }}
               run: pnpm build
             - name: Build Status
               run: echo "Build completed successfully"

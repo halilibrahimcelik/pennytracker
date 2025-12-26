@@ -26,6 +26,12 @@ inputs:
   prod-base-url:
     description: 'Production base URL'
     required: true
+  prod-base-second-url:
+    description: 'Production second base URL'
+    required: true
+  prod-base-third-url:
+    description: 'Production third base URL'
+    required: true
   test-email:
     description: 'Test user email'
     required: true
@@ -52,6 +58,8 @@ runs:
         PROD_BASE_URL: ${{ inputs.prod-base-url }}
         TEST_EMAIL: ${{ inputs.test-email }}
         TEST_PASSWORD: ${{ inputs.test-password }}
+        PROD_BASE_SECOND_URL: ${{ inputs.prod-base-second-url }}
+        PROD_BASE_THIRD_URL: ${{ inputs.prod-base-third-url }}
       run: pnpm dlx start-server-and-test "pnpm dev" http://localhost:3000 "pnpm cypress run --browser chrome"
 
     - name: Upload Cypress Videos and Screenshots on Failure
