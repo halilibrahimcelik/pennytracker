@@ -52,7 +52,7 @@ runs:
         PROD_BASE_URL: ${{ inputs.prod-base-url }}
         TEST_EMAIL: ${{ inputs.test-email }}
         TEST_PASSWORD: ${{ inputs.test-password }}
-      run: pnpm dlx start-server-and-test "pnpm dev" http://localhost:3000 "pnpm cypress run"
+      run: pnpm dlx start-server-and-test "pnpm dev" http://localhost:3000 "pnpm cypress run -browser chrome"
 
     - name: Upload Cypress Videos and Screenshots on Failure
       if: failure()
