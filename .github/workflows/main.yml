@@ -22,15 +22,34 @@ jobs:
               run: echo "Used cache ${{steps.load-cache-deps.outputs.used-cache}}"
             - name: Run Unit Tests
               run: pnpm test
-            - name: Upload Coverage Report
-              uses: actions/upload-artifact@v4
-              with:
-                name: coverage-report
-                path: coverage/
-                retention-days: 30
-              if: always()
-    lint:
+    e2e-tests:
         needs: tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 25
+        container:
+          image: cypress/browsers:latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+            - name: Load & Cache Dependencies
+              id: load-cache-deps
+              uses: ./.github/workflows/actions/cache-deps
+              with:
+                caching: "true"
+            - name: Output Cache Status
+              run: echo "Used cache ${{steps.load-cache-deps.outputs.used-cache}}"
+            - name: Run E2E Tests
+              uses: ./.github/workflows/actions/e2e-tests
+              with:
+                database-url: ${{ secrets.DATABASE_URL }}
+                better-auth-secret: ${{ secrets.BETTER_AUTH_SECRET }}
+                resend-api-key: ${{ secrets.RESEND_API_KEY }}
+                prod-base-url: ${{ secrets.PROD_BASE_URL }}
+                test-email: ${{ secrets.TEST_EMAIL }}
+                test-password: ${{ secrets.TEST_PASSWORD }}
+ 
+    lint:
+        needs: [tests, e2e-tests]
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
@@ -47,7 +66,7 @@ jobs:
             - name: Lint Status
               run: echo "Linting completed successfully"
     build:
-        needs: [tests, lint]
+        needs: [tests, lint, e2e-tests]
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
@@ -63,3 +82,4 @@ jobs:
               run: pnpm build
             - name: Build Status
               run: echo "Build completed successfully"
+    
