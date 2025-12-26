@@ -1,23 +1,23 @@
-'use server';
+"use server";
 import {
   emailSchema,
   passwordSchema,
   signInSchema,
   signUpSchema,
-} from './auth.schema';
-import { signUp } from '@/lib/auth/auth-client';
-import { auth } from '@/lib/auth/auth';
-import { headers } from 'next/headers';
-import { APIError } from 'better-auth';
-import { ROUTES } from '@/types';
-import { db } from '@/db';
-import { account,user } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+} from "./auth.schema";
+import { signUp } from "@/lib/auth/auth-client";
+import { auth } from "@/lib/auth/auth";
+import { headers } from "next/headers";
+import { APIError } from "better-auth";
+import { ROUTES } from "@/types";
+import { db } from "@/db";
+import { account, user } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export const signInUser = async (initialData: unknown, formData: FormData) => {
   const validatedData = signInSchema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
+    email: formData.get("email"),
+    password: formData.get("password"),
   });
   if (!validatedData.success) {
     return {
@@ -26,8 +26,8 @@ export const signInUser = async (initialData: unknown, formData: FormData) => {
     };
   }
   const { email, password } = validatedData.data;
-  console.log('Signing in user with email:', email);
-  console.log('Signing in user with password:', password);
+  console.log("Signing in user with email:", email);
+  console.log("Signing in user with password:", password);
   try {
     const response = await auth.api.signInEmail({
       body: {
@@ -48,13 +48,13 @@ export const signInUser = async (initialData: unknown, formData: FormData) => {
       };
     }
   } catch (error) {
-    console.error('Error during sign-in:', error);
+    console.error("Error during sign-in:", error);
 
     if (error instanceof APIError) {
       return {
         success: false,
         errors: {
-          email: [error.body?.message || 'Invalid email or password'],
+          email: [error.body?.message || "Invalid email or password"],
           password: [],
         },
       };
@@ -68,10 +68,10 @@ export const signUpCreateUser = async (
   formData: FormData
 ) => {
   const validatedData = signUpSchema.safeParse({
-    name: formData.get('name'),
-    email: formData.get('email'),
-    password: formData.get('password'),
-    confirmPassword: formData.get('confirmPassword'),
+    name: formData.get("name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
   });
   if (!validatedData.success) {
     return {
@@ -86,25 +86,38 @@ export const signUpCreateUser = async (
       email,
       password,
 
-      callbackURL: process.env.BASE_URL! + '/dashboard',
+      callbackURL: process.env.BASE_URL! + "/dashboard",
       name,
     },
     {
-      onSuccess:async (data) => {
-
+      onSuccess: async (data) => {
         try {
-         await db.update(account).set({
-          userEmail: email,
-        }).where(eq(account.userId, data.data.user.id));
-       
+          const userId = data?.data?.user?.id;
+
+          if (!userId) {
+            console.error(
+              "Error updating user email in account table: missing user id in sign-up response"
+            );
+            return;
+          }
+
+          await db
+            .update(account)
+            .set({
+              userEmail: email,
+            })
+            .where(eq(account.userId, data.data.user.id));
         } catch (error) {
-          if(error instanceof Error){
-            console.error('Error updating user email in account table:', error.message);
+          if (error instanceof Error) {
+            console.error(
+              "Error updating user email in account table:",
+              error.message
+            );
           }
         }
-        },
+      },
       onError: (error) => {
-        console.error('Error signing up user:', error);
+        console.error("Error signing up user:", error);
       },
     }
   );
@@ -131,14 +144,14 @@ export const signOutUser = async () => {
     if (response) {
       return {
         success: response,
-        error: 'No error',
+        error: "No error",
       };
     }
   } catch (error) {
-    console.error('Error during sign-out:', error);
+    console.error("Error during sign-out:", error);
     return {
       success: false,
-      error: 'Error signing out',
+      error: "Error signing out",
     };
   }
 };
@@ -148,7 +161,7 @@ export const forgotPassword = async (
   formData: FormData
 ) => {
   const validatedData = emailSchema.safeParse({
-    email: formData.get('email'),
+    email: formData.get("email"),
   });
   if (!validatedData.success) {
     return {
@@ -158,17 +171,21 @@ export const forgotPassword = async (
   }
 
   const { email } = validatedData.data;
-  
-  try {
 
-    const isRegisteredWithPassword=await isAccountRegisteredWithPassword(email);
-    if(!isRegisteredWithPassword){
+  try {
+    const isRegisteredWithPassword =
+      await isAccountRegisteredWithPassword(email);
+    if (!isRegisteredWithPassword) {
       return {
         success: false,
-        errors: { email: ['This  email is used by OAuth provider. Please use the OAuth provider to sign in.'] },
+        errors: {
+          email: [
+            "This  email is used by OAuth provider. Please use the OAuth provider to sign in.",
+          ],
+        },
       };
     }
-  const res=  await auth.api.requestPasswordReset({
+    const res = await auth.api.requestPasswordReset({
       body: {
         email, // required
         redirectTo: process.env.BASE_URL! + ROUTES.RESET_PASSWORD, // Use your base URL
@@ -176,17 +193,17 @@ export const forgotPassword = async (
     });
     return { success: true, errors: { email: [] } };
   } catch (error) {
-    console.error('Error during password reset:', error);
+    console.error("Error during password reset:", error);
     if (error instanceof APIError) {
       return {
         success: false,
-        errors: { email: [error.body?.message || 'Error sending reset email'] },
+        errors: { email: [error.body?.message || "Error sending reset email"] },
       };
     }
     // Handle non-APIError exceptions
     return {
       success: false,
-      errors: { email: ['An unexpected error occurred. Please try again.'] },
+      errors: { email: ["An unexpected error occurred. Please try again."] },
     };
   }
 };
@@ -196,8 +213,8 @@ export const resetPassword = async (
   formData: FormData
 ) => {
   const validatedData = passwordSchema.safeParse({
-    newPassword: formData.get('newPassword'),
-    confirmPassword: formData.get('confirmPassword'),
+    newPassword: formData.get("newPassword"),
+    confirmPassword: formData.get("confirmPassword"),
   });
   if (!validatedData.success) {
     return {
@@ -205,7 +222,7 @@ export const resetPassword = async (
       errors: validatedData.error.flatten().fieldErrors,
     };
   }
-  const token = formData.get('token') as string;
+  const token = formData.get("token") as string;
   const { newPassword } = validatedData.data;
   try {
     const data = await auth.api.resetPassword({
@@ -219,67 +236,79 @@ export const resetPassword = async (
       return { success: true, errors: { newPassword: [] } };
     }
   } catch (error) {
-    console.error('Error during password reset:', error);
+    console.error("Error during password reset:", error);
     if (error instanceof APIError) {
       return {
         success: false,
         errors: {
-          newPassword: [error.body?.message || 'Error resetting password'],
+          newPassword: [error.body?.message || "Error resetting password"],
         },
       };
     }
     return {
       success: false,
       errors: {
-        newPassword: ['An unexpected error occurred. Please try again.'],
+        newPassword: ["An unexpected error occurred. Please try again."],
       },
     };
   }
 };
 
-const isAccountRegisteredWithPassword=async(email:string):Promise<boolean>=>{
+const isAccountRegisteredWithPassword = async (
+  email: string
+): Promise<boolean> => {
   try {
-    const data=await db.select().from(account).where(eq(account.userEmail,email));
-    if(data.length===0){
+    const data = await db
+      .select()
+      .from(account)
+      .where(eq(account.userEmail, email));
+    if (data.length === 0) {
       return false;
     }
-    const acc=data[0];
-    return acc.password !==null && acc.password !==undefined;
+    const acc = data[0];
+    return acc.password !== null && acc.password !== undefined;
   } catch (error) {
-    if(error instanceof Error){
-      console.error('Error checking account registration method:', error.message);
+    if (error instanceof Error) {
+      console.error(
+        "Error checking account registration method:",
+        error.message
+      );
     }
     return false;
   }
-}
+};
 
-export const handleMagicLinkSignIn=async()=>{
+export const handleMagicLinkSignIn = async () => {
   try {
-       const res=   await auth.api.signInEmail({
+    if (!process.env.TEST_EMAIL || !process.env.TEST_PASSWORD) {
+      console.error("Guest credentials are not set.");
+      return {
+        success: false,
+        message: "Guest login is currently not configured.",
+      };
+      throw new Error(
+        "TEST_EMAIL or TEST_PASSWORD environment variables are not set."
+      );
+    }
+    const res = await auth.api.signInEmail({
       body: {
-        email:process.env.TEST_EMAIL!,
-        password:process.env.TEST_PASSWORD!,
+        email: process.env.TEST_EMAIL!,
+        password: process.env.TEST_PASSWORD!,
         callbackURL: process.env.BASE_URL! + ROUTES.DASHBOARD,
       },
       headers: await headers(),
     });
-    if(res.user){
+    if (res.user) {
       return {
         success: true,
         message: "You have been logged in as a guest user.",
-      }
+      };
     }
   } catch (error) {
-    if(error instanceof Error){
-      console.error('Error during magic link sign-in:', error.message);
-      return {
-        success: false,
-        message: "Failed to log in as a guest user. Try again later.",
-      }
-    }
+    console.error("Error during guest user sign-in.");
     return {
       success: false,
-      message: "Failed to log in as a guest user.",
-    }
+      message: "Failed to log in as a guest user. Try again later.",
+    };
   }
-}
+};
