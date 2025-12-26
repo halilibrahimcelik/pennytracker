@@ -1,30 +1,36 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { betterAuth } from 'better-auth';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { db } from '@/db'; // your drizzle instance
-import { resend } from '../resend';
-import { schema } from '@/db/schema';
-import { nextCookies } from 'better-auth/next-js';
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "@/db"; // your drizzle instance
+import { resend } from "../resend";
+import { schema } from "@/db/schema";
+import { nextCookies } from "better-auth/next-js";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
-    provider: 'pg', // or "mysql", "sqlite"
+    provider: "pg", // or "mysql", "sqlite"
     schema,
   }),
   plugins: [nextCookies()],
   session: {
     expiresIn: 60 * 60 * 24 * 2, // 2 days,
   },
-  trustedOrigins: [process.env.BASE_URL!, process.env.PROD_BASE_URL!],
+  trustedOrigins: [
+    process.env.BASE_URL!,
+    process.env.PROD_BASE_URL!,
+    process.env.PROD_BASE_SECOND_URL!,
+    process.env.PROD_BASE_THIRD_URL!,
+  ],
+
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 4,
     sendResetPassword: async ({ user, url }, _request) => {
       await resend.emails.send({
         to: user.email!,
-        subject: 'Reset your password',
-        from: 'Finance-Tracker <noreply@pennytracker.xyz>',
+        subject: "Reset your password",
+        from: "Finance-Tracker <noreply@pennytracker.xyz>",
         html: `
           <p>Click the link below to reset your password:</p>
           <a href="${url}">Reset Password</a>
@@ -43,11 +49,11 @@ export const auth = betterAuth({
     },
     google: {
       clientId:
-        process.env.NODE_ENV === 'development'
+        process.env.NODE_ENV === "development"
           ? (process.env.GOOGLE_CLIENT_ID as string)
           : (process.env.PROD_GOOGLE_CLIENT_ID as string),
       clientSecret:
-        process.env.NODE_ENV === 'development'
+        process.env.NODE_ENV === "development"
           ? (process.env.GOOGLE_CLIENT_SECRET as string)
           : (process.env.PROD_GOOGLE_ClIENT_SECRET as string),
     },
@@ -57,13 +63,13 @@ export const auth = betterAuth({
     autoSignInAfterVerification: true,
     expiresIn: 60 * 180, // 3 hours
     sendVerificationEmail: async ({ user, url, token }, _request) => {
-      console.log('Sending verification email to:', user.email);
-      console.log('Verification URL:', url);
-      console.log('Verification Token:', token);
+      console.log("Sending verification email to:", user.email);
+      console.log("Verification URL:", url);
+      console.log("Verification Token:", token);
       const { data, error } = await resend.emails.send({
-        from: 'Finance-Tracker <noreply@pennytracker.xyz>',
+        from: "Finance-Tracker <noreply@pennytracker.xyz>",
         to: user.email!,
-        subject: 'Verify your email',
+        subject: "Verify your email",
         html: `
             <p>Hi ${user.name},</p>
             <p>Thanks for signing up! Please verify your email by clicking the link below:</p>
@@ -71,9 +77,9 @@ export const auth = betterAuth({
           `,
       });
       if (error) {
-        console.error('Error sending verification email:', error);
+        console.error("Error sending verification email:", error);
       } else {
-        console.log('Verification email sent successfully:', data);
+        console.log("Verification email sent successfully:", data);
       }
     },
   },
