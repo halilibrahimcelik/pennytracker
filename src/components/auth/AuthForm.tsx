@@ -23,6 +23,7 @@ import { ROUTES } from "@/types";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Typography from "../ui/typogprahy";
+import { handleMagicLinkSignIn } from "@/app/actions/auth/auth.actions";
 
 type Props = {
   title: string;
@@ -41,7 +42,7 @@ export const AuthForm: React.FC<Props> = ({
   const [state, formAction, pending] = useActionState(authMethod, initialState);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-
+  const [loadingGuest, setLoadingGuest] = useState(false);
   const router = useRouter();
   const handleRouter = useCallback(() => {
     if (state?.success) {
@@ -58,6 +59,27 @@ export const AuthForm: React.FC<Props> = ({
     }
   }, [state?.success, authType, router]);
 
+  const handleGuestLogin = async () => {
+    try {
+      setLoadingGuest(true);
+      const res = await handleMagicLinkSignIn();
+      if (res?.success) {
+        toast.success(res.message || "Logged in as guest user");
+        router.replace(ROUTES.DASHBOARD);
+        router.refresh();
+      }
+      if (!res?.success) {
+        toast.error(
+          res?.message || "Failed to log in as guest user. Try again."
+        );
+      }
+    } catch (error) {
+      setLoadingGuest(false);
+      toast.error("Error during guest login:");
+    } finally {
+      setLoadingGuest(false);
+    }
+  };
   useEffect(() => {
     handleRouter();
   }, [handleRouter]);
@@ -248,6 +270,15 @@ export const AuthForm: React.FC<Props> = ({
               <Link href={ROUTES.FORGOT_PASSWORD}>Forgot your password?</Link>
             </p>
           )}
+          <div className="flex my-6">
+            <Button
+              className="cursor-pointer w-40"
+              onClick={handleGuestLogin}
+              disabled={loadingGuest}
+            >
+              {loadingGuest ? <Spinner /> : "Explore as a guest"}
+            </Button>
+          </div>
           <div className="my-6 flex flex-col gap-2 ">
             <div className="flex items-center  justify-center  gap-5">
               <hr className="w-full  " />

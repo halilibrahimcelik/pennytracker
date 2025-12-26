@@ -252,3 +252,34 @@ const isAccountRegisteredWithPassword=async(email:string):Promise<boolean>=>{
     return false;
   }
 }
+
+export const handleMagicLinkSignIn=async()=>{
+  try {
+       const res=   await auth.api.signInEmail({
+      body: {
+        email:process.env.TEST_EMAIL!,
+        password:process.env.TEST_PASSWORD!,
+        callbackURL: process.env.BASE_URL! + ROUTES.DASHBOARD,
+      },
+      headers: await headers(),
+    });
+    if(res.user){
+      return {
+        success: true,
+        message: "You have been logged in as a guest user.",
+      }
+    }
+  } catch (error) {
+    if(error instanceof Error){
+      console.error('Error during magic link sign-in:', error.message);
+      return {
+        success: false,
+        message: "Failed to log in as a guest user. Try again later.",
+      }
+    }
+    return {
+      success: false,
+      message: "Failed to log in as a guest user.",
+    }
+  }
+}
