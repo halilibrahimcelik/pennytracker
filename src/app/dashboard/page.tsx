@@ -5,9 +5,25 @@ import { ROUTES } from "@/types";
 import { Metadata, NextPage } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+
 export const metadata: Metadata = {
-  title: "Dashboard",
-  description: "User Dashboard Page",
+  title: "Penny Tracker | Dashboard",
+  description:
+    "Manage your personal finances effectively with Penny Tracker's dashboard.",
+  openGraph: {
+    title: "Penny Tracker | Dashboard",
+    description:
+      "Manage your personal finances effectively with Penny Tracker's dashboard.",
+    images: [
+      {
+        url: "logo.svg",
+        width: 800,
+        height: 600,
+        alt: "Penny Tracker Logo",
+        type: "image/svg+xml",
+      },
+    ],
+  },
 };
 
 const DashboardPage: NextPage = async () => {

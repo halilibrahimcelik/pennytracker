@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { Metadata, NextPage } from "next";
 import { TransactionColumns } from "@/components/dashboard/transactions-table/columns";
 import TransactionTable from "@/components/dashboard/transactions-table/TransactionTable";
 import TransactionTableSkeleton from "@/components/dashboard/transactions-table/TransactionTableSkeleton";
@@ -8,6 +8,26 @@ import { redirect } from "next/navigation";
 import { ROUTES } from "@/types";
 import { Suspense } from "react";
 import { trpcServer } from "@/lib/trpc/server";
+
+export const metadata: Metadata = {
+  title: "Penny Tracker | Transactions",
+  description:
+    "View and manage your financial transactions effectively with Penny Tracker.",
+  openGraph: {
+    title: "Penny Tracker | Transactions",
+    description:
+      "View and manage your financial transactions effectively with Penny Tracker.",
+    images: [
+      {
+        url: "logo.svg",
+        width: 800,
+        height: 600,
+        alt: "Penny Tracker Logo",
+        type: "image/svg+xml",
+      },
+    ],
+  },
+};
 
 type Props = {
   searchParams: Promise<TransactionsContentProps>;

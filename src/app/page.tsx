@@ -3,8 +3,29 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Container from "@/components/ui/container";
 import Typography from "@/components/ui/typogprahy";
+import { Metadata } from "next";
 import Link from "next/dist/client/link";
 import Image from "next/image";
+export const metadata: Metadata = {
+  title: "Penny Tracker | Home",
+  description:
+    "Penny Tracker is a personal finance management app that helps you track your expenses and incomes effortlessly.",
+  openGraph: {
+    title: "Penny Tracker | Home",
+    description:
+      "Penny Tracker is a personal finance management app that helps you track your expenses and incomes effortlessly.",
+    images: [
+      {
+        url: "logo.svg",
+        width: 800,
+        height: 600,
+        alt: "Penny Tracker Logo",
+        type: "image/svg+xml",
+      },
+    ],
+  },
+};
+
 export default function Home() {
   return (
     <>
