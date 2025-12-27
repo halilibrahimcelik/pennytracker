@@ -99,7 +99,7 @@ export const Navbar: React.FC<Props> = ({ user }) => {
                     variant={pathname === ROUTES.SIGN_IN ? "secondary" : "link"}
                     asChild
                   >
-                    <Link href={ROUTES.SIGN_IN}>Log in</Link>
+                    <Link href={ROUTES.SIGN_IN}>Sign in</Link>
                   </Button>
                   <Button
                     className="uppercase transition-all hover:scale-105 duration-200"
