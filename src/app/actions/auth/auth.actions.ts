@@ -13,7 +13,6 @@ import { ROUTES } from "@/types";
 import { db } from "@/db";
 import { account } from "@/db/schema";
 import { eq } from "drizzle-orm";
-
 export const signInUser = async (initialData: unknown, formData: FormData) => {
   const validatedData = signInSchema.safeParse({
     email: formData.get("email"),
@@ -26,8 +25,7 @@ export const signInUser = async (initialData: unknown, formData: FormData) => {
     };
   }
   const { email, password } = validatedData.data;
-  console.log("Signing in user with email:", email);
-  console.log("Signing in user with password:", password);
+
   try {
     const response = await auth.api.signInEmail({
       body: {
@@ -65,7 +63,7 @@ export const signInUser = async (initialData: unknown, formData: FormData) => {
 export const signUpCreateUser = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialData: any,
-  formData: FormData
+  formData: FormData,
 ) => {
   const validatedData = signUpSchema.safeParse({
     name: formData.get("name"),
@@ -96,7 +94,7 @@ export const signUpCreateUser = async (
 
           if (!userId) {
             console.error(
-              "Error updating user email in account table: missing user id in sign-up response"
+              "Error updating user email in account table: missing user id in sign-up response",
             );
             return;
           }
@@ -111,7 +109,7 @@ export const signUpCreateUser = async (
           if (error instanceof Error) {
             console.error(
               "Error updating user email in account table:",
-              error.message
+              error.message,
             );
           }
         }
@@ -119,7 +117,7 @@ export const signUpCreateUser = async (
       onError: (error) => {
         console.error("Error signing up user:", error);
       },
-    }
+    },
   );
   if (response.error) {
     return {
@@ -141,6 +139,7 @@ export const signOutUser = async () => {
     const response = await auth.api.signOut({
       headers: await headers(),
     });
+
     if (response) {
       return {
         success: response,
@@ -158,7 +157,7 @@ export const signOutUser = async () => {
 
 export const forgotPassword = async (
   initialData: unknown,
-  formData: FormData
+  formData: FormData,
 ) => {
   const validatedData = emailSchema.safeParse({
     email: formData.get("email"),
@@ -210,7 +209,7 @@ export const forgotPassword = async (
 
 export const resetPassword = async (
   initialData: unknown,
-  formData: FormData
+  formData: FormData,
 ) => {
   const validatedData = passwordSchema.safeParse({
     newPassword: formData.get("newPassword"),
@@ -255,7 +254,7 @@ export const resetPassword = async (
 };
 
 const isAccountRegisteredWithPassword = async (
-  email: string
+  email: string,
 ): Promise<boolean> => {
   try {
     const data = await db
@@ -271,7 +270,7 @@ const isAccountRegisteredWithPassword = async (
     if (error instanceof Error) {
       console.error(
         "Error checking account registration method:",
-        error.message
+        error.message,
       );
     }
     return false;

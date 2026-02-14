@@ -8,11 +8,12 @@ import { ROUTES } from "@/types";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useActionState, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Menu } from "lucide-react";
 import { RiCollapseHorizontalLine } from "react-icons/ri";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   user: Omit<SelectUser, "image"> | undefined;
@@ -22,13 +23,13 @@ export const Navbar: React.FC<Props> = ({ user }) => {
   const { setTheme, theme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const queryClient = useQueryClient();
 
   const pathname = usePathname();
   const [state, formAction, isPending] = useActionState(signOutUser, {
     error: "",
     success: false,
   });
-  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,10 +47,11 @@ export const Navbar: React.FC<Props> = ({ user }) => {
 
   const handleSignOut = useCallback(() => {
     if (state?.success) {
-      router.replace(ROUTES.SIGN_IN, {});
+      queryClient.cancelQueries();
+      queryClient.clear();
       toast.success("User signed out successfully");
     }
-  }, [state?.success, router]);
+  }, [state?.success, queryClient]);
 
   useEffect(() => {
     handleSignOut();

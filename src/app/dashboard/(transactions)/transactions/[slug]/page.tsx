@@ -6,6 +6,8 @@ import Image from "next/image";
 import { ROUTES } from "@/types";
 import { redirect } from "next/navigation";
 import { trpcServer } from "@/lib/trpc/server";
+import { auth } from "@/lib/auth/auth";
+import { headers } from "next/headers";
 
 export const generateMetadata = async ({
   params,
@@ -41,6 +43,14 @@ const TransactionDetailsPage: NextPage<TransactionDetailsPageProps> = async ({
   if (!slug) {
     redirect(ROUTES.NEW_TRANSACTION);
   }
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user.id) {
+    redirect(ROUTES.SIGN_IN);
+  }
+
   const transactionData = await trpcServer.transaction.getById({ id: slug });
   return (
     <div>
