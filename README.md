@@ -1,6 +1,6 @@
 # Penny Tracker
 
-A modern, full-stack personal finance tracking application built with Next.js 15, featuring real-time transaction management, interactive data visualizations, and comprehensive financial analytics.
+A modern, full-stack personal finance tracking application built with Next.js 15, featuring real-time transaction management, interactive data visualizations, and comprehensive financial analytics. 
 
 ## ✨ Features
 
@@ -20,6 +20,7 @@ A modern, full-stack personal finance tracking application built with Next.js 15
   - Salary, Freelance, Investments, Others
 - Date-based transaction filtering
 - Sortable and paginated transaction table
+- Form submissions handled via Next.js Server Actions
 
 ### 📊 Data Visualization & Analytics
 
@@ -42,39 +43,53 @@ A modern, full-stack personal finance tracking application built with Next.js 15
 
 ### 🧪 Testing
 
-- End-to-end testing with Cypress
-- Test coverage for authentication flow
-- Dashboard and route protection tests
-- Transaction management tests
+- **Unit Testing** with Vitest
+  - Authentication form testing
+  - Transaction form validation testing
+  - Table component testing
+- **End-to-end Testing** with Cypress
+  - Test coverage for authentication flow
+  - Dashboard and route protection tests
+  - Transaction management tests
+
+### 🚀 CI/CD
+
+- **GitHub Actions** pipeline for continuous integration
+- Automated testing on pull requests
+- Code quality checks
 
 ## 🛠️ Tech Stack
 
 ### Frontend
 
-- **Framework**: Next.js 15.5.4 (App Router)
+- **Framework**: Next.js 16.0.10
 - **UI Library**: React 19.1.0
 - **Language**: TypeScript 5.x
-- **Styling**: Tailwind CSS 4
+- **Styling**:  Tailwind CSS 4
 - **Components**: Shadcn UI + Radix UI
 - **Charts**: Recharts 2.15.4
-- **Icons**: Lucide React + React Icons
-- **Forms**: React Hook Form (via tRPC)
-- **Validation**: Zod 4.1.11
+- **Icons**:  Lucide React + React Icons
+- **Forms**: React Hook Form with Server Actions
+- **Validation**:  Zod 4.1.11
 
 ### Backend
 
-- **API**: tRPC 11.7.0
+- **API**:  tRPC 11.7.0 (End-to-end typesafe API endpoints)
+- **Server Actions**: Next.js Form Actions for form submissions
 - **Database**: PostgreSQL (Neon)
 - **ORM**: Drizzle ORM 0.44.6
 - **Authentication**: Better Auth 1.3.26
-- **Email**: Resend 6.1.2
+- **Email**:  Resend 6.1.2
 - **Date Utils**: date-fns 4.1.0
 
 ### Development Tools
 
 - **Package Manager**: pnpm
 - **Linting**: ESLint 9
-- **Testing**: Cypress 15.5.0
+- **Testing**: 
+  - Vitest (Unit Testing)
+  - Cypress 15.5.0 (E2E Testing)
+- **CI/CD**: GitHub Actions
 - **Database Tool**: Drizzle Kit 0.31.5
 - **Type Safety**: Full TypeScript coverage
 
@@ -90,8 +105,8 @@ A modern, full-stack personal finance tracking application built with Next.js 15
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/halilibrahimcelik/finance-tracker-app.git
-cd finance-tracker-app
+git clone https://github.com/halilibrahimcelik/pennytracker.git
+cd pennytracker
 ```
 
 ### 2. Install dependencies
@@ -150,23 +165,26 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | `pnpm build`       | Build production bundle                 |
 | `pnpm start`       | Start production server                 |
 | `pnpm lint`        | Run ESLint                              |
+| `pnpm test`        | Run Vitest unit tests                   |
+| `pnpm test:ui`     | Open Vitest UI                          |
 | `pnpm db:generate` | Generate Drizzle migrations             |
 | `pnpm db:push`     | Push schema changes to database         |
 | `pnpm db:migrate`  | Run migrations                          |
 | `pnpm db:studio`   | Open Drizzle Studio (database GUI)      |
 | `pnpm db:seed`     | Seed database with sample data          |
 | `pnpm cy:open`     | Open Cypress test runner                |
+| `pnpm cy:run`      | Run Cypress tests in headless mode      |
 
 ## 🗂️ Project Structure
 
 ```
-finance-tracker/
+pennytracker/
 ├── src/
 │   ├── app/                    # Next.js app router pages
 │   │   ├── (auth)/            # Authentication pages
 │   │   ├── dashboard/         # Dashboard pages
-│   │   ├── api/               # API routes
-│   │   └── actions/           # Server actions
+│   │   ├── api/               # API routes (tRPC endpoints)
+│   │   └── actions/           # Server actions for forms
 │   ├── components/            # React components
 │   │   ├── auth/              # Authentication components
 │   │   ├── dashboard/         # Dashboard components
@@ -187,8 +205,14 @@ finance-tracker/
 │   ├── constants/             # App constants
 │   └── middleware.ts          # Next.js middleware
 ├── cypress/                   # E2E tests
+├── tests/                     # Vitest unit tests
+│   ├── auth/                  # Auth form tests
+│   ├── transactions/          # Transaction form tests
+│   └── tables/                # Table component tests
+├── . github/
+│   └── workflows/             # GitHub Actions CI/CD
 ├── public/                    # Static assets
-├── migrations/                # Database migrations
+
 └── ...config files
 ```
 
@@ -207,29 +231,57 @@ The app supports 9 transaction categories:
 1. **Summary Cards**: Total income, total expense, and net balance
 2. **Pie Chart**: Visual breakdown of income vs expenses with customizable date range
 3. **Bar Chart**: Monthly flow showing 12-month trends
-4. **Category Distribution**: Transactions grouped by category with toggle for income/expense
+4. **Category Distribution**:  Transactions grouped by category with toggle for income/expense
 
 ### Data Management
 
 - **Real-time Updates**: All charts and tables update immediately after CRUD operations
-- **Date Filtering**: Custom date range selection for all analytics
-- **Sorting & Pagination**: Efficient data handling for large transaction lists
-- **Responsive Design**: Optimized for mobile, tablet, and desktop
+- **Date Filtering**:  Custom date range selection for all analytics
+- **Sorting & Pagination**:  Efficient data handling for large transaction lists
+- **Responsive Design**:  Optimized for mobile, tablet, and desktop
+
+### API Architecture
+
+- **tRPC Backend**: End-to-end type-safe API endpoints ensure type safety from server to client
+- **Server Actions**:  Form submissions leverage Next.js Server Actions for optimized data mutations
+- **Type Safety**: Full TypeScript coverage across the entire API surface
 
 ## 🧪 Testing
 
-Run Cypress tests:
+### Unit Tests (Vitest)
+
+Run Vitest unit tests:
+
+```bash
+# Run tests
+pnpm test
+
+# Open Vitest UI
+pnpm test:ui
+
+# Run tests in watch mode
+pnpm test:watch
+```
+
+Test coverage includes: 
+- Authentication form validation
+- Transaction form submission logic
+- Table component rendering and interactions
+- Form state management
+
+### E2E Tests (Cypress)
+
+Run Cypress tests: 
 
 ```bash
 # Open Cypress Test Runner
 pnpm cy:open
 
 # Run tests in headless mode
-pnpm cypress run
+pnpm cy:run
 ```
 
 Test coverage includes:
-
 - User signup and authentication flow
 - Dashboard access and data display
 - Route protection
@@ -239,7 +291,7 @@ Test coverage includes:
 
 - Secure session management
 - Password hashing with Better Auth
-- CSRF protection
+- CSRF protection with Server Actions
 - SQL injection prevention with Drizzle ORM
 - Type-safe API with tRPC
 - Protected API routes
@@ -263,6 +315,20 @@ The app can be deployed to any platform that supports Next.js:
 - DigitalOcean
 
 Ensure your environment variables are properly configured.
+
+## 🔮 Future Enhancements
+
+### Planned Features
+
+- **User Profile Page**:  Dedicated page for users to manage and update their credentials
+  - Update email address
+  - Change password
+  - Manage notification preferences
+  - Delete account option
+- **Enhanced Analytics**: Additional data visualization options
+- **Budget Management**: Set and track monthly budgets
+- **Multi-currency Support**: Support for multiple currencies
+- **Export Functionality**: Export transactions to CSV/PDF
 
 ## 🤝 Contributing
 
@@ -292,6 +358,7 @@ This project is licensed under the MIT License.
 - [Drizzle ORM](https://orm.drizzle.team/) - TypeScript ORM
 - [Better Auth](https://www.better-auth.com/) - Authentication solution
 - [Recharts](https://recharts.org/) - Data visualization
+- [Vitest](https://vitest.dev/) - Unit testing framework
 
 ## 📧 Support
 
